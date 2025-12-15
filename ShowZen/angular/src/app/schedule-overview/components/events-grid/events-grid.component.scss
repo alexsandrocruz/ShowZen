@@ -1,0 +1,132 @@
+.events-grid-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    // Mobile: full width, no border-radius, horizontal scroll
+    @media (max-width: 767.98px) {
+        border-radius: 0;
+        margin-left: -1rem;
+        margin-right: -1rem;
+        width: calc(100% + 2rem);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; // Smooth iOS scroll
+
+        // Scroll hint shadow
+        background:
+            linear-gradient(to right, white 30%, transparent),
+            linear-gradient(to right, transparent, white 70%) 100% 0,
+            radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, .1), transparent),
+            radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, .1), transparent) 100% 0;
+        background-repeat: no-repeat;
+        background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+        background-attachment: local, local, scroll, scroll;
+    }
+
+    .table {
+        margin-bottom: 0;
+
+        // Mobile: fixed minimum widths for scroll
+        @media (max-width: 767.98px) {
+            min-width: 700px; // Force horizontal scroll
+            font-size: 0.85rem;
+        }
+
+        thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            color: #495057;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            padding: 0.75rem 0.5rem;
+            white-space: nowrap;
+
+            @media (min-width: 768px) {
+                font-size: 0.8rem;
+                padding: 1rem;
+            }
+        }
+
+        tbody td {
+            padding: 0.75rem 0.5rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.2s;
+
+            @media (min-width: 768px) {
+                padding: 1rem;
+            }
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+    }
+}
+
+.avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.5em 0.8em;
+    border-radius: 0.25rem;
+}
+
+// Badge colors (Bootstrap extensions/overrides if needed)
+.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+.bg-success {
+    background-color: #28a745 !important;
+}
+
+.bg-primary {
+    background-color: #007bff !important;
+}
+
+.bg-info {
+    background-color: #17a2b8 !important;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529;
+}
+
+.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.small {
+    font-size: 0.875em;
+}
+
+// Conflict row styling - visible red background
+.event-conflict-row {
+    position: relative;
+    background-color: #f8d7da !important;
+    border-left: 4px solid #dc3545 !important;
+
+    &:hover {
+        background-color: #f5c6cb !important;
+    }
+}

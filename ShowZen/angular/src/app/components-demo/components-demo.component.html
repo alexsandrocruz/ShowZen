@@ -1,0 +1,214 @@
+<div class="container" style="padding: 40px 24px; max-width: 1200px; margin: 0 auto;">
+    <h1 class="display">Componentes Premium ShowZen</h1>
+    <p class="text-secondary" style="margin-bottom: 48px;">
+        Demonstração do sistema de design mobile-first baseado em Metronic Demo2
+    </p>
+
+    <!-- CARDS -->
+    <section style="margin-bottom: 64px;">
+        <h2>Cards</h2>
+        <p class="text-secondary">Cards com sombras sutis, border-radius 12px e hover effects</p>
+
+        <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 24px;">
+            <!-- Card padrão -->
+            <div class="card">
+                <div class="card-header">
+                    <h4>Card Padrão</h4>
+                    <span class="badge badge-primary">New</span>
+                </div>
+                <p>Este é um card padrão com sombra sutil e padding responsivo.</p>
+                <div class="card-footer">
+                    <button class="btn btn-outline-primary btn-sm">Ver mais</button>
+                </div>
+            </div>
+
+            <!-- Card hover -->
+            <div class="card card-hover">
+                <div class="card-header">
+                    <h4>Card Hover</h4>
+                    <span class="badge badge-success">Active</span>
+                </div>
+                <p>Passe o mouse para ver o efeito de hover com elevação.</p>
+                <div class="card-footer">
+                    <button class="btn btn-primary btn-sm">Ação</button>
+                </div>
+            </div>
+
+            <!-- Card primary -->
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h4>Card Primary</h4>
+                    <span class="badge badge-info">Featured</span>
+                </div>
+                <p>Card com background gradient azul sutil.</p>
+                <div class="card-footer">
+                    <button class="btn btn-outline-primary btn-sm">Explorar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section style="margin-bottom: 64px;">
+        <h2>Buttons</h2>
+        <p class="text-secondary">Botões touch-friendly (44px min) com loading states e hover effects</p>
+
+        <div style="margin-top: 24px;">
+            <h4 class="h6" style="margin-bottom: 16px;">Variantes</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px;">
+                <button class="btn btn-primary">
+                    <i class="fas fa-check"></i>
+                    Primary
+                </button>
+                <button class="btn btn-success">Success</button>
+                <button class="btn btn-danger">Danger</button>
+                <button class="btn btn-warning">Warning</button>
+                <button class="btn btn-outline-primary">Outline</button>
+                <button class="btn btn-outline-secondary">Secondary</button>
+                <button class="btn btn-ghost">Ghost</button>
+            </div>
+
+            <h4 class="h6" style="margin-bottom: 16px;">Tamanhos</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 24px;">
+                <button class="btn btn-primary btn-sm">Small</button>
+                <button class="btn btn-primary">Normal</button>
+                <button class="btn btn-primary btn-lg">Large</button>
+            </div>
+
+            <h4 class="h6" style="margin-bottom: 16px;">Estados</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                <button class="btn btn-primary" (click)="simulateLoading()" [class.loading]="isButtonLoading">
+                    <i class="fas fa-save"></i>
+                    Loading Demo
+                </button>
+                <button class="btn btn-primary" disabled>Disabled</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FORMS -->
+    <section style="margin-bottom: 64px;">
+        <h2>Forms</h2>
+        <p class="text-secondary">Formulários touch-friendly com focus states e validação</p>
+
+        <div class="card" style="margin-top: 24px; max-width: 600px;">
+            <form>
+                <div class="form-group">
+                    <label class="form-label required">Nome Completo</label>
+                    <input type="text" class="form-control" placeholder="Digite seu nome">
+                    <span class="form-text">Será usado para identificação</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control is-valid" value="usuario@exemplo.com">
+                    <span class="valid-feedback">Email válido!</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Senha</label>
+                    <input type="password" class="form-control is-invalid">
+                    <span class="invalid-feedback">A senha deve ter pelo menos 8 caracteres</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Tipo</label>
+                    <select class="form-control">
+                        <option>Selecione...</option>
+                        <option>Cliente</option>
+                        <option>Artista</option>
+                        <option>Produtor</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Observações</label>
+                    <textarea class="form-control" rows="3" placeholder="Escreva aqui..."></textarea>
+                </div>
+
+                <div class="form-check">
+                    <input type="checkbox" id="terms">
+                    <label for="terms">Aceito os termos e condições</label>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-outline-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- TABLES -->
+    <section style="margin-bottom: 64px;">
+        <h2>Tables</h2>
+        <p class="text-secondary">Tabelas responsivas com hover e striped rows</p>
+
+        <div class="card" style="margin-top: 24px;">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Status</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#001</td>
+                            <td>João Silva</td>
+                            <td><span class="badge badge-success">Ativo</span></td>
+                            <td>13/12/2025</td>
+                            <td>
+                                <button class="btn btn-ghost btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#002</td>
+                            <td>Maria Santos</td>
+                            <td><span class="badge badge-warning">Pendente</span></td>
+                            <td>12/12/2025</td>
+                            <td>
+                                <button class="btn btn-ghost btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#003</td>
+                            <td>Pedro Costa</td>
+                            <td><span class="badge badge-danger">Inativo</span></td>
+                            <td>11/12/2025</td>
+                            <td>
+                                <button class="btn btn-ghost btn-sm">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- BADGES -->
+    <section style="margin-bottom: 64px;">
+        <h2>Badges & Pills</h2>
+        <p class="text-secondary">Badges coloridos para status e categorias</p>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px;">
+            <span class="badge badge-primary">Primary</span>
+            <span class="badge badge-success">Success</span>
+            <span class="badge badge-warning">Warning</span>
+            <span class="badge badge-danger">Danger</span>
+            <span class="badge badge-info">Info</span>
+            <span class="badge badge-primary badge-pill">Pill Badge</span>
+        </div>
+    </section>
+</div>

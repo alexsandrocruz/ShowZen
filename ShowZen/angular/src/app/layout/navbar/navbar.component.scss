@@ -1,0 +1,575 @@
+@import '../../../styles/variables';
+
+// ==========================================
+// NAVBAR - Mobile-First Design
+// ==========================================
+
+.navbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: $navbar-height;
+    background: $navbar-bg;
+    box-shadow: $shadow-sm;
+    transition: $transition-base;
+    z-index: $navbar-z-index;
+
+    &.scrolled {
+        box-shadow: $shadow-md;
+    }
+}
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 $container-padding-mobile;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    @include media-breakpoint-up('lg') {
+        padding: 0 $container-padding-desktop;
+    }
+}
+
+// ==========================================
+// LOGO / BRAND
+// ==========================================
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    gap: spacer(2);
+    text-decoration: none;
+    color: $text-primary;
+    font-weight: $font-weight-bold;
+    font-size: 20px;
+    transition: $transition-fast;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.logo-icon {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.logo-text {
+    font-size: 20px;
+    letter-spacing: -0.02em;
+
+    @include media-breakpoint-up('lg') {
+        font-size: 22px;
+    }
+}
+
+// ==========================================
+// DESKTOP MENU (Hidden on Mobile)
+// ==========================================
+
+.navbar-menu {
+    display: none; // Hidden on mobile
+
+    @include media-breakpoint-up('lg') {
+        display: flex;
+        align-items: center;
+        gap: spacer(2);
+        flex: 1;
+        justify-content: center;
+        margin: 0 spacer(8);
+    }
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    padding: spacer(2) spacer(4);
+    color: $text-secondary;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: $font-weight-medium;
+    border-radius: $border-radius-md;
+    transition: $transition-fast;
+    white-space: nowrap;
+
+    i {
+        font-size: 16px;
+    }
+
+    &:hover {
+        color: $primary;
+        background: $bg-hover;
+    }
+
+    &.active {
+        color: $primary;
+        background: rgba($primary, 0.1);
+        font-weight: $font-weight-semibold;
+    }
+}
+
+// ==========================================
+// USER PROFILE (Desktop)
+// ==========================================
+
+.navbar-user {
+    display: none; // Hidden on mobile
+
+    @include media-breakpoint-up('lg') {
+        display: flex;
+        align-items: center;
+        gap: spacer(3);
+        padding: spacer(2) spacer(3);
+        border-radius: $border-radius-lg;
+        cursor: pointer;
+        transition: $transition-fast;
+
+        &:hover {
+            background: $bg-hover;
+        }
+    }
+}
+
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: $border-radius-full;
+    background: linear-gradient(135deg, $primary, $primary-dark);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: $font-weight-bold;
+    font-size: 14px;
+}
+
+.user-name {
+    font-size: 14px;
+    font-weight: $font-weight-medium;
+    color: $text-primary;
+}
+
+// ==========================================
+// HAMBURGER BUTTON (Mobile Only)
+// ==========================================
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: $z-index-modal + 10;
+    transition: $transition-fast;
+
+    @include media-breakpoint-up('lg') {
+        display: none; // Hidden on desktop
+    }
+
+    &:hover .hamburger-line {
+        background: $primary;
+    }
+
+    &.active .hamburger-line {
+        &:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        &:nth-child(2) {
+            opacity: 0;
+        }
+
+        &:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+    }
+}
+
+.hamburger-line {
+    width: 100%;
+    height: 3px;
+    background: $text-primary;
+    border-radius: 2px;
+    transition: $transition-fast;
+}
+
+// ==========================================
+// MOBILE SIDEBAR DRAWER
+// ==========================================
+
+.mobile-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: $sidebar-width;
+    background: $sidebar-bg;
+    box-shadow: $sidebar-shadow;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: $z-index-modal;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    &.open {
+        transform: translateX(0);
+    }
+
+    @include media-breakpoint-up('lg') {
+        display: none; // Hidden on desktop
+    }
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: spacer(5) spacer(5);
+    border-bottom: 1px solid $border-color;
+
+    .logo-text {
+        font-size: 22px;
+        font-weight: $font-weight-bold;
+        color: $text-primary;
+    }
+
+    .close-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: $text-secondary;
+        font-size: 20px;
+        cursor: pointer;
+        border-radius: $border-radius-md;
+        transition: $transition-fast;
+
+        &:hover {
+            background: $bg-hover;
+            color: $text-primary;
+        }
+    }
+}
+
+.sidebar-menu {
+    flex: 1;
+    padding: spacer(4) 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: spacer(3);
+    padding: spacer(4) spacer(5);
+    color: $text-secondary;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: $font-weight-medium;
+    transition: $transition-fast;
+    border-left: 3px solid transparent;
+
+    i {
+        font-size: 18px;
+        width: 24px;
+    }
+
+    &:hover {
+        background: $bg-hover;
+        color: $text-primary;
+    }
+
+    &.active {
+        background: rgba($primary, 0.08);
+        color: $primary;
+        border-left-color: $primary;
+        font-weight: $font-weight-semibold;
+    }
+}
+
+.sidebar-footer {
+    padding: spacer(5);
+    border-top: 1px solid $border-color;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: spacer(3);
+}
+
+.user-info {
+    flex: 1;
+    min-width: 0; // Allow text truncation
+}
+
+.user-email {
+    color: $text-muted;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+// ==========================================
+// MOBILE OVERLAY (Dark backdrop)
+// ==========================================
+
+.mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $sidebar-overlay-bg;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    z-index: $z-index-modal - 10;
+
+    &.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    @include media-breakpoint-up('lg') {
+        display: none; // Hidden on desktop
+    }
+}
+
+// ==========================================
+// UTILITY CLASSES
+// ==========================================
+
+.desktop-only {
+    display: none !important;
+
+    @include media-breakpoint-up('lg') {
+        display: flex !important;
+    }
+}
+
+.mobile-only {
+    display: flex !important;
+
+    @include media-breakpoint-up('lg') {
+        display: none !important;
+    }
+}
+
+// ==========================================
+// NAVBAR ACTIONS (Language + User/Login)
+// ==========================================
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: spacer(3);
+}
+
+// Language Selector
+.language-selector {
+    position: relative;
+}
+
+.lang-btn {
+    display: flex;
+    align-items: center;
+    gap: spacer(2);
+    padding: spacer(2) spacer(3);
+    background: transparent;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-md;
+    color: $text-secondary;
+    font-size: 14px;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover {
+        border-color: $primary;
+        color: $text-primary;
+        background: $bg-hover;
+    }
+
+    .flag {
+        font-size: 16px;
+    }
+
+    i {
+        font-size: 10px;
+        margin-left: spacer(1);
+    }
+}
+
+.lang-dropdown {
+    position: absolute;
+    top: calc(100% + spacer(2));
+    right: 0;
+    min-width: 200px;
+    background: $bg-card;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-lg;
+    padding: spacer(2);
+    z-index: $z-index-dropdown;
+    animation: fadeInDown 0.2s ease-out;
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: spacer(3);
+    width: 100%;
+    padding: spacer(3);
+    background: transparent;
+    border: none;
+    border-radius: $border-radius-md;
+    color: $text-primary;
+    font-size: 14px;
+    cursor: pointer;
+    transition: $transition-fast;
+    text-align: left;
+
+    &:hover,
+    &.active {
+        background: rgba($primary, 0.1);
+        color: $primary;
+    }
+
+    .flag {
+        font-size: 18px;
+    }
+}
+
+// Login Button (Desktop)
+.login-btn {
+    display: flex;
+    align-items: center;
+    gap: spacer(2);
+    padding: spacer(2) spacer(4);
+    background: $primary;
+    color: white;
+    border: none;
+    border-radius: $border-radius-md;
+    font-size: 14px;
+    font-weight: $font-weight-semibold;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover {
+        background: $primary-dark;
+        transform: translateY(-1px);
+        box-shadow: $shadow-md;
+    }
+}
+
+// Logout Button (small icon button next to user)
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-md;
+    color: $text-secondary;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover {
+        background: rgba($danger, 0.1);
+        border-color: $danger;
+        color: $danger;
+    }
+}
+
+// ==========================================
+// MOBILE SIDEBAR - Language & Auth
+// ==========================================
+
+.mobile-lang-selector {
+    padding: spacer(4) spacer(5);
+    border-top: 1px solid $border-color;
+
+    .lang-label {
+        margin-bottom: spacer(3);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: $font-weight-semibold;
+    }
+
+    .lang-option {
+        margin-bottom: spacer(2);
+    }
+}
+
+.mobile-auth-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: spacer(3);
+    width: calc(100% - spacer(10));
+    margin: spacer(4) spacer(5);
+    padding: spacer(4);
+    background: $bg-hover;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-lg;
+    color: $text-primary;
+    font-size: 15px;
+    font-weight: $font-weight-semibold;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    &:hover {
+        background: $bg-active;
+        border-color: $border-color-dark;
+    }
+
+    &.primary {
+        background: $primary;
+        border-color: $primary;
+        color: white;
+
+        &:hover {
+            background: $primary-dark;
+            border-color: $primary-dark;
+        }
+    }
+
+    i {
+        font-size: 18px;
+    }
+}
+
+// ==========================================
+// ANIMATIONS
+// ==========================================
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

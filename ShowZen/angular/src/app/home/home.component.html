@@ -1,0 +1,400 @@
+<div class="landing-page">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center min-vh-75">
+        <div class="col-lg-6">
+          <h1 class="hero-title animate__animated animate__fadeInUp">
+            Gestão Premium de Eventos para Artistas
+          </h1>
+          <p class="hero-subtitle animate__animated animate__fadeInUp animate__delay-1s">
+            Organize shows, palestras e eventos com a plataforma SaaS all-in-one
+            mais completa do mercado.
+          </p>
+          @if(!hasLoggedIn) {
+          <div class="hero-buttons animate__animated animate__fadeInUp animate__delay-2s">
+            <button class="btn btn-primary-custom btn-lg" (click)="login()">
+              <i class="fa fa-rocket me-2"></i>
+              Começar Agora
+            </button>
+            <button class="btn btn-outline-light btn-lg" (click)="register()">
+              <i class="fa fa-play-circle me-2"></i>
+              Ver Demo
+            </button>
+          </div>
+          } @else {
+          <div class="hero-buttons animate__animated animate__fadeInUp animate__delay-2s">
+            <button class="btn btn-primary-custom btn-lg" (click)="goToSchedule()">
+              <i class="fa fa-columns me-2"></i>
+              Acessar Dashboard
+            </button>
+          </div>
+          }
+        </div>
+        <div class="col-lg-6 mt-5 mt-lg-0">
+          <div class="hero-image-container">
+            <img src="assets/images/schedule-overview-screenshot.png" alt="ShowZen Dashboard" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">Recursos Profissionais</h2>
+        <p class="section-subtitle">Ferramentas avançadas para quem exige excelência</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Feature 1 -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="icon-container">
+              <i class="fa fa-calendar-check"></i>
+            </div>
+            <h3>Agenda Inteligente</h3>
+            <p>Calendário drag-and-drop com detecção de conflitos e visão multi-artista para agências.</p>
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="icon-container">
+              <i class="fa fa-users-cog"></i>
+            </div>
+            <h3>CRM para Artistas</h3>
+            <p>Gerencie contratos, riders técnicos e logística de viagens em um dashboard unificado.</p>
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="icon-container">
+              <i class="fa fa-file-invoice-dollar"></i>
+            </div>
+            <h3>Financeiro Real-time</h3>
+            <p>Controle de cachês, repasses, despesas de tour e ROI automático por evento.</p>
+          </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="icon-container">
+              <i class="fa fa-project-diagram"></i>
+            </div>
+            <h3>Workflow Visual</h3>
+            <p>Kanban de propostas: do lead à confirmação. Automação de follow-ups e contratos.</p>
+          </div>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="icon-container">
+              <i class="fa fa-mobile-alt"></i>
+            </div>
+            <h3>App para Equipe</h3>
+            <p>Roadmap na mão do roadie. Check-in, horários e infos técnicas offline no app mobile.</p>
+          </div>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="col-lg-4 col-md-6">
+          <div class="feature-card">
+            <div class="icon-container">
+              <i class="fa fa-chart-pie"></i>
+            </div>
+            <h3>Analytics 360º</h3>
+            <p>Métricas de audiência, performance por praça e relatórios executivos para investidores.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials-section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">O que dizem nossos usuários</h2>
+        <p class="section-subtitle">Confiança de grandes nomes do mercado</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="testimonial-card">
+            <i class="fa fa-quote-left quote-icon"></i>
+            <p>"O ShowZen transformou a logística da nossa tour. Economizamos horas de planilha e evitamos diversos
+              conflitos de agenda."</p>
+            <div class="user-info">
+              <div class="avatar">MM</div>
+              <div>
+                <h5>Marcos Miller</h5>
+                <span>Road Manager, Banda X</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="testimonial-card">
+            <i class="fa fa-quote-left quote-icon"></i>
+            <p>"Financeiro impecável. Consigo ver o lucro líquido de cada show em tempo real. Essencial para qualquer
+              escritório sério."</p>
+            <div class="user-info">
+              <div class="avatar">LP</div>
+              <div>
+                <h5>Luiza Paula</h5>
+                <span>CEO, LP Produções</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="testimonial-card">
+            <i class="fa fa-quote-left quote-icon"></i>
+            <p>"A interface é linda e intuitiva. Nossa equipe de vendas dobrou a eficiência usando o CRM integrado."</p>
+            <div class="user-info">
+              <div class="avatar">RF</div>
+              <div>
+                <h5>Ricardo Faria</h5>
+                <span>Booker, Agência Top</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing-section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">Planos Flexíveis</h2>
+        <p class="section-subtitle">Escolha a melhor opção para sua carreira</p>
+      </div>
+      <div class="row align-items-center g-4">
+        <!-- Starter -->
+        <div class="col-lg-4">
+          <div class="pricing-card">
+            <h4>Starter</h4>
+            <div class="price">Gratis <small>/mês</small></div>
+            <ul>
+              <li><i class="fa fa-check"></i> Até 5 eventos/mês</li>
+              <li><i class="fa fa-check"></i> 1 Artista</li>
+              <li><i class="fa fa-check"></i> Agenda Básica</li>
+            </ul>
+            <button class="btn btn-pricing btn-outline-primary">Começar Grátis</button>
+          </div>
+        </div>
+        <!-- Pro -->
+        <div class="col-lg-4">
+          <div class="pricing-card featured">
+            <span class="badge-featured">Mais Popular</span>
+            <h4>Pro</h4>
+            <div class="price">R$ 89 <small>/mês</small></div>
+            <ul>
+              <li><i class="fa fa-check"></i> Eventos Ilimitados</li>
+              <li><i class="fa fa-check"></i> Até 5 Artistas</li>
+              <li><i class="fa fa-check"></i> Financeiro Completo</li>
+              <li><i class="fa fa-check"></i> Suporte Prioritário</li>
+            </ul>
+            <button class="btn btn-pricing btn-primary">Assinar Pro</button>
+          </div>
+        </div>
+        <!-- Agency -->
+        <div class="col-lg-4">
+          <div class="pricing-card">
+            <h4>Agency</h4>
+            <div class="price">R$ 299 <small>/mês</small></div>
+            <ul>
+              <li><i class="fa fa-check"></i> Artistas Ilimitados</li>
+              <li><i class="fa fa-check"></i> Múltiplos Usuários</li>
+              <li><i class="fa fa-check"></i> API & Integrações</li>
+              <li><i class="fa fa-check"></i> Gerente de Conta</li>
+            </ul>
+            <button class="btn btn-pricing btn-outline-primary">Falar com Vendas</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title">Perguntas Frequentes</h2>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#faq1">
+                  Posso cancelar a qualquer momento?
+                </button>
+              </h2>
+              <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Sim! O ShowZen não possui fidelidade. Você pode cancelar sua assinatura a qualquer momento através do
+                  painel de controle.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#faq2">
+                  Serve para bandas independentes?
+                </button>
+              </h2>
+              <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Com certeza. O plano Starter foi feito pensando em quem está começando, oferecendo ferramentas
+                  profissionais sem custo inicial.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#faq3">
+                  Como funciona o suporte?
+                </button>
+              </h2>
+              <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                  Oferecemos suporte via chat e email para todos os planos. Usuários Pro e Agency têm prioridade na fila
+                  de atendimento.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="contact-box">
+            <div class="text-center mb-4">
+              <h2 class="section-title">Fale Conosco</h2>
+              <p class="section-subtitle mb-0">Tem alguma dúvida? Mande uma mensagem.</p>
+            </div>
+            <form>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Nome</label>
+                  <input type="text" class="form-control" placeholder="Seu nome">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" placeholder="seu@email.com">
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Mensagem</label>
+                <textarea class="form-control" rows="4" placeholder="Como podemos ajudar?"></textarea>
+              </div>
+              <div class="text-center">
+                <button type="button" class="btn btn-primary-custom px-5">Enviar Mensagem</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Sapienza Section -->
+  <section class="about-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <h2 class="mb-4">Power by Sapienza</h2>
+          <p class="lead mb-4">
+            ShowZen é um projeto de referência em Engenharia de Software Moderna.
+          </p>
+          <div class="tech-badges mt-4">
+            <span class="badge me-2 mb-2"><i class="fa fa-code me-1"></i> ABP Framework</span>
+            <span class="badge me-2 mb-2"><i class="fa fa-server me-1"></i> .NET 10</span>
+            <span class="badge me-2 mb-2"><i class="fa fa-angular me-1"></i> Angular</span>
+          </div>
+        </div>
+        <div class="col-lg-6 text-center">
+          <a href="https://www.sapienzae.com.br" target="_blank" class="btn btn-outline-primary">
+            Conheça a Sapienza
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-box text-center">
+        <h2 class="text-white mb-3">Pronto para transformar sua gestão?</h2>
+        <p>Junte-se a centenas de artistas e produtores que já estão usando o ShowZen.</p>
+        @if(!hasLoggedIn) {
+        <button class="btn btn-light btn-lg" (click)="login()">
+          <i class="fa fa-rocket me-2"></i>
+          Criar Conta Grátis
+        </button>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer-section pb-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+          <h5 class="mb-3">Produto</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="#">Funcionalidades</a></li>
+            <li class="mb-2"><a href="#">Preços</a></li>
+            <li class="mb-2"><a href="#">Roadmap</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+          <h5 class="mb-3">Empresa</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="#">Sobre nós</a></li>
+            <li class="mb-2"><a href="#">Carreiras</a></li>
+            <li class="mb-2"><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+          <h5 class="mb-3">Legal</h5>
+          <ul class="list-unstyled">
+            <li class="mb-2"><a href="#">Termos de Uso</a></li>
+            <li class="mb-2"><a href="#">Privacidade</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <h5 class="mb-3">ShowZen</h5>
+          <p class="text-muted small">
+            O sistema operacional do entretenimento.
+          </p>
+        </div>
+      </div>
+      <hr class="my-4">
+      <div class="text-center text-muted">
+        <small>© 2025 ShowZen. Feito com tecnologia de ponta.</small>
+      </div>
+    </div>
+  </footer>
+</div>

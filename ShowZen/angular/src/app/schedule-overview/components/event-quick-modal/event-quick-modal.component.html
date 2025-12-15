@@ -1,0 +1,181 @@
+<abp-modal [(visible)]="isModalOpen">
+    <ng-template #abpHeader>
+        <h3>{{ isEditMode ? 'Editar Evento' : 'Novo Evento' }}</h3>
+    </ng-template>
+
+    <ng-template #abpBody>
+        <form [formGroup]="form" (ngSubmit)="save()">
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label for="event-title" class="form-label">{{ '::Title' | abpLocalization }} *</label>
+                    <input type="text" id="event-title" class="form-control" formControlName="title" autofocus />
+                    <div *ngIf="form.get('title')?.invalid && form.get('title')?.touched"
+                        class="invalid-feedback d-block">
+                        <span *ngIf="form.get('title')?.errors?.['required']">{{ '::ThisFieldIsRequired' |
+                            abpLocalization
+                            }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="event-type" class="form-label">{{ '::Type' | abpLocalization }} *</label>
+                    <select id="event-type" class="form-select" formControlName="type">
+                        <option [ngValue]="null">{{ '::PleaseSelect' | abpLocalization }}</option>
+                        <option *ngFor="let type of eventTypes" [ngValue]="type.key">
+                            {{ type.value }}
+                        </option>
+                    </select>
+                    <div *ngIf="form.get('type')?.invalid && form.get('type')?.touched"
+                        class="invalid-feedback d-block">
+                        <span *ngIf="form.get('type')?.errors?.['required']">{{ '::ThisFieldIsRequired' |
+                            abpLocalization }}</span>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="event-duration" class="form-label">{{ '::Duration' | abpLocalization }} (min) *</label>
+                    <input type="number" id="event-duration" class="form-control" formControlName="duration" min="30"
+                        step="30" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="event-date" class="form-label">{{ '::Date' | abpLocalization }} *</label>
+                    <input class="form-control" placeholder="YYYY-MM-DD" name="dp" formControlName="startDate"
+                        ngbDatepicker #d="ngbDatepicker" (click)="d.toggle()" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="event-time" class="form-label">{{ '::Time' | abpLocalization }} *</label>
+                    <ngb-timepicker formControlName="startTime" [spinners]="false"></ngb-timepicker>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="event-artist" class="form-label">{{ '::Artist' | abpLocalization }} *</label>
+                    <select id="event-artist" class="form-select" formControlName="artistId">
+                        <option [ngValue]="null">{{ '::PleaseSelect' | abpLocalization }}</option>
+                        <option *ngFor="let artist of artists" [ngValue]="artist.id">
+                            {{ artist.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="event-client" class="form-label">{{ '::Client' | abpLocalization }} *</label>
+
+                    <ng-select [items]="clients" bindLabel="name" bindValue="id" [searchable]="true" [clearable]="true"
+                        [addTag]="onAddClient" [searchFn]="customSearchFnClient"
+                        placeholder="Buscar ou criar cliente..." formControlName="clientId">
+
+                        <!-- Custom item template -->
+                        <ng-template ng-option-tmp let-item="item">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-user me-2 text-muted"></i>
+                                <div>
+                                    <div class="fw-bold">{{ item.name }}</div>
+                                    <small class="text-muted">{{ item.email || item.phone || 'Sem contato' }}</small>
+                                </div>
+                            </div>
+                        </ng-template>
+
+                        <!-- Custom "add tag" template -->
+                        <ng-template ng-tag-tmp let-search="searchTerm">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-plus-circle me-2 text-success"></i>
+                                <span>Criar cliente: <strong>{{ search }}</strong></span>
+                            </div>
+                        </ng-template>
+
+                        <!-- Not found template -->
+                        <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+                            <div class="text-center py-3">
+                                <i class="fa fa-search fa-2x text-muted mb-2"></i>
+                                <p class="mb-0">Nenhum cliente encontrado</p>
+                                <small class="text-muted">Digite e pressione Enter para criar</small>
+                            </div>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+
+
+            <!-- Location Row (Full Width) -->
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label for="event-location" class="form-label">{{ '::Location' | abpLocalization }}</label>
+
+                    <ng-select [items]="locations" bindLabel="name" bindValue="id" [searchable]="true"
+                        [clearable]="true" [addTag]="onAddLocation" [searchFn]="customSearchFn"
+                        placeholder="Buscar ou criar local..." formControlName="locationId">
+
+                        <!-- Custom item template -->
+                        <ng-template ng-option-tmp let-item="item">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-map-marker-alt me-2 text-muted"></i>
+                                <div>
+                                    <div class="fw-bold">{{ item.name }}</div>
+                                    <small class="text-muted">{{ item.city }}/{{ item.state }}</small>
+                                </div>
+                            </div>
+                        </ng-template>
+
+                        <!-- Custom "add tag" template -->
+                        <ng-template ng-tag-tmp let-search="searchTerm">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-plus-circle me-2 text-success"></i>
+                                <span>Criar local: <strong>{{ search }}</strong></span>
+                            </div>
+                        </ng-template>
+
+                        <!-- Not found template -->
+                        <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+                            <div class="text-center py-3">
+                                <i class="fa fa-search fa-2x text-muted mb-2"></i>
+                                <p class="mb-0">Nenhum local encontrado</p>
+                                <small class="text-muted">Digite e pressione Enter para criar</small>
+                            </div>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div>
+
+            <!-- Status and Fee Row -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="event-status" class="form-label">{{ '::Status' | abpLocalization }}</label>
+                    <select id="event-status" class="form-select" formControlName="status">
+                        <option *ngFor="let status of eventStatuses" [ngValue]="status.key">
+                            {{ status.value }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="event-fee" class="form-label">{{ '::Fee' | abpLocalization }} (R$)</label>
+                    <input type="number" id="event-fee" class="form-control" formControlName="fee" min="0" step="0.01"
+                        placeholder="0,00">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="event-description" class="form-label">{{ '::Description' | abpLocalization }}</label>
+                <textarea id="event-description" class="form-control" formControlName="description" rows="3"></textarea>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #abpFooter>
+        <button type="button" class="btn btn-secondary" (click)="isModalOpen = false">
+            {{ '::Cancel' | abpLocalization }}
+        </button>
+        <button class="btn btn-primary" type="button" [disabled]="form.invalid" (click)="save()">
+            <i class="fa fa-check me-1"></i>
+            {{ '::Save' | abpLocalization }}
+        </button>
+    </ng-template>
+</abp-modal>

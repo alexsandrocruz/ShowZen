@@ -1,0 +1,21 @@
+{
+  "production": true,
+  "application": {
+    "baseUrl":"https://showzen-web",
+    "name": "ShowZen",
+    "logoUrl": ""
+  },
+  "oAuthConfig": {
+    "issuer": "https://showzen-api/",
+    "redirectUri": "https://showzen",
+    "clientId": "ShowZen_App",
+    "responseType": "code",
+    "scope": "offline_access openid profile email phone"
+  },
+  "apis": {
+    "default": {
+      "url": "https://showzen-api",
+      "rootNamespace": "ShowZen"
+    }
+  }
+}

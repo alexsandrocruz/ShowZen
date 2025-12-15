@@ -1,0 +1,1055 @@
+// =====================================================
+// ShowZen Premium Design System
+// =====================================================
+@import 'styles/variables';
+
+// =====================================================
+// TYPOGRAPHY - Google Fonts
+// =====================================================
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* You can add global styles to this file, and also import other style files */
+
+// =====================================================
+// GLOBAL RESET & BASE STYLES (Mobile-First)
+// =====================================================
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%; // 16px base for accessibility
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: $font-family-base;
+  font-size: $font-size-base-mobile;
+  font-weight: $font-weight-normal;
+  line-height: $line-height-normal;
+  color: $text-primary;
+  background-color: $bg-body;
+
+  // Desktop: slightly larger base font
+  @include media-breakpoint-up('md') {
+    font-size: $font-size-base-desktop;
+  }
+}
+
+// =====================================================
+// TYPOGRAPHY HIERARCHY (Mobile-First)
+// =====================================================
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 spacer(4) 0;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+  color: $text-primary;
+}
+
+.display {
+  font-size: font-size-mobile('display');
+  font-weight: $font-weight-extrabold;
+  line-height: 1.1;
+
+  @include media-breakpoint-up('md') {
+    font-size: font-size-desktop('display');
+  }
+}
+
+h1,
+.h1 {
+  font-size: font-size-mobile('h1');
+
+  @include media-breakpoint-up('md') {
+    font-size: font-size-desktop('h1');
+  }
+}
+
+h2,
+.h2 {
+  font-size: font-size-mobile('h2');
+
+  @include media-breakpoint-up('md') {
+    font-size: font-size-desktop('h2');
+  }
+}
+
+h3,
+.h3 {
+  font-size: font-size-mobile('h3');
+  font-weight: $font-weight-semibold;
+
+  @include media-breakpoint-up('md') {
+    font-size: font-size-desktop('h3');
+  }
+}
+
+h4,
+.h4 {
+  font-size: font-size-mobile('h4');
+  font-weight: $font-weight-semibold;
+
+  @include media-breakpoint-up('md') {
+    font-size: font-size-desktop('h4');
+  }
+}
+
+h5,
+.h5 {
+  font-size: font-size-mobile('h5');
+  font-weight: $font-weight-semibold;
+
+  @include media-breakpoint-up('md') {
+    font-size: font-size-desktop('h5');
+  }
+}
+
+h6,
+.h6 {
+  font-size: font-size-mobile('h6');
+  font-weight: $font-weight-semibold;
+
+  @include media-breakpoint-up('md') {
+    font-size: font-size-desktop('h6');
+  }
+}
+
+p {
+  margin: 0 0 spacer(4) 0;
+  font-size: font-size-mobile('body');
+
+  @include media-breakpoint-up('md') {
+    font-size: font-size-desktop('body');
+  }
+}
+
+small,
+.small {
+  font-size: font-size-mobile('small');
+
+  @include media-breakpoint-up('md') {
+    font-size: font-size-desktop('small');
+  }
+}
+
+.caption {
+  font-size: font-size-mobile('caption');
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+
+  @include media-breakpoint-up('md') {
+    font-size: font-size-desktop('caption');
+  }
+}
+
+// =====================================================
+// TEXT UTILITY CLASSES
+// =====================================================
+
+.text-primary {
+  color: $text-primary !important;
+}
+
+.text-secondary {
+  color: $text-secondary !important;
+}
+
+.text-muted {
+  color: $text-muted !important;
+}
+
+.text-white {
+  color: $text-white !important;
+}
+
+.text-success {
+  color: $success !important;
+}
+
+.text-warning {
+  color: $warning !important;
+}
+
+.text-danger {
+  color: $danger !important;
+}
+
+.text-info {
+  color: $info !important;
+}
+
+// Font weights
+.fw-light {
+  font-weight: $font-weight-light !important;
+}
+
+.fw-normal {
+  font-weight: $font-weight-normal !important;
+}
+
+.fw-medium {
+  font-weight: $font-weight-medium !important;
+}
+
+.fw-semibold {
+  font-weight: $font-weight-semibold !important;
+}
+
+.fw-bold {
+  font-weight: $font-weight-bold !important;
+}
+
+// Line heights
+.lh-tight {
+  line-height: $line-height-tight !important;
+}
+
+.lh-normal {
+  line-height: $line-height-normal !important;
+}
+
+.lh-relaxed {
+  line-height: $line-height-relaxed !important;
+}
+
+// =====================================================
+// PREMIUM COMPONENTS - Mobile-First (Metronic-inspired)
+// =====================================================
+
+// ==========================================
+// CARDS
+// ==========================================
+
+.card {
+  background: $bg-card;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+  padding: $card-padding-mobile;
+  transition: $transition-base;
+  border: 1px solid $border-color-light;
+
+  @include media-breakpoint-up('md') {
+    padding: $card-padding-desktop;
+  }
+
+  &:hover {
+    box-shadow: $shadow-md;
+  }
+}
+
+.card-hover {
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: spacer(4);
+  padding-bottom: spacer(4);
+  border-bottom: 1px solid $border-color;
+
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+  }
+}
+
+.card-footer {
+  margin-top: spacer(4);
+  padding-top: spacer(4);
+  border-top: 1px solid $border-color;
+}
+
+// Card variants
+.card-flat {
+  box-shadow: none;
+  border: 1px solid $border-color;
+}
+
+.card-outlined {
+  box-shadow: none;
+  border: 2px solid $primary;
+}
+
+.card-primary {
+  background: linear-gradient(135deg, rgba($primary, 0.05), rgba($primary, 0.02));
+  border-color: rgba($primary, 0.2);
+}
+
+// ==========================================
+// BUTTONS
+// ==========================================
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: spacer(2);
+  padding: $btn-padding-y-mobile $btn-padding-x-mobile;
+  min-height: $btn-min-height; // Touch-friendly
+  font-family: $font-family-base;
+  font-size: 14px;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: $btn-border-radius;
+  transition: $transition-fast;
+
+  @include media-breakpoint-up('md') {
+    padding: $btn-padding-y-desktop $btn-padding-x-desktop;
+    font-size: 15px;
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  // Loading state
+  &.loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: 50%;
+      left: 50%;
+      margin-left: -8px;
+      margin-top: -8px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      border-right-color: transparent;
+      animation: btn-spin 0.6s linear infinite;
+    }
+  }
+}
+
+// Button variants
+.btn-primary {
+  background: $primary;
+  color: white;
+  border-color: $primary;
+
+  &:hover {
+    background: $primary-dark;
+    border-color: $primary-dark;
+    box-shadow: 0 4px 12px rgba($primary, 0.3);
+  }
+
+  &.loading::after {
+    border-color: white;
+    border-right-color: transparent;
+  }
+}
+
+.btn-secondary {
+  background: $secondary;
+  color: $text-primary;
+  border-color: $secondary;
+
+  &:hover {
+    background: $secondary-dark;
+    border-color: $secondary-dark;
+  }
+}
+
+.btn-success {
+  background: $success;
+  color: white;
+  border-color: $success;
+
+  &:hover {
+    background: $success-dark;
+    border-color: $success-dark;
+    box-shadow: 0 4px 12px rgba($success, 0.3);
+  }
+}
+
+.btn-danger {
+  background: $danger;
+  color: white;
+  border-color: $danger;
+
+  &:hover {
+    background: $danger-dark;
+    border-color: $danger-dark;
+    box-shadow: 0 4px 12px rgba($danger, 0.3);
+  }
+}
+
+.btn-warning {
+  background: $warning;
+  color: $gray-900;
+  border-color: $warning;
+
+  &:hover {
+    background: $warning-dark;
+    border-color: $warning-dark;
+  }
+}
+
+.btn-outline-primary {
+  background: transparent;
+  color: $primary;
+  border-color: $primary;
+
+  &:hover {
+    background: $primary;
+    color: white;
+  }
+}
+
+.btn-outline-secondary {
+  background: transparent;
+  color: $text-secondary;
+  border-color: $border-color;
+
+  &:hover {
+    background: $bg-hover;
+    border-color: $border-color-dark;
+    color: $text-primary;
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  color: $text-primary;
+  border-color: transparent;
+
+  &:hover {
+    background: $bg-hover;
+  }
+}
+
+// Button sizes
+.btn-sm {
+  padding: spacer(2) spacer(3);
+  font-size: 13px;
+  min-height: 36px;
+}
+
+.btn-lg {
+  padding: spacer(4) spacer(6);
+  font-size: 16px;
+  min-height: 52px;
+}
+
+.btn-block {
+  display: flex;
+  width: 100%;
+}
+
+// Button animation
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ==========================================
+// FORMS
+// ==========================================
+
+.form-group {
+  margin-bottom: spacer(5);
+}
+
+.form-label {
+  display: block;
+  margin-bottom: spacer(2);
+  font-size: 14px;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+
+  &.required::after {
+    content: ' *';
+    color: $danger;
+  }
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  padding: $input-padding-y-mobile $input-padding-x-mobile;
+  min-height: $input-min-height; // Touch-friendly
+  font-family: $font-family-base;
+  font-size: 14px;
+  font-weight: $font-weight-normal;
+  line-height: 1.5;
+  color: $text-primary;
+  background-color: $bg-card;
+  background-clip: padding-box;
+  border: 1px solid $input-border-color;
+  border-radius: $input-border-radius;
+  transition: $transition-fast;
+  appearance: none;
+
+  @include media-breakpoint-up('md') {
+    font-size: 15px;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $input-focus-border-color;
+    box-shadow: 0 0 0 3px rgba($primary, 0.1);
+  }
+
+  &::placeholder {
+    color: $text-muted;
+    opacity: 1;
+  }
+
+  &:disabled,
+  &[readonly] {
+    background-color: $bg-surface;
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  &.is-invalid {
+    border-color: $danger;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($danger, 0.1);
+    }
+  }
+
+  &.is-valid {
+    border-color: $success;
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($success, 0.1);
+    }
+  }
+}
+
+textarea.form-control {
+  min-height: 100px;
+  resize: vertical;
+}
+
+select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right $input-padding-x-mobile center;
+  background-size: 16px 12px;
+  padding-right: spacer(8);
+}
+
+.form-text {
+  display: block;
+  margin-top: spacer(2);
+  font-size: 13px;
+  color: $text-muted;
+}
+
+.invalid-feedback {
+  display: block;
+  margin-top: spacer(2);
+  font-size: 13px;
+  color: $danger;
+}
+
+.valid-feedback {
+  display: block;
+  margin-top: spacer(2);
+  font-size: 13px;
+  color: $success;
+}
+
+// Checkbox & Radio
+.form-check {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+  padding-left: 28px;
+  margin-bottom: spacer(3);
+  position: relative;
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    position: absolute;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  label {
+    margin-bottom: 0;
+    cursor: pointer;
+  }
+}
+
+// ==========================================
+// TABLES
+// ==========================================
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: spacer(5);
+  color: $text-primary;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  thead {
+    background: $bg-surface;
+    border-bottom: 2px solid $border-color;
+
+    th {
+      padding: spacer(4);
+      font-size: 13px;
+      font-weight: $font-weight-semibold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: $text-secondary;
+      text-align: left;
+      border-bottom: 2px solid $border-color;
+
+      &:first-child {
+        border-top-left-radius: $border-radius-md;
+      }
+
+      &:last-child {
+        border-top-right-radius: $border-radius-md;
+      }
+
+      @include media-breakpoint-up('md') {
+        padding: spacer(5);
+        font-size: 14px;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: $transition-fast;
+
+      &:hover {
+        background: $bg-hover;
+      }
+
+      td {
+        padding: spacer(4);
+        font-size: 14px;
+        border-bottom: 1px solid $border-color-light;
+
+        @include media-breakpoint-up('md') {
+          padding: spacer(5);
+          font-size: 15px;
+        }
+      }
+    }
+  }
+
+  // Table variants
+  &.table-striped {
+    tbody tr:nth-of-type(odd) {
+      background: rgba($gray-100, 0.5);
+    }
+  }
+
+  &.table-hover {
+    tbody tr:hover {
+      background: $bg-hover;
+      cursor: pointer;
+    }
+  }
+
+  &.table-bordered {
+    border: 1px solid $border-color;
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+
+    th,
+    td {
+      border-right: 1px solid $border-color-light;
+
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+}
+
+// ==========================================
+// BADGES & PILLS
+// ==========================================
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: spacer(1) spacer(3);
+  font-size: 12px;
+  font-weight: $font-weight-semibold;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: $border-radius-sm;
+
+  @include media-breakpoint-up('md') {
+    font-size: 13px;
+  }
+}
+
+.badge-primary {
+  background: rgba($primary, 0.1);
+  color: $primary;
+}
+
+.badge-success {
+  background: rgba($success, 0.1);
+  color: $success-dark;
+}
+
+.badge-warning {
+  background: rgba($warning, 0.1);
+  color: $warning-dark;
+}
+
+.badge-danger {
+  background: rgba($danger, 0.1);
+  color: $danger-dark;
+}
+
+.badge-info {
+  background: rgba($info, 0.1);
+  color: $info-dark;
+}
+
+.badge-pill {
+  border-radius: $border-radius-full;
+  padding-left: spacer(3);
+  padding-right: spacer(3);
+}
+
+// =====================================================
+// ORIGINAL ABP STYLES (Keep for now)
+// =====================================================
+
+:root {
+  --lpx-theme-light-bg: url('assets/images/login/login-bg-img-light.svg');
+  --lpx-theme-dim-bg: url('assets/images/login/login-bg-img-dim.svg');
+  --lpx-theme-dark-bg: url('assets/images/login/login-bg-img-dark.svg');
+
+  --lpx-logo-icon: url('assets/images/logo/icon-lite.svg');
+  --lpx-logo-url: var(--lpx-logo-icon);
+  --lpx-logo: var(--lpx-logo-icon);
+
+
+  .abp-logo {
+    background-repeat: no-repeat;
+  }
+
+  .abp-support {
+    width: 178px;
+    height: 30px;
+    background-image: url('assets/images/getting-started/abp-support.svg');
+  }
+
+  .abp-community {
+    width: 215px;
+    height: 30px;
+    background-image: url('assets/images/getting-started/abp-community.svg');
+  }
+
+  .abp-blog {
+    width: 142px;
+    height: 30px;
+    background-image: url('assets/images/getting-started/abp-blog.svg');
+  }
+
+  .logo-x {
+    width: 20px;
+    height: 20px;
+    background-image: url('assets/images/getting-started/x.svg');
+  }
+}
+
+/* Custom Footer Overrides for ShowZen */
+.lpx-footer-container {
+  .lpx-footer-copyright {
+    visibility: hidden;
+    position: relative;
+    height: 1.5rem;
+
+    &::before {
+      content: '© 2025 ShowZen. Desenvolvido com ❤️ pela Sapienza';
+      visibility: visible;
+      position: absolute;
+      left: 0;
+      font-size: 0.875rem;
+      color: var(--lpx-text-secondary, #6c757d);
+    }
+
+    * {
+      display: none !important;
+    }
+  }
+
+  .lpx-footer-links {
+    a {
+      visibility: hidden;
+      position: relative;
+
+      &:nth-child(1)::before {
+        content: 'Sobre';
+        visibility: visible;
+      }
+
+      &:nth-child(2)::before {
+        content: 'Privacidade';
+        visibility: visible;
+      }
+
+      &:nth-child(3)::before {
+        content: 'Contato';
+        visibility: visible;
+      }
+
+      &::before {
+        font-size: 0.875rem;
+        color: var(--lpx-text-secondary, #6c757d);
+      }
+
+      &:hover::before {
+        color: var(--lpx-primary, #5b6fe3);
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// ========================================
+// PREMIUM FOOTER - ShowZen/Sapienza
+// ========================================
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+}
+
+// ========================================
+// HIDE DEFAULT ABP THEME FOOTER
+// ========================================
+// Basic Theme has a default footer that conflicts with our premium footer
+// Hide ONLY the ABP default footer, not our premium one
+
+// Hide all footers EXCEPT our premium footer
+footer:not(.premium-footer) {
+  display: none !important;
+}
+
+// Ensure our premium footer is visible
+app-premium-footer {
+  display: block;
+
+  footer.premium-footer {
+    display: block !important;
+  }
+}
+
+// Ensure proper flex layout for sticky footer
+html,
+body {
+  height: 100%;
+  min-height: 100vh;
+}
+
+body {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+app-root {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+  min-height: 100vh;
+}
+
+// Make sure dynamic layout takes full height
+abp-dynamic-layout {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 !important;
+}
+
+// ========================================
+// HIDE DEFAULT ABP THEME NAVBAR & SIDEBAR
+// ========================================
+// ONLY hide ABP-specific elements, NOT our premium navbar!
+// Use ONLY lpx- and abp- prefixed selectors to be safe
+
+// Hide ABP Basic Theme navbar (lpx prefix = LeptonX/Basic Theme specific)
+.lpx-header-container,
+.lpx-header,
+.lpx-header-wrapper,
+.lpx-navbar,
+.lpx-navbar-container,
+.lpx-topbar,
+.lpx-topbar-container,
+abp-navbar,
+.abp-navbar,
+// Hide the dark navbar that appears
+.navbar.navbar-dark,
+.navbar.bg-dark,
+nav.navbar-dark,
+nav.bg-dark,
+.bg-dark.navbar-expand,
+.navbar-expand.navbar-dark {
+  display: none !important;
+}
+
+// Hide ABP Basic Theme sidebar/menu (ONLY lpx- and abp- prefixed classes)
+.lpx-sidebar,
+.lpx-sidebar-container,
+.lpx-sidebar-wrapper,
+.lpx-sidebar-header,
+.lpx-sidebar-content,
+.lpx-menu,
+.lpx-menu-container,
+abp-sidebar,
+.abp-sidebar,
+abp-routes,
+.abp-routes,
+lpx-routes,
+.lpx-routes {
+  display: none !important;
+}
+
+// Hide ABP menu toggle buttons (ONLY lpx- and abp- prefixed)
+.lpx-navbar-toggler,
+.lpx-sidebar-toggle,
+.lpx-menu-toggle,
+button.lpx-toggler {
+  display: none !important;
+}
+
+// Ensure our premium navbar is ALWAYS visible and functional
+app-navbar {
+  display: block !important;
+  position: relative !important;
+  z-index: 1030 !important;
+
+  .navbar {
+    display: flex !important;
+  }
+
+  // Make sure our mobile sidebar is visible
+  .mobile-sidebar {
+    display: flex !important;
+  }
+
+  .mobile-overlay {
+    display: block !important;
+  }
+}
+
+// Adjust main content to take full width (no ABP sidebar)
+.lpx-main-container,
+.lpx-content,
+.lpx-content-wrapper {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+// Remove ABP backdrop/overlay
+.lpx-backdrop,
+.lpx-overlay,
+.offcanvas-backdrop.lpx-backdrop {
+  display: none !important;
+}
+
+// =====================================================
+// FULLCALENDAR GLOBAL OVERRIDES
+// =====================================================
+// Force remove underlines from all calendar links
+.fc a {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.fc .fc-col-header-cell-cushion,
+.fc .fc-daygrid-day-number,
+.fc-col-header-cell a,
+.fc-daygrid-day-top a {
+  text-decoration: none !important;
+}
+
+// Clean header styling
+.fc-col-header-cell {
+  background: #f9f9f9 !important;
+
+  a {
+    text-decoration: none !important;
+    color: #7e8299 !important;
+    font-weight: 600 !important;
+  }
+}
+
+// Day numbers - no underline
+.fc-daygrid-day-number {
+  text-decoration: none !important;
+  color: #3f4254 !important;
+}

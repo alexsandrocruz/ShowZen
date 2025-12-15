@@ -1,0 +1,87 @@
+<div class="events-grid-container table-responsive">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th scope="col">Data/Hora</th>
+                <th scope="col">Evento</th>
+                <th scope="col">Artista</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Local</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="text-end">Cachê</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let event of events" (click)="onEventClick(event)" class="cursor-pointer"
+                [ngClass]="{'event-conflict-row': event.hasConflict}">
+                <!-- Date/Time -->
+                <td>
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold">{{ event.startDateTime | date:'dd/MM/yyyy' }}</span>
+                        <span class="text-muted small">
+                            {{ event.startDateTime | date:'HH:mm' }} - {{ event.endDateTime | date:'HH:mm' }}
+                        </span>
+                    </div>
+                </td>
+
+                <!-- Event Title/Type -->
+                <td>
+                    <div class="d-flex flex-column">
+                        <span class="fw-medium">{{ event.title }}</span>
+                        <span class="text-muted small">{{ getTypeLabel(event.type) }}</span>
+                    </div>
+                </td>
+
+                <!-- Artist -->
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="avatar-circle me-2 bg-light text-primary">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <span>{{ event.artistName }}</span>
+                    </div>
+                </td>
+
+                <!-- Client -->
+                <td>
+                    <span>{{ event.clientName }}</span>
+                </td>
+
+                <!-- Location -->
+                <td>
+                    <span *ngIf="event.locationName"><i class="fa fa-map-marker-alt text-danger me-1"></i> {{
+                        event.locationName }}</span>
+                    <span *ngIf="!event.locationName" class="text-muted fst-italic">A definir</span>
+                </td>
+
+                <!-- Status -->
+                <td>
+                    <span class="badge" [ngClass]="getStatusClass(event.status)">
+                        {{ getStatusLabel(event.status) }}
+                    </span>
+                    <span *ngIf="event.hasConflict" class="badge bg-danger ms-1" title="Conflito de Agenda!">
+                        <i class="fa fa-exclamation-triangle"></i>
+                    </span>
+                </td>
+
+                <!-- Fee -->
+                <td class="text-end">
+                    <span *ngIf="event.fee" class="fw-medium text-success">
+                        {{ event.fee | currency:'BRL':'symbol':'1.2-2' }}
+                    </span>
+                    <span *ngIf="!event.fee" class="text-muted">-</span>
+                </td>
+            </tr>
+
+            <!-- Empty State -->
+            <tr *ngIf="events.length === 0">
+                <td colspan="7" class="text-center py-5">
+                    <div class="text-muted">
+                        <i class="fa fa-calendar-times fs-2 mb-3"></i>
+                        <p class="mb-0">Nenhum evento encontrado para os filtros selecionados.</p>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

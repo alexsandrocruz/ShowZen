@@ -1,0 +1,21 @@
+{
+  "production": true,
+  "application": {
+    "baseUrl":"http://localhost:4200",
+    "name": "ShowZen",
+    "logoUrl": ""
+  },
+  "oAuthConfig": {
+    "issuer": "https://localhost:44353",
+    "redirectUri": "https://localhost:44353",
+    "clientId": "ShowZen_App",
+    "responseType": "code",
+    "scope": "offline_access openid profile email phone ShowZen"
+  },
+  "apis": {
+    "default": {
+      "url": "https://localhost:44353",
+      "rootNamespace": "ShowZen"
+    }
+  }
+}

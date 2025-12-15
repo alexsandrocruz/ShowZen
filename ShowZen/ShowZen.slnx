@@ -1,0 +1,8 @@
+<Solution>
+    <Configurations>
+        <Platform Name="Any CPU" />
+    </Configurations>
+
+    <Project Path="ShowZen\ShowZen.csproj" />
+    <Project Path="ShowZen.Tests\ShowZen.Tests.csproj" />
+</Solution>

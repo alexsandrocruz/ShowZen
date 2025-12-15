@@ -1,0 +1,83 @@
+<div class="filters-container">
+    <div class="d-flex align-items-center flex-wrap gap-2">
+
+        <!-- Period Dropdown -->
+        <div class="dropdown custom-dropdown" [class.show]="activeDropdown === 'period'">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
+                (click)="toggleDropdown('period', $event)">
+                📅 {{ getPeriodLabel() }}
+            </button>
+            <ul class="dropdown-menu" [class.show]="activeDropdown === 'period'">
+                <li *ngFor="let preset of periodPresets">
+                    <a class="dropdown-item" href="javascript:void(0)"
+                        [class.active]="filterForm.value.periodPreset === preset.days"
+                        (click)="selectPeriod(preset.days)">
+                        {{ preset.label }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Artist Dropdown -->
+        <div class="dropdown custom-dropdown" [class.show]="activeDropdown === 'artist'">
+            <button class="btn btn-outline-info dropdown-toggle" type="button"
+                (click)="toggleDropdown('artist', $event)">
+                🎤 {{ getLabel('selectedArtists', artists, 'id', 'name', 'Artistas') }}
+            </button>
+            <div class="dropdown-menu p-2" [class.show]="activeDropdown === 'artist'" (click)="stopProp($event)"
+                style="min-width: 250px;">
+                <div *ngFor="let artist of artists" class="form-check">
+                    <input class="form-check-input" type="checkbox" [id]="'artist-' + artist.id"
+                        [checked]="isSelected('selectedArtists', artist.id)"
+                        (change)="toggleSelection('selectedArtists', artist.id)">
+                    <label class="form-check-label w-100" [for]="'artist-' + artist.id">
+                        {{ artist.name }}
+                    </label>
+                </div>
+                <div *ngIf="artists.length === 0" class="text-muted small p-2">Nenhum artista encontrado.</div>
+            </div>
+        </div>
+
+        <!-- Status Dropdown -->
+        <div class="dropdown custom-dropdown" [class.show]="activeDropdown === 'status'">
+            <button class="btn btn-outline-success dropdown-toggle" type="button"
+                (click)="toggleDropdown('status', $event)">
+                📊 {{ getLabel('selectedStatuses', eventStatuses, 'value', 'label', 'Status') }}
+            </button>
+            <div class="dropdown-menu p-2" [class.show]="activeDropdown === 'status'" (click)="stopProp($event)">
+                <div *ngFor="let status of eventStatuses" class="form-check mb-1">
+                    <input class="form-check-input" type="checkbox" [id]="'status-' + status.value"
+                        [checked]="isSelected('selectedStatuses', status.value)"
+                        (change)="toggleSelection('selectedStatuses', status.value)">
+                    <label class="form-check-label w-100 d-flex align-items-center" [for]="'status-' + status.value">
+                        <span class="status-dot me-2" [ngClass]="status.color"></span>
+                        {{ status.label }}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Type Dropdown -->
+        <div class="dropdown custom-dropdown" [class.show]="activeDropdown === 'type'">
+            <button class="btn btn-outline-warning dropdown-toggle text-dark" type="button"
+                (click)="toggleDropdown('type', $event)">
+                🏷️ {{ getLabel('selectedTypes', eventTypes, 'value', 'label', 'Tipos') }}
+            </button>
+            <div class="dropdown-menu p-2" [class.show]="activeDropdown === 'type'" (click)="stopProp($event)">
+                <div *ngFor="let type of eventTypes" class="form-check mb-1">
+                    <input class="form-check-input" type="checkbox" [id]="'type-' + type.value"
+                        [checked]="isSelected('selectedTypes', type.value)"
+                        (change)="toggleSelection('selectedTypes', type.value)">
+                    <label class="form-check-label w-100" [for]="'type-' + type.value">
+                        {{ type.icon }} {{ type.label }}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clear Button -->
+        <button type="button" class="btn btn-link text-decoration-none ms-auto text-secondary" (click)="clearFilters()">
+            <i class="fa fa-undo"></i> Limpar
+        </button>
+    </div>
+</div>

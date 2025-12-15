@@ -1,0 +1,129 @@
+.premium-footer {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    color: #e5e7eb;
+    padding: 2rem 0;
+    margin-top: auto; // Push to bottom in flex container
+    box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+    position: relative; // Changed from fixed to relative
+    width: 100%;
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+
+    .footer-left {
+        flex: 1;
+    }
+
+    .copyright {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #9ca3af;
+
+        .heart {
+            color: #ef4444;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        .sapienza-link {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+
+            &::after {
+                content: '';
+                position: absolute;
+                width: 0;
+                height: 2px;
+                bottom: -2px;
+                left: 0;
+                background: linear-gradient(90deg, #60a5fa, #a78bfa);
+                transition: width 0.3s ease;
+            }
+
+            &:hover {
+                color: #93c5fd;
+
+                &::after {
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    .footer-right {
+        display: flex;
+        align-items: center;
+    }
+
+    .footer-links {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        .separator {
+            color: #4b5563;
+            font-size: 0.75rem;
+        }
+
+        .footer-link {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+
+            &:hover {
+                color: #e5e7eb;
+                background: rgba(255, 255, 255, 0.05);
+            }
+        }
+    }
+
+    // Responsive
+    @media (max-width: 768px) {
+        .footer-content {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .footer-left,
+        .footer-right {
+            width: 100%;
+        }
+    }
+}
+
+@keyframes heartbeat {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1.1);
+    }
+
+    50% {
+        transform: scale(1);
+    }
+
+    75% {
+        transform: scale(1.05);
+    }
+}

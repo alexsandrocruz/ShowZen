@@ -1,0 +1,175 @@
+<div class="page-container">
+    <!-- Premium Header -->
+    <div class="page-header">
+        <div class="page-header-content">
+            <div class="page-title-wrapper">
+                <i class="fas fa-briefcase page-icon"></i>
+                <div>
+                    <h2 class="page-title">{{ '::Clients' | abpLocalization }}</h2>
+                    <p class="page-subtitle">{{ clients.totalCount }} {{ '::Clients' | abpLocalization }}</p>
+                </div>
+            </div>
+            <button *abpPermission="'ShowZen.Clients.Create'" class="btn btn-primary" type="button"
+                (click)="createClient()">
+                <i class="fa fa-plus me-2"></i>
+                <span>{{ '::NewClient' | abpLocalization }}</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <form [formGroup]="filterForm" class="w-100">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="form-control search-input" formControlName="filter"
+                        [placeholder]="'::SearchClients' | abpLocalization">
+                </div>
+            </form>
+        </div>
+        <div class="card-body">
+            <ngx-datatable [rows]="clients.items" [count]="clients.totalCount" [list]="list" default>
+                <ngx-datatable-column [name]="'::ClientName' | abpLocalization" prop="name" [maxWidth]="300">
+                </ngx-datatable-column>
+                <ngx-datatable-column [name]="'::Email' | abpLocalization" prop="email" [minWidth]="200">
+                </ngx-datatable-column>
+                <ngx-datatable-column [name]="'::Phone' | abpLocalization" prop="phone" [maxWidth]="150">
+                </ngx-datatable-column>
+                <ngx-datatable-column [name]="'::LeadStatus' | abpLocalization" prop="leadStatus" [maxWidth]="160">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span class="badge" [ngClass]="getLeadStatusClass(row.leadStatus)">
+                            {{ '::LeadStatus:' + getLeadStatusName(row.leadStatus) | abpLocalization }}
+                        </span>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [name]="'::Actions' | abpLocalization" [maxWidth]="140" [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="action-buttons">
+                            <button *abpPermission="'ShowZen.Clients.Edit'" class="btn btn-ghost btn-sm action-btn"
+                                (click)="editClient(row.id)" title="{{ '::Edit' | abpLocalization }}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <div ngbDropdown container="body" class="d-inline-block">
+                                <button class="btn btn-ghost btn-sm action-btn" ngbDropdownToggle
+                                    title="{{ '::UpdateLeadStatus' | abpLocalization }}">
+                                    <i class="fas fa-tag"></i>
+                                </button>
+                                <div ngbDropdownMenu>
+                                    <h6 class="dropdown-header">{{ '::UpdateLeadStatus' | abpLocalization }}</h6>
+                                    <ng-container *abpPermission="'ShowZen.Clients.Edit'">
+                                        <button ngbDropdownItem *ngFor="let status of leadStatuses"
+                                            (click)="updateLeadStatus(row.id, status.value)">
+                                            <span class="badge me-2" [ngClass]="getLeadStatusClass(status.value)">{{
+                                                '::LeadStatus:' + status.label | abpLocalization
+                                                }}</span>
+                                        </button>
+                                    </ng-container>
+                                </div>
+                            </div>
+                            <button *abpPermission="'ShowZen.Clients.Delete'"
+                                class="btn btn-ghost btn-sm action-btn text-danger" (click)="delete(row.id)"
+                                title="{{ '::Delete' | abpLocalization }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+    </div>
+
+    <abp-modal [(visible)]="isModalOpen">
+        <ng-template #abpHeader>
+            <h3>{{ (selectedClient.id ? '::EditClient' : '::NewClient') | abpLocalization }}</h3>
+        </ng-template>
+
+        <ng-template #abpBody>
+            <form [formGroup]="form" (ngSubmit)="save()">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="client-name" class="form-label">{{ '::ClientName' | abpLocalization }} *</label>
+                        <input type="text" id="client-name" class="form-control" formControlName="name" autofocus />
+                        <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
+                            class="invalid-feedback d-block">
+                            <span *ngIf="form.get('name')?.errors?.['required']">{{ '::ThisFieldIsRequired' |
+                                abpLocalization }}</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="client-type" class="form-label">{{ '::ClientType' | abpLocalization }} *</label>
+                        <select id="client-type" class="form-select" formControlName="type">
+                            <option [ngValue]="null">{{ '::PleaseSelect' | abpLocalization }}</option>
+                            <option *ngFor="let type of clientTypes" [ngValue]="type.value">
+                                {{ '::ClientType:' + type.label | abpLocalization }}
+                            </option>
+                        </select>
+                        <div *ngIf="form.get('type')?.invalid && form.get('type')?.touched"
+                            class="invalid-feedback d-block">
+                            <span *ngIf="form.get('type')?.errors?.['required']">{{ '::ThisFieldIsRequired' |
+                                abpLocalization }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="client-document" class="form-label">{{ '::Document' | abpLocalization }}</label>
+                        <input type="text" id="client-document" class="form-control" formControlName="document"
+                            placeholder="CPF/CNPJ" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="client-email" class="form-label">{{ '::Email' | abpLocalization }}</label>
+                        <input type="email" id="client-email" class="form-control" formControlName="email" />
+                        <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched"
+                            class="invalid-feedback d-block">
+                            <span *ngIf="form.get('email')?.errors?.['email']">{{ '::InvalidEmailAddress' |
+                                abpLocalization }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="client-phone" class="form-label">{{ '::Phone' | abpLocalization }}</label>
+                        <input type="tel" id="client-phone" class="form-control" formControlName="phone" />
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="client-city" class="form-label">{{ '::City' | abpLocalization }}</label>
+                        <input type="text" id="client-city" class="form-control" formControlName="city" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-9 mb-3">
+                        <label for="client-address" class="form-label">{{ '::Address' | abpLocalization }}</label>
+                        <input type="text" id="client-address" class="form-control" formControlName="address" />
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label for="client-state" class="form-label">{{ '::State' | abpLocalization }}</label>
+                        <input type="text" id="client-state" class="form-control" formControlName="state" maxlength="2"
+                            placeholder="UF" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="client-notes" class="form-label">{{ '::Notes' | abpLocalization }}</label>
+                    <textarea id="client-notes" class="form-control" formControlName="notes" rows="3"></textarea>
+                </div>
+            </form>
+        </ng-template>
+
+        <ng-template #abpFooter>
+            <button type="button" class="btn btn-secondary" (click)="isModalOpen = false">
+                {{ '::Cancel' | abpLocalization }}
+            </button>
+            <button class="btn btn-primary" type="button" [disabled]="form.invalid" (click)="save()">
+                <i class="fa fa-check me-1"></i>
+                {{ '::Save' | abpLocalization }}
+            </button>
+        </ng-template>
+    </abp-modal>
+</div>

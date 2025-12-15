@@ -1,0 +1,120 @@
+@import '../../styles/variables';
+
+// Premium Page Header (same as Clients)
+.page-container {
+    padding: $container-padding-mobile;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    @include media-breakpoint-up('md') {
+        padding: $container-padding-desktop;
+    }
+}
+
+.page-header {
+    margin-bottom: spacer(6);
+}
+
+.page-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: spacer(4);
+    flex-wrap: wrap;
+}
+
+.page-title-wrapper {
+    display: flex;
+    align-items: flex-start; // Align icon to top of text
+    gap: spacer(3);
+    flex: 1;
+    min-width: 0;
+}
+
+.page-icon {
+    font-size: 24px;
+    color: $primary;
+    flex-shrink: 0;
+    margin-top: 4px; // Visually center with the H2 text line
+}
+
+.page-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+
+    @include media-breakpoint-up('md') {
+        font-size: 28px;
+    }
+}
+
+.page-subtitle {
+    margin: 0;
+    font-size: 14px;
+    color: $text-muted;
+}
+
+// Action Buttons (icon-only) - Larger like example
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: spacer(2);
+}
+
+.action-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $border-radius-md;
+    transition: $transition-fast;
+
+    i {
+        font-size: 16px;
+    }
+
+    &:hover {
+        background: $bg-hover;
+    }
+
+    &.text-danger:hover {
+        background: rgba($danger, 0.1);
+        color: $danger;
+    }
+}
+
+// Search input with icon
+.search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-muted;
+    font-size: 16px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.search-input {
+    padding-left: 48px !important; // Space for icon
+    width: 100%;
+}
+
+// Prevent text wrapping in table cells
+::ng-deep {
+
+    .ngx-datatable.fixed-header .datatable-header .datatable-header-inner .datatable-header-cell,
+    .ngx-datatable .datatable-body .datatable-body-row .datatable-body-cell {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

@@ -1,0 +1,136 @@
+<div class="page-container">
+    <!-- Premium Header -->
+    <div class="page-header">
+        <div class="page-header-content">
+            <div class="page-title-wrapper">
+                <i class="fas fa-users page-icon"></i>
+                <div>
+                    <h2 class="page-title">{{ '::Artists' | abpLocalization }}</h2>
+                    <p class="page-subtitle">{{ artists.totalCount }} {{ '::Artists' | abpLocalization }}</p>
+                </div>
+            </div>
+            <button *abpPermission="'ShowZen.Artists.Create'" class="btn btn-primary" type="button"
+                (click)="createArtist()">
+                <i class="fa fa-plus me-2"></i>
+                <span>{{ '::NewArtist' | abpLocalization }}</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <form [formGroup]="filterForm" class="w-100">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="form-control search-input" formControlName="filter"
+                        [placeholder]="'::SearchArtists' | abpLocalization">
+                </div>
+            </form>
+        </div>
+        <div class="card-body">
+            <ngx-datatable [rows]="artists.items" [count]="artists.totalCount" [list]="list" default>
+                <ngx-datatable-column [name]="'::ArtistName' | abpLocalization" prop="name" [minWidth]="200">
+                </ngx-datatable-column>
+                <ngx-datatable-column [name]="'::ArtistType' | abpLocalization" prop="type" [minWidth]="150">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{ '::ArtistType:' + getArtistTypeName(row.type) | abpLocalization }}
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [name]="'::IsActive' | abpLocalization" prop="isActive" [maxWidth]="100">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span class="badge" [class.bg-success]="row.isActive" [class.bg-secondary]="!row.isActive">
+                            {{ (row.isActive ? '::Yes' : '::No') | abpLocalization }}
+                        </span>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [name]="'::Actions' | abpLocalization" [maxWidth]="140" [sortable]="false">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        <div class="action-buttons">
+                            <button *abpPermission="'ShowZen.Artists.Edit'" class="btn btn-ghost btn-sm action-btn"
+                                (click)="editArtist(row.id)" title="{{ '::Edit' | abpLocalization }}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button *abpPermission="'ShowZen.Artists.Delete'"
+                                class="btn btn-ghost btn-sm action-btn text-danger" (click)="delete(row.id)"
+                                title="{{ '::Delete' | abpLocalization }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+    </div>
+
+    <abp-modal [(visible)]="isModalOpen">
+        <ng-template #abpHeader>
+            <h3>{{ (selectedArtist.id ? '::EditArtist' : '::NewArtist') | abpLocalization }}</h3>
+        </ng-template>
+
+        <ng-template #abpBody>
+            <form [formGroup]="form" (ngSubmit)="save()">
+                <div class="mb-3">
+                    <label for="artist-name" class="form-label">{{ '::ArtistName' | abpLocalization }} *</label>
+                    <input type="text" id="artist-name" class="form-control" formControlName="name" autofocus />
+                    <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
+                        class="invalid-feedback d-block">
+                        <span *ngIf="form.get('name')?.errors?.['required']">{{ '::ThisFieldIsRequired' |
+                            abpLocalization }}</span>
+                        <span *ngIf="form.get('name')?.errors?.['maxlength']">{{ '::MaxLengthExceeded' | abpLocalization
+                            }}</span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="artist-type" class="form-label">{{ '::ArtistType' | abpLocalization }} *</label>
+                    <select id="artist-type" class="form-select" formControlName="type">
+                        <option [ngValue]="null">{{ '::PleaseSelect' | abpLocalization }}</option>
+                        <option *ngFor="let type of artistTypes" [ngValue]="type.value">
+                            {{ '::ArtistType:' + type.label | abpLocalization }}
+                        </option>
+                    </select>
+                    <div *ngIf="form.get('type')?.invalid && form.get('type')?.touched"
+                        class="invalid-feedback d-block">
+                        <span *ngIf="form.get('type')?.errors?.['required']">{{ '::ThisFieldIsRequired' |
+                            abpLocalization }}</span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="artist-biography" class="form-label">{{ '::Biography' | abpLocalization }} *</label>
+                    <textarea id="artist-biography" class="form-control" formControlName="biography"
+                        rows="4"></textarea>
+                    <div *ngIf="form.get('biography')?.invalid && form.get('biography')?.touched"
+                        class="invalid-feedback d-block">
+                        <span *ngIf="form.get('biography')?.errors?.['required']">{{ '::ThisFieldIsRequired' |
+                            abpLocalization }}</span>
+                        <span *ngIf="form.get('biography')?.errors?.['maxlength']">{{ '::MaxLengthExceeded' |
+                            abpLocalization }}</span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="artist-instagram" class="form-label">{{ '::InstagramHandle' | abpLocalization }}</label>
+                    <input type="text" id="artist-instagram" class="form-control" formControlName="instagramHandle"
+                        placeholder="@username" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="artist-website" class="form-label">{{ '::WebsiteUrl' | abpLocalization }}</label>
+                    <input type="url" id="artist-website" class="form-control" formControlName="websiteUrl"
+                        placeholder="https://example.com" />
+                </div>
+            </form>
+        </ng-template>
+
+        <ng-template #abpFooter>
+            <button type="button" class="btn btn-secondary" (click)="isModalOpen = false">
+                {{ '::Cancel' | abpLocalization }}
+            </button>
+            <button class="btn btn-primary" type="button" [disabled]="form.invalid" (click)="save()">
+                <i class="fa fa-check me-1"></i>
+                {{ '::Save' | abpLocalization }}
+            </button>
+        </ng-template>
+    </abp-modal>
+</div>

@@ -1,0 +1,270 @@
+@import '../../styles/variables';
+
+// Premium Page Layout
+.dashboard-container {
+    padding: $container-padding-mobile;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    @include media-breakpoint-up('md') {
+        padding: $container-padding-desktop;
+    }
+}
+
+// Premium Header (consistent with other pages)
+.page-header {
+    margin-bottom: spacer(6);
+}
+
+.page-header-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: spacer(3);
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    @include media-breakpoint-up('md') {
+        flex-direction: row;
+        align-items: center;
+        gap: spacer(4);
+    }
+}
+
+.page-title-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: spacer(3);
+    width: 100%;
+
+    @include media-breakpoint-up('md') {
+        flex: 1;
+        min-width: 0;
+        width: auto;
+    }
+}
+
+.page-icon {
+    font-size: 24px;
+    color: $primary;
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+
+.page-title {
+    margin: 0;
+    font-size: 24px;
+    font-weight: $font-weight-bold;
+    color: $text-primary;
+
+    @include media-breakpoint-up('md') {
+        font-size: 28px;
+    }
+}
+
+.page-subtitle {
+    margin: 0;
+    font-size: 14px;
+    color: $text-muted;
+}
+
+// KPI Carousel - Horizontal Scroll on Mobile
+.kpi-carousel-wrapper {
+    margin-bottom: spacer(6);
+
+    // Mobile: horizontal scroll
+    @media (max-width: 767.98px) {
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding-left: 1rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+.kpi-carousel {
+    display: flex;
+    gap: spacer(3);
+
+    // Mobile: horizontal layout with fixed-width cards
+    @media (max-width: 767.98px) {
+        flex-wrap: nowrap;
+        padding-right: 1rem;
+
+        .kpi-card {
+            flex: 0 0 200px; // Fixed width ~1.5 visible
+            min-width: 200px;
+        }
+    }
+
+    // Desktop: 4-column grid
+    @include media-breakpoint-up('md') {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: spacer(4);
+    }
+}
+
+// KPI Cards - Clean Premium Style (matching Schedule Overview)
+.kpi-card {
+    background: white;
+    padding: spacer(4);
+    border-radius: $border-radius-lg;
+    display: flex;
+    align-items: center;
+    gap: spacer(4);
+    box-shadow: $shadow-sm;
+    transition: $transition-base;
+    border: 1px solid $gray-200;
+    position: relative;
+    overflow: hidden;
+
+    // Color indicator bar
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: $shadow-md;
+    }
+
+    @include media-breakpoint-up('md') {
+        padding: spacer(5);
+    }
+
+    .kpi-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: $border-radius-lg;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+
+        @media (max-width: 768px) {
+            width: 48px;
+            height: 48px;
+            font-size: 20px;
+        }
+    }
+
+    .kpi-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .kpi-value {
+        font-size: 1.75rem;
+        font-weight: $font-weight-extrabold;
+        line-height: $line-height-tight;
+        color: $text-primary;
+
+        @media (max-width: 768px) {
+            font-size: 1.5rem;
+        }
+    }
+
+    .kpi-label {
+        font-size: 0.85rem;
+        color: $text-muted;
+        margin-top: spacer(1);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+}
+
+// KPI Card Color Variants
+.kpi-blue {
+    &::before {
+        background: $primary;
+    }
+
+    .kpi-icon {
+        background: rgba($primary, 0.1);
+        color: $primary;
+    }
+}
+
+.kpi-green {
+    &::before {
+        background: $success;
+    }
+
+    .kpi-icon {
+        background: rgba($success, 0.1);
+        color: $success;
+    }
+}
+
+.kpi-purple {
+    &::before {
+        background: #8b5cf6;
+    }
+
+    .kpi-icon {
+        background: rgba(#8b5cf6, 0.1);
+        color: #8b5cf6;
+    }
+}
+
+.kpi-orange {
+    &::before {
+        background: $warning;
+    }
+
+    .kpi-icon {
+        background: rgba($warning, 0.1);
+        color: $warning;
+    }
+}
+
+// Cards Enhancement
+.card {
+    border: 1px solid $gray-200;
+    box-shadow: $shadow-sm;
+
+    .card-header {
+        border-bottom: 1px solid $gray-200;
+        padding: spacer(4);
+
+        h5 {
+            font-weight: 600;
+            color: $text-primary;
+            margin: 0;
+        }
+    }
+
+    .card-body {
+        padding: spacer(4);
+    }
+}
+
+// List Items Enhancement
+.list-group-item {
+    transition: $transition-fast;
+    border-color: $gray-200;
+    padding: spacer(4);
+
+    &:hover {
+        background-color: $bg-hover;
+    }
+}
+
+// Chart Container
+.chart-container {
+    position: relative;
+    width: 100%;
+}

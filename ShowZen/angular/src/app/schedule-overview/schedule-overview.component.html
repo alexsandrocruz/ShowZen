@@ -1,0 +1,101 @@
+<div class="page-container">
+  <!-- Premium Header -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <div class="page-title-wrapper">
+        <i class="far fa-calendar-alt page-icon"></i>
+        <div>
+          <h2 class="page-title">{{ '::ScheduleOverview' | abpLocalization }}</h2>
+          <p class="page-subtitle">{{ scheduleData?.events?.length || 0 }} {{ '::Events' | abpLocalization }}</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- View Switcher -->
+        <div class="btn-group me-3" role="group">
+          <button type="button" class="btn btn-outline-secondary" [class.active]="currentView === ViewMode.List"
+            (click)="onViewModeChange(ViewMode.List)" title="Lista">
+            <i class="fa fa-list"></i>
+          </button>
+          <button type="button" class="btn btn-outline-secondary" [class.active]="currentView === ViewMode.Month"
+            (click)="onViewModeChange(ViewMode.Month)" title="Mês">
+            <i class="fa fa-calendar-alt"></i>
+          </button>
+          <button type="button" class="btn btn-outline-secondary" [class.active]="currentView === ViewMode.Week"
+            (click)="onViewModeChange(ViewMode.Week)" title="Semana">
+            <i class="fa fa-calendar-week"></i>
+          </button>
+        </div>
+
+        <button *abpPermission="'ShowZen.Events.Create'" class="btn btn-primary" (click)="onNewEvent()">
+          <i class="fa fa-plus me-2"></i> {{ '::NewEvent' | abpLocalization }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Summary - Horizontal Scroll on Mobile -->
+  <div class="kpi-carousel-wrapper" *ngIf="scheduleData?.statistics">
+    <div class="kpi-carousel">
+      <div class="kpi-card kpi-success">
+        <span class="stat-label">{{ '::Confirmed' | abpLocalization }}</span>
+        <span class="stat-value">{{ scheduleData.statistics.confirmedEvents }}</span>
+      </div>
+      <div class="kpi-card kpi-info">
+        <span class="stat-label">{{ '::Proposals' | abpLocalization }}</span>
+        <span class="stat-value">{{ scheduleData.statistics.proposalEvents }}</span>
+      </div>
+      <div class="kpi-card kpi-warning">
+        <span class="stat-label">{{ '::Leads' | abpLocalization }}</span>
+        <span class="stat-value">{{ scheduleData.statistics.leadEvents }}</span>
+      </div>
+      <div class="kpi-card kpi-primary">
+        <span class="stat-label">{{ '::ConfirmedRevenue' | abpLocalization }}</span>
+        <span class="stat-value">R$ {{ scheduleData.statistics.totalConfirmedRevenue | number:'1.2-2' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters Card -->
+  <div class="card mb-4">
+    <div class="card-body p-3">
+      <app-schedule-filters [artists]="artists" [filters]="filters" (filtersChange)="onFiltersChange($event)">
+      </app-schedule-filters>
+    </div>
+  </div>
+
+  <!-- Calendar/List View Card -->
+  <div class="card">
+    <div class="card-body p-0">
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>{{ '::Loading' | abpLocalization }}...</p>
+      </div>
+
+      <!-- Calendar View (Month) -->
+      <div class="calendar-wrapper" *ngIf="!loading && currentView === ViewMode.Month">
+        <app-calendar-month [events]="scheduleData?.events || []"
+          [dailyAvailability]="scheduleData?.dailyAvailability || {}" (eventClick)="onEventClick($event)"
+          (dateClick)="onDateClick($event)">
+        </app-calendar-month>
+      </div>
+
+      <!-- Calendar View (Week) -->
+      <div class="calendar-wrapper" *ngIf="!loading && currentView === ViewMode.Week">
+        <app-calendar-week [events]="scheduleData?.events || []" (eventClick)="onEventClick($event)">
+        </app-calendar-week>
+      </div>
+
+      <!-- List View -->
+      <div class="calendar-wrapper" *ngIf="!loading && currentView === ViewMode.List">
+        <app-events-grid [events]="scheduleData?.events || []" (eventClick)="onEventClick($event)"></app-events-grid>
+      </div>
+    </div>
+  </div>
+
+  <app-conflict-alert [conflictsCount]="scheduleData?.conflictsCount || 0"></app-conflict-alert>
+
+  <!-- Event Quick Modal -->
+  <app-event-quick-modal (onSave)="onEventSaved()"></app-event-quick-modal>
+</div>

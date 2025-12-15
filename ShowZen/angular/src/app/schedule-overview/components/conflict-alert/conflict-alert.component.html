@@ -1,0 +1,10 @@
+<div class="conflict-alert-container" *ngIf="conflictsCount > 0">
+    <div class="alert alert-danger d-flex align-items-center mb-0" role="alert">
+        <i class="fa fa-exclamation-triangle me-2"></i>
+        <div>
+            <strong>Atenção:</strong> Existem <strong>{{ conflictsCount }}</strong> agendamentos com conflito de
+            horário/recurso.
+            Verifique os itens destacados em vermelho no calendário.
+        </div>
+    </div>
+</div>

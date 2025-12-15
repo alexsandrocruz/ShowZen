@@ -1,0 +1,153 @@
+<nav class="navbar" [class.scrolled]="isScrolled">
+    <div class="navbar-container">
+        <!-- Logo -->
+        <div class="navbar-brand">
+            <a routerLink="/" class="logo-link" (click)="closeMobileMenu()">
+                <span class="logo-icon">🎭</span>
+                <span class="logo-text">ShowZen</span>
+            </a>
+        </div>
+
+        <!-- Desktop Menu (hidden on mobile) -->
+        <div class="navbar-menu desktop-only">
+            <a routerLink="/schedule-overview" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-calendar me-2"></i>
+                <span>Agenda</span>
+            </a>
+            <a routerLink="/crm" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-columns me-2"></i>
+                <span>Pipeline</span>
+            </a>
+            <a routerLink="/clients" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-briefcase me-2"></i>
+                <span>Clientes</span>
+            </a>
+            <a routerLink="/artists" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-users me-2"></i>
+                <span>Artistas</span>
+            </a>
+            <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-tachometer-alt me-2"></i>
+                <span>Dashboard</span>
+            </a>
+        </div>
+
+        <!-- Actions (Desktop) -->
+        <div class="navbar-actions desktop-only">
+            <!-- Language Selector -->
+            <div class="language-selector">
+                <button class="lang-btn" (click)="toggleLanguageDropdown()" aria-label="Select language">
+                    <span class="flag">{{ currentLanguage.flagIcon }}</span>
+                    <span class="lang-name">{{ currentLanguage.displayName }}</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="lang-dropdown" *ngIf="isLanguageDropdownOpen">
+                    <button *ngFor="let lang of languages" class="lang-option"
+                        (click)="changeLanguage(lang.cultureName)">
+                        <span class="flag">{{ lang.flagIcon }}</span>
+                        <span>{{ lang.displayName }}</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- User Profile or Login -->
+            <div class="navbar-user" *ngIf="isAuthenticated">
+                <div class="user-avatar">
+                    {{ (currentUser?.userName || 'U')[0].toUpperCase() }}
+                </div>
+                <span class="user-name">{{ currentUser?.userName }}</span>
+                <button class="logout-btn" (click)="logout()" title="Sair">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+            <button class="login-btn" *ngIf="!isAuthenticated" (click)="login()">
+                <i class="fas fa-sign-in-alt me-2"></i>
+                <span>Login</span>
+            </button>
+        </div>
+
+        <!-- Mobile Hamburger Button -->
+        <button class="hamburger mobile-only" [class.active]="isMobileMenuOpen" (click)="toggleMobileMenu()"
+            aria-label="Toggle menu">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Sidebar Drawer -->
+<div class="mobile-sidebar" [class.open]="isMobileMenuOpen">
+    <div class="sidebar-header">
+        <span class="logo-text">ShowZen</span>
+        <button class="close-btn" (click)="closeMobileMenu()" aria-label="Close menu">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <nav class="sidebar-menu">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="menu-item"
+            (click)="closeMobileMenu()">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a routerLink="/schedule-overview" routerLinkActive="active" class="menu-item" (click)="closeMobileMenu()">
+            <i class="fas fa-calendar"></i>
+            <span>Agenda</span>
+        </a>
+        <a routerLink="/crm" routerLinkActive="active" class="menu-item" (click)="closeMobileMenu()">
+            <i class="fas fa-columns"></i>
+            <span>Pipeline</span>
+        </a>
+        <a routerLink="/clients" routerLinkActive="active" class="menu-item" (click)="closeMobileMenu()">
+            <i class="fas fa-briefcase"></i>
+            <span>Clientes</span>
+        </a>
+        <a routerLink="/artists" routerLinkActive="active" class="menu-item" (click)="closeMobileMenu()">
+            <i class="fas fa-users"></i>
+            <span>Artistas</span>
+        </a>
+        <a routerLink="/dashboard" routerLinkActive="active" class="menu-item" (click)="closeMobileMenu()">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </nav>
+
+    <!-- Mobile Sidebar Footer -->
+    <div class="sidebar-footer">
+        <!-- User Profile (if authenticated) -->
+        <div class="user-profile" *ngIf="isAuthenticated">
+            <div class="user-avatar">
+                {{ (currentUser?.userName || 'U')[0].toUpperCase() }}
+            </div>
+            <div class="user-info">
+                <div class="user-name">{{ currentUser?.userName }}</div>
+                <div class="user-email caption">{{ currentUser?.email }}</div>
+            </div>
+        </div>
+
+        <!-- Language Selector (Mobile) -->
+        <div class="mobile-lang-selector">
+            <div class="lang-label caption">Idioma</div>
+            <button *ngFor="let lang of languages" class="lang-option"
+                [class.active]="lang.cultureName === currentLanguage.cultureName"
+                (click)="changeLanguage(lang.cultureName)">
+                <span class="flag">{{ lang.flagIcon }}</span>
+                <span>{{ lang.displayName }}</span>
+            </button>
+        </div>
+
+        <!-- Login/Logout Button (Mobile) -->
+        <button class="mobile-auth-btn" *ngIf="isAuthenticated" (click)="logout(); closeMobileMenu()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Sair</span>
+        </button>
+        <button class="mobile-auth-btn primary" *ngIf="!isAuthenticated" (click)="login(); closeMobileMenu()">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>Login</span>
+        </button>
+    </div>
+</div>
+
+<!-- Overlay (shown when mobile menu is open) -->
+<div class="mobile-overlay" [class.visible]="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
