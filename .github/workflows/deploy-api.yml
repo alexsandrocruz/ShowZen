@@ -35,7 +35,7 @@ jobs:
         run: |
           cp ShowZen/etc/deploy/docker-compose.prod.yml ./publish/docker-compose.yml
           cp ShowZen/etc/deploy/nginx.conf ./publish/nginx.conf
-          cp ShowZen/ShowZen/openiddict.pfx ./publish/openiddict.pfx
+          cp ShowZen/ShowZen/ShowZen/openiddict.pfx ./publish/openiddict.pfx
 
 
       - name: Copy files to server
