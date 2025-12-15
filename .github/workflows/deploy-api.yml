@@ -28,6 +28,9 @@ jobs:
       - name: Build
         run: dotnet build ShowZen/ShowZen/ShowZen.csproj --configuration Release --no-restore
 
+      - name: Install ABP CLI
+        run: dotnet tool install -g Volo.Abp.Cli
+
       - name: Install ABP Libraries
         working-directory: ShowZen/ShowZen
         run: abp install-libs
