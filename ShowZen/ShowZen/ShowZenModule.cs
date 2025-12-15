@@ -171,6 +171,12 @@ public class ShowZenModule : AbpModule
             context.Services.Replace(ServiceDescriptor.Singleton<IEmailSender, NullEmailSender>());
         }
 
+        // Disable client-side library checking since frontend is Angular (separate)
+        Configure<AbpMvcLibsOptions>(options =>
+        {
+            options.CheckLibs = false;
+        });
+
         ConfigureAuthentication(context);
         ConfigureBundles();
         ConfigureMultiTenancy();

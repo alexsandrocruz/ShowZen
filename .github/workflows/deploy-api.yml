@@ -28,13 +28,6 @@ jobs:
       - name: Build
         run: dotnet build ShowZen/ShowZen/ShowZen.csproj --configuration Release --no-restore
 
-      - name: Install ABP CLI
-        run: dotnet tool install -g Volo.Abp.Studio.Cli
-
-      - name: Install ABP Libraries
-        working-directory: ShowZen/ShowZen
-        run: abp install-libs
-
       - name: Restore OpenIddict Certificate
         run: |
           mkdir -p ShowZen/ShowZen/ShowZen
