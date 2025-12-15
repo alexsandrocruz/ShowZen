@@ -23,7 +23,13 @@ public static class HealthChecksBuilderExtensions
 
         var healthChecksUiBuilder = services.AddHealthChecksUI(settings =>
         {
-            settings.AddHealthCheckEndpoint("ShowZen Health Status", healthCheckUrl);
+            // HealthChecks UI needs an absolute URL and cannot use 0.0.0.0
+            // Use localhost for local health check monitoring
+            var healthCheckEndpoint = string.IsNullOrEmpty(healthCheckUrl) || healthCheckUrl.StartsWith("/")
+                ? $"http://localhost:5000{healthCheckUrl}"
+                : healthCheckUrl;
+            
+            settings.AddHealthCheckEndpoint("ShowZen Health Status", healthCheckEndpoint);
         });
 
         // Set your HealthCheck UI Storage here
