@@ -30,6 +30,7 @@ jobs:
 
       - name: Restore OpenIddict Certificate
         run: |
+          mkdir -p ShowZen/ShowZen/ShowZen
           echo "${{ secrets.OPENIDDICT_CERTIFICATE }}" | base64 --decode > ShowZen/ShowZen/ShowZen/openiddict.pfx
 
       - name: Publish
