@@ -4,8 +4,8 @@ on:
   push:
     branches: [main, blazor]
     paths:
-      - 'abp/ShowZen/ShowZen/**'
-      - 'abp/ShowZen/etc/deploy/**'
+      - 'ShowZen/ShowZen/**'
+      - 'ShowZen/etc/deploy/**'
       - '.github/workflows/deploy-api.yml'
   workflow_dispatch:
 
@@ -23,18 +23,18 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore abp/ShowZen/ShowZen/ShowZen.csproj
+        run: dotnet restore ShowZen/ShowZen/ShowZen.csproj
 
       - name: Build
-        run: dotnet build abp/ShowZen/ShowZen/ShowZen.csproj --configuration Release --no-restore
+        run: dotnet build ShowZen/ShowZen/ShowZen.csproj --configuration Release --no-restore
 
       - name: Publish
-        run: dotnet publish abp/ShowZen/ShowZen/ShowZen.csproj --configuration Release --no-build -o ./publish
+        run: dotnet publish ShowZen/ShowZen/ShowZen.csproj --configuration Release --no-build -o ./publish
 
       - name: Prepare Config Files
         run: |
-          cp abp/ShowZen/etc/deploy/docker-compose.prod.yml ./publish/docker-compose.yml
-          cp abp/ShowZen/etc/deploy/nginx.conf ./publish/nginx.conf
+          cp ShowZen/etc/deploy/docker-compose.prod.yml ./publish/docker-compose.yml
+          cp ShowZen/etc/deploy/nginx.conf ./publish/nginx.conf
 
       - name: Copy files to server
         uses: appleboy/scp-action@v0.1.7
