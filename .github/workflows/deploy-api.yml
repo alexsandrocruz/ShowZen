@@ -25,6 +25,13 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ShowZen/ShowZen/ShowZen.csproj
 
+      - name: Install ABP CLI
+        run: dotnet tool install -g Volo.Abp.Cli
+
+      - name: Install Libs
+        run: abp install-libs
+        working-directory: ShowZen/ShowZen
+
       - name: Build
         run: dotnet build ShowZen/ShowZen/ShowZen.csproj --configuration Release --no-restore
 
