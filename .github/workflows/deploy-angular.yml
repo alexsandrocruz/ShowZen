@@ -46,7 +46,7 @@ jobs:
               "redirectUri": "https://eventos.zensuite.com.br",
               "clientId": "ShowZen_App",
               "responseType": "code",
-              "scope": "offline_access openid profile email phone"
+              "scope": "offline_access openid profile email phone ShowZen"
             },
             "apis": {
               "default": {
