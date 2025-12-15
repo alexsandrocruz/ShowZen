@@ -19,8 +19,5 @@ export const environment = {
       url: 'https://eventos.zensuite.com.br',
       rootNamespace: 'ShowZen',
     },
-    url: oAuthConfig.issuer,
-    rootNamespace: 'AbpAccountPublic',
   },
-},
 } as Environment;
