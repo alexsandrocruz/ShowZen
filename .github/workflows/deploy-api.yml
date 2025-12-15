@@ -62,7 +62,7 @@ jobs:
           script: |
             # Move config files first
             cp /opt/showzen/deploy-temp/docker-compose.yml /opt/showzen/docker-compose.yml
-            cp /opt/showzen/deploy-temp/nginx.conf /opt/showzen/nginx/nginx.conf
+            cp /opt/showzen/deploy-temp/nginx.conf /opt/showzen/nginx.conf
             
             # Remove configs from temp so we don't move them to api folder
             rm /opt/showzen/deploy-temp/docker-compose.yml
@@ -76,10 +76,13 @@ jobs:
             # Restart Systemd Service
             systemctl restart showzen-api
             
-            # Refresh Infra
+            # Restart Docker Compose
             cd /opt/showzen
-            docker compose up -d --remove-orphans postgres redis nginx
+            docker compose down
+            docker compose up -d --remove-orphans
             
             # Check Health
-            sleep 10
-            curl -f http://localhost:5000/health-status || echo "Check health failed, check logs"
+            sleep 15
+            curl -f https://localhost/health-status -k || echo "HTTPS health check failed"
+            curl -f https://eventos.zensuite.com.br/health-status || echo "External HTTPS health check failed"
+
