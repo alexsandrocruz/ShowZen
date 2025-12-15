@@ -28,6 +28,10 @@ jobs:
       - name: Build
         run: dotnet build ShowZen/ShowZen/ShowZen.csproj --configuration Release --no-restore
 
+      - name: Restore OpenIddict Certificate
+        run: |
+          echo "${{ secrets.OPENIDDICT_CERTIFICATE }}" | base64 --decode > ShowZen/ShowZen/ShowZen/openiddict.pfx
+
       - name: Publish
         run: dotnet publish ShowZen/ShowZen/ShowZen.csproj --configuration Release --no-build -o ./publish
 
