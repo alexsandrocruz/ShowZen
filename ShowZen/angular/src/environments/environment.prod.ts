@@ -1,31 +1,26 @@
 import { Environment } from '@abp/ng.core';
 
-const baseUrl = 'http://65.109.172.148';
-
-const oAuthConfig = {
-  issuer: 'http://65.109.172.148/',
-  redirectUri: baseUrl,
-  clientId: 'ShowZen_App',
-  responseType: 'code',
-  scope: 'offline_access ShowZen',
-  requireHttps: false,
-};
-
 export const environment = {
   production: true,
   application: {
-    baseUrl,
+    baseUrl: 'https://eventos.zensuite.com.br',
     name: 'ShowZen',
+    logoUrl: '',
   },
-  oAuthConfig,
+  oAuthConfig: {
+    issuer: 'https://eventos.zensuite.com.br/',
+    redirectUri: 'https://eventos.zensuite.com.br',
+    clientId: 'ShowZen_App',
+    responseType: 'code',
+    scope: 'offline_access openid profile email phone',
+  },
   apis: {
     default: {
-      url: 'http://65.109.172.148',
+      url: 'https://eventos.zensuite.com.br',
       rootNamespace: 'ShowZen',
     },
-    AbpAccountPublic: {
-      url: oAuthConfig.issuer,
-      rootNamespace: 'AbpAccountPublic',
-    },
+    url: oAuthConfig.issuer,
+    rootNamespace: 'AbpAccountPublic',
   },
+},
 } as Environment;
