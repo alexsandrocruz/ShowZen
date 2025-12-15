@@ -31,6 +31,32 @@ jobs:
         working-directory: ShowZen/angular
         run: npm run build -- --configuration production
 
+      - name: Generate dynamic-env.json
+        run: |
+          cat > ShowZen/angular/dist/ShowZen/browser/dynamic-env.json <<'EOF'
+          {
+            "production": true,
+            "application": {
+              "baseUrl": "https://eventos.zensuite.com.br",
+              "name": "ShowZen",
+              "logoUrl": ""
+            },
+            "oAuthConfig": {
+              "issuer": "https://eventos.zensuite.com.br/",
+              "redirectUri": "https://eventos.zensuite.com.br",
+              "clientId": "ShowZen_App",
+              "responseType": "code",
+              "scope": "offline_access openid profile email phone"
+            },
+            "apis": {
+              "default": {
+                "url": "https://eventos.zensuite.com.br",
+                "rootNamespace": "ShowZen"
+              }
+            }
+          }
+          EOF
+
       - name: Prepare Publish Directory
         run: |
           mkdir -p angular-publish
