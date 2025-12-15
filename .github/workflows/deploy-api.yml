@@ -40,6 +40,7 @@ jobs:
         run: |
           cp ShowZen/etc/deploy/docker-compose.prod.yml ./publish/docker-compose.yml
           cp ShowZen/etc/deploy/nginx.conf ./publish/nginx.conf
+          cp ShowZen/etc/deploy/showzen-api.service ./publish/showzen-api.service
           cp ShowZen/ShowZen/ShowZen/openiddict.pfx ./publish/openiddict.pfx
 
 
@@ -63,17 +64,20 @@ jobs:
             # Move config files first
             cp /opt/showzen/deploy-temp/docker-compose.yml /opt/showzen/docker-compose.yml
             cp /opt/showzen/deploy-temp/nginx.conf /opt/showzen/nginx.conf
+            cp /opt/showzen/deploy-temp/showzen-api.service /etc/systemd/system/showzen-api.service
             
             # Remove configs from temp so we don't move them to api folder
             rm /opt/showzen/deploy-temp/docker-compose.yml
             rm /opt/showzen/deploy-temp/nginx.conf
+            rm /opt/showzen/deploy-temp/showzen-api.service
             
             # Deploy API
             rm -rf /opt/showzen/api/*
             mv /opt/showzen/deploy-temp/* /opt/showzen/api/
             rm -rf /opt/showzen/deploy-temp
             
-            # Restart Systemd Service
+            # Reload systemd and restart API
+            systemctl daemon-reload
             systemctl restart showzen-api
             
             # Restart Docker Compose
