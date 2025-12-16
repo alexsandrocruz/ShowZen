@@ -1,3 +1,4 @@
+// Production environment - Updated 2024-12-16 to include ShowZen scope for API access
 import { Environment } from '@abp/ng.core';
 
 export const environment = {
@@ -12,7 +13,7 @@ export const environment = {
     redirectUri: 'https://eventos.zensuite.com.br',
     clientId: 'ShowZen_App',
     responseType: 'code',
-    scope: 'offline_access openid profile email phone',
+    scope: 'offline_access openid profile email phone ShowZen',
   },
   apis: {
     default: {
