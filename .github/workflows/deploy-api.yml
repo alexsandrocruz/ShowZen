@@ -43,6 +43,10 @@ jobs:
       - name: Publish
         run: dotnet publish ShowZen/ShowZen/ShowZen.csproj --configuration Release --no-build -o ./publish
 
+      - name: Copy wwwroot libs to publish
+        run: |
+          cp -r ShowZen/ShowZen/wwwroot/libs ./publish/wwwroot/libs
+
       - name: Prepare Config Files
         run: |
           cp ShowZen/etc/deploy/docker-compose.prod.yml ./publish/docker-compose.yml
