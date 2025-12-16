@@ -240,6 +240,7 @@ public class EventAppService : ApplicationService, IEventAppService
         return new PagedResultDto<CalendarEventDto>(calendarEvents.Count, calendarEvents);
     }
     
+    [IgnoreAntiforgeryToken]
     public async Task<ScheduleOverviewDto> QueryScheduleOverviewAsync([FromBody] GetScheduleOverviewInput input)
     {
         var queryable = await _eventRepository.GetQueryableAsync();
