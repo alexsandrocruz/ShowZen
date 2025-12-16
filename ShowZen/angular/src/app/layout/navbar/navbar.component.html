@@ -52,10 +52,12 @@
 
             <!-- User Profile or Login -->
             <div class="navbar-user" *ngIf="isAuthenticated">
-                <div class="user-avatar">
-                    {{ (currentUser?.userName || 'U')[0].toUpperCase() }}
-                </div>
-                <span class="user-name">{{ currentUser?.userName }}</span>
+                <a routerLink="/account/manage" class="user-profile-link" title="Gerenciar Perfil">
+                    <div class="user-avatar">
+                        {{ (currentUser?.userName || 'U')[0].toUpperCase() }}
+                    </div>
+                    <span class="user-name">{{ currentUser?.userName }}</span>
+                </a>
                 <button class="logout-btn" (click)="logout()" title="Sair">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
@@ -116,7 +118,7 @@
     <!-- Mobile Sidebar Footer -->
     <div class="sidebar-footer">
         <!-- User Profile (if authenticated) -->
-        <div class="user-profile" *ngIf="isAuthenticated">
+        <a routerLink="/account/manage" class="user-profile" *ngIf="isAuthenticated" (click)="closeMobileMenu()">
             <div class="user-avatar">
                 {{ (currentUser?.userName || 'U')[0].toUpperCase() }}
             </div>
@@ -124,7 +126,7 @@
                 <div class="user-name">{{ currentUser?.userName }}</div>
                 <div class="user-email caption">{{ currentUser?.email }}</div>
             </div>
-        </div>
+        </a>
 
         <!-- Language Selector (Mobile) -->
         <div class="mobile-lang-selector">

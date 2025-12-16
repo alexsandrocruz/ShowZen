@@ -158,6 +158,25 @@
     color: $text-primary;
 }
 
+// User Profile Link (Desktop - clickable)
+.user-profile-link {
+    display: flex;
+    align-items: center;
+    gap: spacer(3);
+    text-decoration: none;
+    padding: spacer(1) spacer(2);
+    border-radius: $border-radius-md;
+    transition: $transition-fast;
+
+    &:hover {
+        background: rgba($primary, 0.08);
+
+        .user-name {
+            color: $primary;
+        }
+    }
+}
+
 // ==========================================
 // HAMBURGER BUTTON (Mobile Only)
 // ==========================================
@@ -314,6 +333,16 @@
     display: flex;
     align-items: center;
     gap: spacer(3);
+    text-decoration: none;
+    cursor: pointer;
+    padding: spacer(3);
+    margin: 0 spacer(2);
+    border-radius: $border-radius-lg;
+    transition: $transition-fast;
+
+    &:hover {
+        background: rgba($primary, 0.08);
+    }
 }
 
 .user-info {
