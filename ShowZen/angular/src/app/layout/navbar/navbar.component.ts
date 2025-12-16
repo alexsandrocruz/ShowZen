@@ -21,6 +21,7 @@ export class NavbarComponent {
     isMobileMenuOpen = false;
     isScrolled = false;
     isLanguageDropdownOpen = false;
+    isAdminDropdownOpen = false;
 
     languages: Language[] = [
         { cultureName: 'pt-BR', displayName: 'Português (Brasil)', flagIcon: '🇧🇷' },
@@ -77,6 +78,15 @@ export class NavbarComponent {
      */
     toggleLanguageDropdown(): void {
         this.isLanguageDropdownOpen = !this.isLanguageDropdownOpen;
+        this.isAdminDropdownOpen = false; // Close admin dropdown when opening language
+    }
+
+    /**
+     * Toggle admin dropdown
+     */
+    toggleAdminDropdown(): void {
+        this.isAdminDropdownOpen = !this.isAdminDropdownOpen;
+        this.isLanguageDropdownOpen = false; // Close language dropdown when opening admin
     }
 
     /**

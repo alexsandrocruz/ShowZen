@@ -58,6 +58,35 @@
                     </div>
                     <span class="user-name">{{ currentUser?.userName }}</span>
                 </a>
+
+                <!-- Admin Menu Dropdown -->
+                <div class="admin-menu">
+                    <button class="admin-btn" (click)="toggleAdminDropdown()" title="Administração">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="admin-dropdown" *ngIf="isAdminDropdownOpen">
+                        <div class="dropdown-header">Administração</div>
+                        <a routerLink="/identity/users" class="dropdown-item" (click)="isAdminDropdownOpen = false">
+                            <i class="fas fa-users"></i>
+                            <span>Usuários</span>
+                        </a>
+                        <a routerLink="/identity/roles" class="dropdown-item" (click)="isAdminDropdownOpen = false">
+                            <i class="fas fa-key"></i>
+                            <span>Perfis</span>
+                        </a>
+                        <a routerLink="/tenant-management/tenants" class="dropdown-item"
+                            (click)="isAdminDropdownOpen = false">
+                            <i class="fas fa-building"></i>
+                            <span>Inquilinos</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a routerLink="/setting-management" class="dropdown-item" (click)="isAdminDropdownOpen = false">
+                            <i class="fas fa-sliders-h"></i>
+                            <span>Configurações</span>
+                        </a>
+                    </div>
+                </div>
+
                 <button class="logout-btn" (click)="logout()" title="Sair">
                     <i class="fas fa-sign-out-alt"></i>
                 </button>
@@ -112,6 +141,30 @@
         <a routerLink="/dashboard" routerLinkActive="active" class="menu-item" (click)="closeMobileMenu()">
             <i class="fas fa-tachometer-alt"></i>
             <span>Dashboard</span>
+        </a>
+
+        <!-- Admin Section (Mobile) -->
+        <div class="menu-section-divider" *ngIf="isAuthenticated"></div>
+        <div class="menu-section-title" *ngIf="isAuthenticated">Administração</div>
+        <a routerLink="/identity/users" routerLinkActive="active" class="menu-item" (click)="closeMobileMenu()"
+            *ngIf="isAuthenticated">
+            <i class="fas fa-users"></i>
+            <span>Usuários</span>
+        </a>
+        <a routerLink="/identity/roles" routerLinkActive="active" class="menu-item" (click)="closeMobileMenu()"
+            *ngIf="isAuthenticated">
+            <i class="fas fa-key"></i>
+            <span>Perfis</span>
+        </a>
+        <a routerLink="/tenant-management/tenants" routerLinkActive="active" class="menu-item"
+            (click)="closeMobileMenu()" *ngIf="isAuthenticated">
+            <i class="fas fa-building"></i>
+            <span>Inquilinos</span>
+        </a>
+        <a routerLink="/setting-management" routerLinkActive="active" class="menu-item" (click)="closeMobileMenu()"
+            *ngIf="isAuthenticated">
+            <i class="fas fa-sliders-h"></i>
+            <span>Configurações</span>
         </a>
     </nav>
 

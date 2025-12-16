@@ -324,6 +324,22 @@
     }
 }
 
+// Mobile Admin Section Styles
+.menu-section-divider {
+    height: 1px;
+    background: $border-color;
+    margin: spacer(4) spacer(5);
+}
+
+.menu-section-title {
+    padding: spacer(2) spacer(5);
+    font-size: 11px;
+    font-weight: $font-weight-bold;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
 .sidebar-footer {
     padding: spacer(5);
     border-top: 1px solid $border-color;
@@ -526,6 +542,98 @@
         background: rgba($danger, 0.1);
         border-color: $danger;
         color: $danger;
+    }
+}
+
+// ==========================================
+// ADMIN MENU DROPDOWN
+// ==========================================
+
+.admin-menu {
+    position: relative;
+}
+
+.admin-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-md;
+    color: $text-secondary;
+    cursor: pointer;
+    transition: $transition-fast;
+
+    i {
+        font-size: 14px;
+        transition: transform 0.3s ease;
+    }
+
+    &:hover {
+        background: rgba($primary, 0.1);
+        border-color: $primary;
+        color: $primary;
+
+        i {
+            transform: rotate(90deg);
+        }
+    }
+}
+
+.admin-dropdown {
+    position: absolute;
+    top: calc(100% + spacer(2));
+    right: 0;
+    min-width: 220px;
+    background: $bg-card;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-lg;
+    padding: spacer(2);
+    z-index: $z-index-dropdown;
+    animation: fadeInDown 0.2s ease-out;
+
+    .dropdown-header {
+        padding: spacer(2) spacer(3);
+        font-size: 12px;
+        font-weight: $font-weight-bold;
+        color: $text-muted;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: spacer(3);
+        padding: spacer(3);
+        color: $text-primary;
+        text-decoration: none;
+        font-size: 14px;
+        border-radius: $border-radius-md;
+        transition: $transition-fast;
+
+        i {
+            width: 18px;
+            font-size: 14px;
+            color: $text-secondary;
+        }
+
+        &:hover {
+            background: rgba($primary, 0.1);
+            color: $primary;
+
+            i {
+                color: $primary;
+            }
+        }
+    }
+
+    .dropdown-divider {
+        height: 1px;
+        background: $border-color;
+        margin: spacer(2) 0;
     }
 }
 
