@@ -42,6 +42,7 @@ using Volo.Abp.Validation.Localization;
 using Volo.Abp.VirtualFileSystem;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.OpenIddict;
+using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 using Volo.Abp.PermissionManagement.OpenIddict;
 using Volo.Abp.Security.Claims;
 using Volo.Abp.EntityFrameworkCore;
@@ -190,6 +191,28 @@ public class ShowZenModule : AbpModule
         ConfigureDataProtection(context);
         ConfigureVirtualFiles(hostingEnvironment);
         ConfigureEfCore(context);
+        ConfigureAntiForgery();
+    }
+
+    private void ConfigureAntiForgery()
+    {
+        Configure<AbpAntiForgeryOptions>(options =>
+        {
+            // Disable automatic antiforgery validation for API endpoints.
+            // This is the recommended approach for SPA applications using OAuth Bearer tokens.
+            // 
+            // SECURITY JUSTIFICATION:
+            // - CSRF protection is needed for cookie-based authentication where the browser
+            //   automatically sends cookies on cross-site requests.
+            // - With OAuth Bearer tokens (stored in localStorage/sessionStorage), tokens are
+            //   sent via JavaScript in the Authorization header, which malicious sites cannot access.
+            // - The OAuth PKCE flow already provides protection against cross-site attacks.
+            // - ABP modules like TenantManagement require this setting when used with Angular SPAs.
+            //
+            // The Account/Login pages (cookie-based) will still have CSRF protection via the
+            // [ValidateAntiForgeryToken] attribute on MVC actions.
+            options.AutoValidate = false;
+        });
     }
     
 
