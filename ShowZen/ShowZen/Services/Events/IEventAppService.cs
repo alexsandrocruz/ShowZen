@@ -19,4 +19,6 @@ public interface IEventAppService : IApplicationService
     Task<PagedResultDto<CalendarEventDto>> GetCalendarEventsAsync(DateTime startDate, DateTime endDate);
     
     Task<ScheduleOverviewDto> QueryScheduleOverviewAsync([FromBody] GetScheduleOverviewInput input);
+    
+    Task<bool> CheckConflictAsync(CheckConflictInput input);
 }

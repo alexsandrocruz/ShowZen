@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { NgbDateAdapter, NgbDateNativeAdapter, NgbDatepickerModule, NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { LocalizationPipe } from '@abp/ng.core';
-import { ModalComponent } from '@abp/ng.theme.shared';
+import { Confirmation, ConfirmationService, ModalComponent } from '@abp/ng.theme.shared';
 import { toLocalISOString } from '../../../shared/utils/date-helpers';
 import { EventService } from '../../../proxy/services/events/event.service';
 import { ArtistService } from '../../../proxy/services/artists/artist.service';
@@ -66,7 +66,8 @@ export class EventQuickModalComponent implements OnInit {
     private eventService: EventService,
     private artistService: ArtistService,
     private clientService: ClientService,
-    private locationService: LocationService
+    private locationService: LocationService,
+    private confirmation: ConfirmationService
   ) { }
 
   ngOnInit(): void {
@@ -183,11 +184,36 @@ export class EventQuickModalComponent implements OnInit {
       clientId: formValue.clientId,
       locationId: formValue.locationId,
       fee: formValue.fee,
+      status: formValue.status != null ? Number(formValue.status) : undefined,
       startDateTime: toLocalISOString(startDateTime),
       endDateTime: toLocalISOString(endDateTime),
       description: formValue.description
     };
 
+    // Check for conflict before saving
+    this.eventService.checkConflict({
+      artistId: formValue.artistId,
+      startDateTime: toLocalISOString(startDateTime),
+      endDateTime: toLocalISOString(endDateTime),
+      excludeEventId: this.editingEventId ?? undefined
+    }).subscribe(hasConflict => {
+      if (hasConflict) {
+        this.confirmation.warn(
+          'Já existe um compromisso agendado para este artista no mesmo horário. Deseja prosseguir mesmo assim?',
+          'Conflito de Agenda Detectado',
+          { yesText: 'Sim, Salvar Mesmo Assim', cancelText: 'Voltar e Alterar' }
+        ).subscribe(status => {
+          if (status === Confirmation.Status.confirm) {
+            this.doSave(input);
+          }
+        });
+      } else {
+        this.doSave(input);
+      }
+    });
+  }
+
+  private doSave(input: any): void {
     if (this.isEditMode && this.editingEventId) {
       this.eventService.update(this.editingEventId, input).subscribe(() => {
         this.onSave.emit();

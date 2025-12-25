@@ -120,13 +120,21 @@
     font-size: 0.875em;
 }
 
-// Conflict row styling - visible red background
+// Conflict row styling - visible red hatched background
 .event-conflict-row {
     position: relative;
-    background-color: #f8d7da !important;
+    background: repeating-linear-gradient(-45deg,
+            #f8d7da,
+            #f8d7da 10px,
+            #f5c6cb 10px,
+            #f5c6cb 20px) !important;
     border-left: 4px solid #dc3545 !important;
 
     &:hover {
-        background-color: #f5c6cb !important;
+        background: repeating-linear-gradient(-45deg,
+                #f5c6cb,
+                #f5c6cb 10px,
+                #f1b0b7 10px,
+                #f1b0b7 20px) !important;
     }
 }

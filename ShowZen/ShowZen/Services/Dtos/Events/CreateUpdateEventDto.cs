@@ -34,6 +34,8 @@ public class CreateUpdateEventDto
     
     public decimal? Fee { get; set; }
     
+    public EventStatus? Status { get; set; }
+    
     [StringLength(2000)]
     public string? Notes { get; set; }
 }

@@ -2,6 +2,7 @@ namespace ShowZen.Entities.Artists;
 
 public enum ArtistType
 {
+    Singer = 0,     // Cantor
     Musician = 1,
     Speaker = 2,
     Teacher = 3,

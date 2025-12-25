@@ -173,6 +173,13 @@ public class EventAppService : ApplicationService, IEventAppService
         );
         
         ObjectMapper.Map(input, eventEntity);
+        
+        // Apply status if provided (ObjectMapper ignores nullable fields that are null)
+        if (input.Status.HasValue)
+        {
+            eventEntity.Status = input.Status.Value;
+        }
+        
         eventEntity.HasConflict = hasConflict; // Mark conflict but don't block
         
         // Store suggested alternative if there's a conflict
@@ -210,6 +217,16 @@ public class EventAppService : ApplicationService, IEventAppService
         var evt = await _eventRepository.GetAsync(id);
         evt.Status = status;
         await _eventRepository.UpdateAsync(evt);
+    }
+    
+    public async Task<bool> CheckConflictAsync(CheckConflictInput input)
+    {
+        return await _conflictDetector.HasConflictAsync(
+            input.ArtistId,
+            input.StartDateTime,
+            input.EndDateTime,
+            input.ExcludeEventId
+        );
     }
 
     public async Task<PagedResultDto<CalendarEventDto>> GetCalendarEventsAsync(DateTime startDate, DateTime endDate)

@@ -25,3 +25,11 @@ public class GetScheduleOverviewInput : PagedAndSortedResultRequestDto
     /// </summary>
     public List<EventType>? Types { get; set; }
 }
+
+public class CheckConflictInput
+{
+    public Guid ArtistId { get; set; }
+    public DateTime StartDateTime { get; set; }
+    public DateTime EndDateTime { get; set; }
+    public Guid? ExcludeEventId { get; set; }
+}
