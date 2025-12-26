@@ -44,7 +44,7 @@ export class ScheduleOverviewComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   // View state
-  currentView: ViewMode = ViewMode.Grid;
+  currentView: ViewMode = ViewMode.List;
   ViewMode = ViewMode;
 
   // Data
