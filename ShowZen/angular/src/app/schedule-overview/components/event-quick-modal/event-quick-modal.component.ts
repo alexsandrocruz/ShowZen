@@ -110,6 +110,7 @@ export class EventQuickModalComponent implements OnInit {
     this.editingEventId = null;
     this.form.reset({
       type: EventType.Show,
+      status: EventStatus.Lead,
       startTime: { hour: 20, minute: 0 },
       duration: 120
     });
