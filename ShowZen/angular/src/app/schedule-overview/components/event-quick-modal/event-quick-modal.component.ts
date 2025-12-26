@@ -196,18 +196,34 @@ export class EventQuickModalComponent implements OnInit {
       startDateTime: toLocalISOString(startDateTime),
       endDateTime: toLocalISOString(endDateTime),
       excludeEventId: this.editingEventId ?? undefined
-    }).subscribe(hasConflict => {
-      if (hasConflict) {
-        this.confirmation.warn(
-          'Já existe um compromisso agendado para este artista no mesmo horário. Deseja prosseguir mesmo assim?',
-          'Conflito de Agenda Detectado',
-          { yesText: 'Sim, Salvar Mesmo Assim', cancelText: 'Voltar e Alterar' }
-        ).subscribe(status => {
-          if (status === Confirmation.Status.confirm) {
-            this.doSave(input);
-          }
-        });
-      } else {
+    }).subscribe({
+      next: (hasConflict) => {
+        console.log('Conflict check result:', hasConflict);
+        if (hasConflict) {
+          this.showConflictConfirmation(input);
+        } else {
+          this.doSave(input);
+        }
+      },
+      error: (err) => {
+        console.error('Error checking conflict:', err);
+        // If conflict check fails, save anyway (don't block the user)
+        this.doSave(input);
+      }
+    });
+  }
+
+  private showConflictConfirmation(input: any): void {
+    this.confirmation.warn(
+      'Já existe um compromisso agendado para este artista no mesmo horário. Deseja prosseguir mesmo assim?',
+      'Conflito de Agenda Detectado',
+      {
+        yesText: 'Sim, Salvar Mesmo Assim',
+        cancelText: 'Voltar e Alterar'
+      }
+    ).subscribe(status => {
+      console.log('Confirmation status:', status);
+      if (status === Confirmation.Status.confirm) {
         this.doSave(input);
       }
     });
