@@ -219,7 +219,8 @@ public class EventAppService : ApplicationService, IEventAppService
         await _eventRepository.UpdateAsync(evt);
     }
     
-    public async Task<bool> CheckConflictAsync(CheckConflictInput input)
+    [HttpPost]
+    public async Task<bool> CheckConflictAsync([FromBody] CheckConflictInput input)
     {
         return await _conflictDetector.HasConflictAsync(
             input.ArtistId,
