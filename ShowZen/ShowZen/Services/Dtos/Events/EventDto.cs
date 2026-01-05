@@ -24,11 +24,32 @@ public class EventDto : FullAuditedEntityDto<Guid>
     public Guid LocationId { get; set; }
     public string LocationName { get; set; } = string.Empty;
     
+    public Guid? LocalPartnerId { get; set; }
+    public string? LocalPartnerName { get; set; }
+    
     // Event Details
     public string? Description { get; set; }
     public int? ExpectedAudience { get; set; }
     public decimal? Fee { get; set; }
     public string? Notes { get; set; }
+    
+    public ContractType ContractType { get; set; }
+    public string? Duration { get; set; }
+    public string? StartTime { get; set; }
+    
+    public bool HasProduction { get; set; }
+    public decimal? ProductionValue { get; set; }
+    public decimal? ProductionPercentage { get; set; }
+    
+    public NegotiationType NegotiationType { get; set; }
+    public decimal? GuaranteeValue { get; set; }
+    public decimal? TicketPercentage { get; set; }
+    public decimal? DiscountValue { get; set; }
+    
+    public decimal TaxPercentage { get; set; }
+    public decimal TaxValue { get; set; }
+    
+    public List<EventCommissionDto> Commissions { get; set; } = new();
     
     // Conflict Detection
     public bool HasConflict { get; set; }

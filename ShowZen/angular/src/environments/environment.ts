@@ -28,4 +28,5 @@ export const environment = {
       rootNamespace: 'AbpAccountPublic',
     },
   },
+  googleMapsApiKey: 'YOUR_API_KEY_HERE',
 } as Environment;

@@ -5,6 +5,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType, Chart, registerables } from 'chart.js';
 import { DashboardService } from './dashboard.service';
 import { DashboardStats } from './models/dashboard.models';
+import { BrazilMapComponent } from '../reports/components/brazil-map/brazil-map.component';
 
 // Register Chart.js components
 Chart.register(...registerables);
@@ -12,7 +13,7 @@ Chart.register(...registerables);
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [CommonModule, RouterModule, BaseChartDirective],
+    imports: [CommonModule, RouterModule, BaseChartDirective, BrazilMapComponent],
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss']
 })

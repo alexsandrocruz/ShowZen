@@ -14,6 +14,10 @@ public class ArtistDto : FullAuditedEntityDto<Guid>
     public bool IsActive { get; set; }
     public string? InstagramHandle { get; set; }
     public string? WebsiteUrl { get; set; }
+    public string? LogoUrl { get; set; }
+    public string? BannerUrl { get; set; }
+    public string? HexColor { get; set; }
+    public decimal DefaultTaxPercentage { get; set; }
     
     public List<ArtistSpecialtyDto> Specialties { get; set; } = new();
 }

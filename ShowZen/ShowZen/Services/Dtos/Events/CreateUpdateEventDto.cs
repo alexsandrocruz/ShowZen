@@ -38,6 +38,26 @@ public class CreateUpdateEventDto
     
     [StringLength(2000)]
     public string? Notes { get; set; }
+    
+    public Guid? LocalPartnerId { get; set; }
+    
+    public ContractType ContractType { get; set; }
+    public string? Duration { get; set; }
+    public string? StartTime { get; set; }
+    
+    public bool HasProduction { get; set; }
+    public decimal? ProductionValue { get; set; }
+    public decimal? ProductionPercentage { get; set; }
+    
+    public NegotiationType NegotiationType { get; set; }
+    public decimal? GuaranteeValue { get; set; }
+    public decimal? TicketPercentage { get; set; }
+    public decimal? DiscountValue { get; set; }
+    
+    public decimal TaxPercentage { get; set; }
+    public decimal TaxValue { get; set; }
+    
+    public List<CreateUpdateEventCommissionDto> Commissions { get; set; } = new();
 }
 
 

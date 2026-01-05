@@ -1,5 +1,7 @@
 import type { EventStatus } from '../../../entities/events/event-status.enum';
 import type { EventType } from '../../../entities/events/event-type.enum';
+import type { ContractType } from '../../../entities/events/contract-type.enum';
+import type { NegotiationType } from '../../../entities/events/negotiation-type.enum';
 import type { EntityDto, FullAuditedEntityDto, PagedAndSortedResultRequestDto } from '@abp/ng.core';
 import { AvailabilityStatus } from './availability-status.enum';
 export { AvailabilityStatus };
@@ -28,6 +30,26 @@ export interface CreateUpdateEventDto {
   expectedAudience?: number;
   fee?: number;
   notes?: string;
+  localPartnerId?: string;
+  contractType?: ContractType;
+  duration?: string;
+  startTime?: string;
+  hasProduction: boolean;
+  productionValue?: number;
+  productionPercentage?: number;
+  negotiationType?: NegotiationType;
+  guaranteeValue?: number;
+  ticketPercentage?: number;
+  discountValue?: number;
+  taxPercentage: number;
+  taxValue: number;
+  commissions: CreateUpdateEventCommissionDto[];
+}
+
+export interface CreateUpdateEventCommissionDto {
+  description: string;
+  value?: number;
+  percentage?: number;
 }
 
 export interface CreateUpdateLocationDto {
@@ -48,6 +70,7 @@ export interface EventDto extends FullAuditedEntityDto<string> {
   endDateTime?: string;
   artistId?: string;
   artistName?: string;
+  artistHexColor?: string;
   clientId?: string;
   clientName?: string;
   locationId?: string;
@@ -59,6 +82,28 @@ export interface EventDto extends FullAuditedEntityDto<string> {
   hasConflict: boolean;
   suggestedAlternativeArtistId?: string;
   suggestedAlternativeArtistName?: string;
+  localPartnerId?: string;
+  localPartnerName?: string;
+  contractType?: ContractType;
+  duration?: string;
+  startTime?: string;
+  hasProduction: boolean;
+  productionValue?: number;
+  productionPercentage?: number;
+  negotiationType?: NegotiationType;
+  guaranteeValue?: number;
+  ticketPercentage?: number;
+  discountValue?: number;
+  taxPercentage: number;
+  taxValue: number;
+  commissions: EventCommissionDto[];
+}
+
+export interface EventCommissionDto extends EntityDto<string> {
+  eventId?: string;
+  description?: string;
+  value?: number;
+  percentage?: number;
 }
 
 export interface EventSummaryDto {
@@ -70,6 +115,7 @@ export interface EventSummaryDto {
   artistName?: string;
   clientId?: string;
   clientName?: string;
+  artistHexColor?: string;
   locationId?: string;
   locationName?: string;
   status?: EventStatus;
@@ -77,6 +123,8 @@ export interface EventSummaryDto {
   fee?: number;
   hasConflict: boolean;
   expectedAudience?: number;
+  duration?: string;
+  startTime?: string;
   durationHours: number;
 }
 

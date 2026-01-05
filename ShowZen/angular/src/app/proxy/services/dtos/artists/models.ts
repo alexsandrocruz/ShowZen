@@ -9,6 +9,10 @@ export interface ArtistDto extends FullAuditedEntityDto<string> {
   isActive: boolean;
   instagramHandle?: string;
   websiteUrl?: string;
+  logoUrl?: string;
+  bannerUrl?: string;
+  hexColor?: string;
+  defaultTaxPercentage: number;
   specialties: ArtistSpecialtyDto[];
 }
 
@@ -24,6 +28,10 @@ export interface CreateUpdateArtistDto {
   biography: string;
   instagramHandle?: string;
   websiteUrl?: string;
+  logoUrl?: string;
+  bannerUrl?: string;
+  hexColor?: string;
+  defaultTaxPercentage?: number;
 }
 
 export interface GetArtistListDto extends PagedAndSortedResultRequestDto {

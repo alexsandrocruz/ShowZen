@@ -113,3 +113,18 @@ public partial class ShowZenCreateUpdateLocationDtoToLocationMapper : MapperBase
     public override partial Location Map(CreateUpdateLocationDto source);
     public override partial void Map(CreateUpdateLocationDto source, Location destination);
 }
+
+// Event Commissions
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class ShowZenEventCommissionToEventCommissionDtoMapper : MapperBase<EventCommission, EventCommissionDto>
+{
+    public override partial EventCommissionDto Map(EventCommission source);
+    public override partial void Map(EventCommission source, EventCommissionDto destination);
+}
+
+[Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
+public partial class ShowZenCreateUpdateEventCommissionDtoToEventCommissionMapper : MapperBase<CreateUpdateEventCommissionDto, EventCommission>
+{
+    public override partial EventCommission Map(CreateUpdateEventCommissionDto source);
+    public override partial void Map(CreateUpdateEventCommissionDto source, EventCommission destination);
+}

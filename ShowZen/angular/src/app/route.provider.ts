@@ -49,6 +49,13 @@ export const APP_ROUTE_PROVIDER = [
         order: 5,
         layout: eLayoutType.application,
       },
+      {
+        path: '/reports',
+        name: '::Menu:Reports',
+        iconClass: 'fas fa-chart-bar',
+        order: 7,
+        layout: eLayoutType.application,
+      },
     ]);
 
     console.log('[ShowZen] Routes configured successfully');

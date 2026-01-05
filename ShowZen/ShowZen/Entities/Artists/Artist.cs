@@ -17,6 +17,14 @@ public class Artist : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public string? InstagramHandle { get; set; }
     public string? WebsiteUrl { get; set; }
     
+    // Customization
+    public string? LogoUrl { get; set; }
+    public string? BannerUrl { get; set; }
+    public string? HexColor { get; set; }
+    
+    // Financial Defaults
+    public decimal DefaultTaxPercentage { get; set; }
+    
     // Collections
     public ICollection<ArtistSpecialty> Specialties { get; set; }
     public ICollection<Availability> Availabilities { get; set; }

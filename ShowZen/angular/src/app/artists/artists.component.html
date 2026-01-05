@@ -120,6 +120,33 @@
                     <input type="url" id="artist-website" class="form-control" formControlName="websiteUrl"
                         placeholder="https://example.com" />
                 </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="artist-logo" class="form-label">URL do Logo</label>
+                        <input type="text" id="artist-logo" class="form-control" formControlName="logoUrl" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="artist-banner" class="form-label">URL do Banner</label>
+                        <input type="text" id="artist-banner" class="form-control" formControlName="bannerUrl" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="artist-color" class="form-label">Cor de Identificação</label>
+                        <div class="d-flex align-items-center">
+                            <input type="color" id="artist-color" class="form-control form-control-color"
+                                formControlName="hexColor" />
+                            <span class="ms-2 text-muted small">{{ form.get('hexColor')?.value }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="artist-tax" class="form-label">Imposto Padrão (%)</label>
+                        <input type="number" id="artist-tax" class="form-control" formControlName="defaultTaxPercentage"
+                            min="0" max="100" />
+                    </div>
+                </div>
             </form>
         </ng-template>
 

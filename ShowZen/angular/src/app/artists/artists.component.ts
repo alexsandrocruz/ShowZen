@@ -86,7 +86,11 @@ export class ArtistsComponent implements OnInit {
             type: [null, Validators.required],
             biography: ['', [Validators.required, Validators.maxLength(2000)]],
             instagramHandle: ['', Validators.maxLength(100)],
-            websiteUrl: ['', Validators.maxLength(500)]
+            websiteUrl: ['', Validators.maxLength(500)],
+            logoUrl: [null],
+            bannerUrl: [null],
+            hexColor: ['#000000'],
+            defaultTaxPercentage: [0, [Validators.min(0), Validators.max(100)]]
         });
     }
 

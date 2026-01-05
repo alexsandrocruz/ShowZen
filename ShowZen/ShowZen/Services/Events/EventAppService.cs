@@ -43,6 +43,8 @@ public class EventAppService : ApplicationService, IEventAppService
             .Include(e => e.Artist)
             .Include(e => e.Client)
             .Include(e => e.Location)
+            .Include(e => e.LocalPartner)
+            .Include(e => e.Commissions)
             .FirstOrDefaultAsync(e => e.Id == id);
             
         if (eventEntity == null)
@@ -54,6 +56,7 @@ public class EventAppService : ApplicationService, IEventAppService
         dto.ArtistName = eventEntity.Artist.Name;
         dto.ClientName = eventEntity.Client.Name;
         dto.LocationName = eventEntity.Location?.Name;
+        dto.LocalPartnerName = eventEntity.LocalPartner?.Name;
         
         return dto;
     }
@@ -64,7 +67,8 @@ public class EventAppService : ApplicationService, IEventAppService
         queryable = queryable
             .Include(e => e.Artist)
             .Include(e => e.Client)
-            .Include(e => e.Location);
+            .Include(e => e.Location)
+            .Include(e => e.LocalPartner);
         
         // Filtros
         if (!input.Filter.IsNullOrWhiteSpace())
@@ -120,6 +124,7 @@ public class EventAppService : ApplicationService, IEventAppService
             dto.ArtistName = e.Artist.Name;
             dto.ClientName = e.Client.Name;
             dto.LocationName = e.Location?.Name;
+            dto.LocalPartnerName = e.LocalPartner?.Name;
             return dto;
         }).ToList();
         
@@ -152,6 +157,16 @@ public class EventAppService : ApplicationService, IEventAppService
             );
             
             eventEntity.SuggestedAlternativeArtistId = alternative?.Id;
+        }
+        
+        // Handle Commissions
+        if (input.Commissions != null)
+        {
+            foreach (var commInput in input.Commissions)
+            {
+                var commission = ObjectMapper.Map<CreateUpdateEventCommissionDto, EventCommission>(commInput);
+                eventEntity.Commissions.Add(commission);
+            }
         }
         
         await _eventRepository.InsertAsync(eventEntity, autoSave: true);
@@ -198,6 +213,18 @@ public class EventAppService : ApplicationService, IEventAppService
         else
         {
             eventEntity.SuggestedAlternativeArtistId = null;
+        }
+        
+        // Handle Commissions
+        if (input.Commissions != null)
+        {
+            // Clear and re-add for simplicity (requires including Commissions in Get)
+            eventEntity.Commissions.Clear();
+            foreach (var commInput in input.Commissions)
+            {
+                var commission = ObjectMapper.Map<CreateUpdateEventCommissionDto, EventCommission>(commInput);
+                eventEntity.Commissions.Add(commission);
+            }
         }
         
         await _eventRepository.UpdateAsync(eventEntity);
@@ -320,6 +347,7 @@ public class EventAppService : ApplicationService, IEventAppService
             EndDateTime = e.EndDateTime,
             ArtistId = e.ArtistId,
             ArtistName = e.Artist.Name,
+            ArtistHexColor = e.Artist.HexColor,
             ClientId = e.ClientId,
             ClientName = e.Client.Name,
             LocationId = e.LocationId,
@@ -328,7 +356,9 @@ public class EventAppService : ApplicationService, IEventAppService
             Type = e.Type,
             Fee = e.Fee,
             HasConflict = e.HasConflict,
-            ExpectedAudience = e.ExpectedAudience
+            ExpectedAudience = e.ExpectedAudience,
+            Duration = e.Duration,
+            StartTime = e.StartTime
         }).ToList();
         
         // Calculate daily availability

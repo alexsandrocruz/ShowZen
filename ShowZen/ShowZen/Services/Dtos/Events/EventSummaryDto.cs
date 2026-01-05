@@ -32,6 +32,10 @@ public class EventSummaryDto
     public bool HasConflict { get; set; }
     public int? ExpectedAudience { get; set; }
     
+    public string? Duration { get; set; }
+    public string? StartTime { get; set; }
+    public string? ArtistHexColor { get; set; }
+    
     /// <summary>
     /// Duration in hours (calculated from start/end)
     /// </summary>

@@ -10,12 +10,15 @@ import { EventService } from '../../../proxy/services/events/event.service';
 import { ArtistService } from '../../../proxy/services/artists/artist.service';
 import { ClientService } from '../../../proxy/services/clients/client.service';
 import { LocationService } from '../../../proxy/services/events/location.service';
-import { EventType } from '../../../proxy/entities/events/event-type.enum';
-import { EventStatus } from '../../../proxy/entities/events/event-status.enum';
+import { LocationDto, CreateUpdateLocationDto, CreateUpdateEventCommissionDto, EventDto } from '../../../proxy/services/dtos/events/models';
 import { ArtistDto } from '../../../proxy/services/dtos/artists/models';
 import { ClientDto, CreateUpdateClientDto } from '../../../proxy/services/dtos/clients/models';
 import { ClientType } from '../../../proxy/entities/clients/client-type.enum';
-import { LocationDto, CreateUpdateLocationDto } from '../../../proxy/services/dtos/events/models';
+import { EventType } from '../../../proxy/entities/events/event-type.enum';
+import { EventStatus } from '../../../proxy/entities/events/event-status.enum';
+import { ContractType } from '../../../proxy/entities/events/contract-type.enum';
+import { NegotiationType } from '../../../proxy/entities/events/negotiation-type.enum';
+import { FormArray } from '@angular/forms';
 
 @Component({
   selector: 'app-event-quick-modal',
@@ -51,15 +54,33 @@ export class EventQuickModalComponent implements OnInit {
     .filter(key => isNaN(Number(key)))
     .map(key => ({
       key: EventType[key as keyof typeof EventType],
-      value: key
+      value: `::EventType:${key}`
     }));
 
   eventStatuses = Object.keys(EventStatus)
     .filter(key => isNaN(Number(key)))
     .map(key => ({
       key: EventStatus[key as keyof typeof EventStatus],
-      value: key
+      value: `::EventStatus:${key}`
     }));
+
+  contractTypes = Object.keys(ContractType)
+    .filter(key => isNaN(Number(key)))
+    .map(key => ({
+      key: ContractType[key as keyof typeof ContractType],
+      value: `::ContractType:${key}`
+    }));
+
+  negotiationTypes = Object.keys(NegotiationType)
+    .filter(key => isNaN(Number(key)))
+    .map(key => ({
+      key: NegotiationType[key as keyof typeof NegotiationType],
+      value: `::NegotiationType:${key}`
+    }));
+
+  get commissions() {
+    return this.form.get('commissions') as FormArray;
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -81,14 +102,98 @@ export class EventQuickModalComponent implements OnInit {
       type: [null, [Validators.required]],
       artistId: [null, [Validators.required]],
       clientId: [null, [Validators.required]],
-      locationId: [null], // Optional
-      fee: [null, [Validators.min(0)]], // Optional, but must be >= 0
-      status: [EventStatus.Lead], // Default to Lead
+      locationId: [null],
+      fee: [null, [Validators.min(0)]],
+      status: [EventStatus.Lead],
       startDate: [null, [Validators.required]],
-      startTime: [{ hour: 20, minute: 0 }, [Validators.required]],
-      duration: [120, [Validators.required, Validators.min(30)]], // Duration in minutes
-      description: ['', [Validators.maxLength(2000)]]
+      startTime: { hour: 20, minute: 0 },
+      durationInMinutes: [120, [Validators.required, Validators.min(30)]],
+      description: ['', [Validators.maxLength(2000)]],
+
+      // New fields
+      localPartnerId: [null],
+      contractType: [ContractType.Private],
+      duration: ['02:00'],
+      hasProduction: [false],
+      productionValue: [null],
+      productionPercentage: [null],
+      negotiationType: [NegotiationType.Fee],
+      guaranteeValue: [null],
+      ticketPercentage: [null],
+      discountValue: [null],
+      taxPercentage: [0],
+      taxValue: [0],
+      commissions: this.fb.array([])
     });
+
+    // Tax calculation logic
+    this.form.get('taxPercentage')?.valueChanges.subscribe(val => {
+      this.calculateTaxFromPercentage(val);
+    });
+
+    this.form.get('taxValue')?.valueChanges.subscribe(val => {
+      this.calculateTaxFromValue(val);
+    });
+
+    // Production calculation logic
+    this.form.get('productionValue')?.valueChanges.subscribe(val => {
+      this.calculateProductionFromValue(val);
+    });
+
+    this.form.get('productionPercentage')?.valueChanges.subscribe(val => {
+      this.calculateProductionFromPercentage(val);
+    });
+
+    // Update tax/production when fee changes
+    this.form.get('fee')?.valueChanges.subscribe(() => {
+      this.calculateTaxFromPercentage(this.form.get('taxPercentage')?.value);
+      this.calculateProductionFromPercentage(this.form.get('productionPercentage')?.value);
+    });
+  }
+
+  addCommission(): void {
+    const commissionForm = this.fb.group({
+      description: ['', Validators.required],
+      value: [null],
+      percentage: [null]
+    });
+    this.commissions.push(commissionForm);
+  }
+
+  removeCommission(index: number): void {
+    this.commissions.removeAt(index);
+  }
+
+  private calculateTaxFromPercentage(percentage: number): void {
+    const fee = this.form.get('fee')?.value || 0;
+    if (fee > 0) {
+      const value = (percentage / 100) * fee;
+      this.form.get('taxValue')?.setValue(Number(value.toFixed(2)), { emitEvent: false });
+    }
+  }
+
+  private calculateTaxFromValue(value: number): void {
+    const fee = this.form.get('fee')?.value || 0;
+    if (fee > 0) {
+      const percentage = (value / fee) * 100;
+      this.form.get('taxPercentage')?.setValue(Number(percentage.toFixed(2)), { emitEvent: false });
+    }
+  }
+
+  private calculateProductionFromValue(value: number): void {
+    const fee = this.form.get('fee')?.value || 0;
+    if (fee > 0) {
+      const percentage = (value / fee) * 100;
+      this.form.get('productionPercentage')?.setValue(Number(percentage.toFixed(2)), { emitEvent: false });
+    }
+  }
+
+  private calculateProductionFromPercentage(percentage: number): void {
+    const fee = this.form.get('fee')?.value || 0;
+    if (fee > 0) {
+      const value = (percentage / 100) * fee;
+      this.form.get('productionValue')?.setValue(Number(value.toFixed(2)), { emitEvent: false });
+    }
   }
 
   loadDependencies(): void {
@@ -108,11 +213,17 @@ export class EventQuickModalComponent implements OnInit {
   open(): void {
     this.isEditMode = false;
     this.editingEventId = null;
+    this.commissions.clear();
     this.form.reset({
       type: EventType.Show,
       status: EventStatus.Lead,
       startTime: { hour: 20, minute: 0 },
-      duration: 120
+      durationInMinutes: 120,
+      contractType: ContractType.Private,
+      negotiationType: NegotiationType.Fee,
+      hasProduction: false,
+      taxPercentage: 0,
+      taxValue: 0
     });
     this.isModalOpen = true;
   }
@@ -127,7 +238,18 @@ export class EventQuickModalComponent implements OnInit {
       const endDateTime = event.endDateTime ? new Date(event.endDateTime) : new Date(startDateTime.getTime() + 2 * 60 * 60 * 1000);
 
       // Calculate duration in minutes
-      const duration = Math.round((endDateTime.getTime() - startDateTime.getTime()) / 60000);
+      const durationInMinutes = Math.round((endDateTime.getTime() - startDateTime.getTime()) / 60000);
+
+      this.commissions.clear();
+      if (event.commissions) {
+        event.commissions.forEach(c => {
+          this.commissions.push(this.fb.group({
+            description: [c.description, Validators.required],
+            value: [c.value],
+            percentage: [c.percentage]
+          }));
+        });
+      }
 
       this.form.patchValue({
         title: event.title,
@@ -137,10 +259,22 @@ export class EventQuickModalComponent implements OnInit {
         locationId: event.locationId,
         fee: event.fee,
         status: event.status || EventStatus.Lead,
-        startDate: startDateTime, // Use Date directly (NgbDateNativeAdapter handles it)
+        startDate: startDateTime,
         startTime: { hour: startDateTime.getHours(), minute: startDateTime.getMinutes() },
-        duration: duration,
-        description: event.description
+        durationInMinutes: durationInMinutes,
+        description: event.description,
+        localPartnerId: event.localPartnerId,
+        contractType: event.contractType,
+        duration: event.duration,
+        hasProduction: event.hasProduction,
+        productionValue: event.productionValue,
+        productionPercentage: event.productionPercentage,
+        negotiationType: event.negotiationType,
+        guaranteeValue: event.guaranteeValue,
+        ticketPercentage: event.ticketPercentage,
+        discountValue: event.discountValue,
+        taxPercentage: event.taxPercentage,
+        taxValue: event.taxValue
       });
     });
   }
@@ -175,20 +309,17 @@ export class EventQuickModalComponent implements OnInit {
     // Create datetime in LOCAL timezone (not UTC)
     const startDateTime = new Date(year, month, day, formValue.startTime.hour, formValue.startTime.minute, 0, 0);
 
-    // Calculate End Date Time based on duration
-    const endDateTime = new Date(startDateTime.getTime() + formValue.duration * 60000);
+    // Calculate End Date Time based on duration in minutes
+    const endDateTime = new Date(startDateTime.getTime() + formValue.durationInMinutes * 60000);
 
     const input = {
-      title: formValue.title,
+      ...formValue,
       type: Number(formValue.type),
-      artistId: formValue.artistId,
-      clientId: formValue.clientId,
-      locationId: formValue.locationId,
-      fee: formValue.fee,
       status: formValue.status != null ? Number(formValue.status) : undefined,
+      contractType: Number(formValue.contractType),
+      negotiationType: Number(formValue.negotiationType),
       startDateTime: toLocalISOString(startDateTime),
       endDateTime: toLocalISOString(endDateTime),
-      description: formValue.description
     };
 
     // Check for conflict before saving

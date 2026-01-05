@@ -7,14 +7,17 @@
     "sourceMap": true,
     "declaration": false,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "module": "es2020",
     "importHelpers": true,
     "target": "ES2022",
-    "lib": ["es2018","dom"],
-    "paths": {
-    },
+    "lib": [
+      "es2018",
+      "dom"
+    ],
+    "paths": {},
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {

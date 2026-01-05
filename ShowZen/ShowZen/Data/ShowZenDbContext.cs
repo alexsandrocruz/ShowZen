@@ -33,6 +33,7 @@ public class ShowZenDbContext : AbpDbContext<ShowZenDbContext>
     // Events Module
     public DbSet<Event> Events { get; set; }
     public DbSet<Location> Locations { get; set; }
+    public DbSet<EventCommission> EventCommissions { get; set; }
     
     public const string DbTablePrefix = "App";
     public const string DbSchema = null;
@@ -78,6 +79,7 @@ public class ShowZenDbContext : AbpDbContext<ShowZenDbContext>
             b.Property(x => x.Biography).IsRequired().HasMaxLength(2000);
             b.Property(x => x.InstagramHandle).HasMaxLength(100);
             b.Property(x => x.WebsiteUrl).HasMaxLength(500);
+            b.Property(x => x.DefaultTaxPercentage).HasColumnType("decimal(18,2)");
             
             b.HasIndex(x => x.TenantId);
             b.HasIndex(x => x.Name);
@@ -162,6 +164,13 @@ public class ShowZenDbContext : AbpDbContext<ShowZenDbContext>
             b.Property(x => x.Description).HasMaxLength(2000);
             b.Property(x => x.Notes).HasMaxLength(2000);
             b.Property(x => x.Fee).HasColumnType("decimal(18,2)");
+            b.Property(x => x.ProductionValue).HasColumnType("decimal(18,2)");
+            b.Property(x => x.ProductionPercentage).HasColumnType("decimal(18,2)");
+            b.Property(x => x.GuaranteeValue).HasColumnType("decimal(18,2)");
+            b.Property(x => x.TicketPercentage).HasColumnType("decimal(18,2)");
+            b.Property(x => x.DiscountValue).HasColumnType("decimal(18,2)");
+            b.Property(x => x.TaxValue).HasColumnType("decimal(18,2)");
+            b.Property(x => x.TaxPercentage).HasColumnType("decimal(18,2)");
             
             b.HasIndex(x => x.TenantId);
             b.HasIndex(x => x.ArtistId);
@@ -183,6 +192,28 @@ public class ShowZenDbContext : AbpDbContext<ShowZenDbContext>
                 .WithMany()
                 .HasForeignKey(x => x.LocationId)
                 .OnDelete(DeleteBehavior.Restrict);
+                
+            b.HasOne(x => x.LocalPartner)
+                .WithMany()
+                .HasForeignKey(x => x.LocalPartnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+                
+            b.HasMany(x => x.Commissions)
+                .WithOne(x => x.Event)
+                .HasForeignKey(x => x.EventId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+        
+        builder.Entity<EventCommission>(b =>
+        {
+            b.ToTable(DbTablePrefix + "EventCommissions", DbSchema);
+            b.ConfigureByConvention();
+            
+            b.Property(x => x.Description).IsRequired().HasMaxLength(200);
+            b.Property(x => x.Value).HasColumnType("decimal(18,2)");
+            b.Property(x => x.Percentage).HasColumnType("decimal(18,2)");
+            
+            b.HasIndex(x => x.EventId);
         });
     }
 }

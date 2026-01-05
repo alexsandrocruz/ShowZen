@@ -56,8 +56,8 @@ export class CalendarMonthComponent implements OnChanges {
             start: event.startDateTime,
             end: event.endDateTime || event.startDateTime,
             classNames: event.hasConflict ? ['event-conflict'] : [],
-            backgroundColor: this.getEventColor(event.status!),
-            borderColor: this.getEventColor(event.status!),
+            backgroundColor: event.artistHexColor || this.getEventStatusColor(event.status!),
+            borderColor: event.artistHexColor || this.getEventStatusColor(event.status!),
             extendedProps: {
                 event: event
             }
@@ -91,7 +91,7 @@ export class CalendarMonthComponent implements OnChanges {
         }
     }
 
-    private getEventColor(status: EventStatus): string {
+    private getEventStatusColor(status: EventStatus): string {
         switch (status) {
             case EventStatus.Confirmed: return '#28a745';
             case EventStatus.ProposalSent: return '#ffc107';

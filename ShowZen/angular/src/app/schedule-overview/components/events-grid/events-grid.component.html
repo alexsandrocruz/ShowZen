@@ -35,7 +35,8 @@
                 <!-- Artist -->
                 <td>
                     <div class="d-flex align-items-center">
-                        <div class="avatar-circle me-2 bg-light text-primary">
+                        <div class="avatar-circle me-2" [style.background-color]="event.artistHexColor || '#f8f9fa'"
+                            [style.color]="event.artistHexColor ? '#fff' : '#007bff'">
                             <i class="fa fa-user"></i>
                         </div>
                         <span>{{ event.artistName }}</span>

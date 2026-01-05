@@ -21,4 +21,5 @@ export const environment = {
       rootNamespace: 'ShowZen',
     },
   },
+  googleMapsApiKey: 'YOUR_API_KEY_HERE',
 } as Environment;

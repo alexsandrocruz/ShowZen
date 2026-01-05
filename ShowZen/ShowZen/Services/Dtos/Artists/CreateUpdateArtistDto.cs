@@ -21,4 +21,12 @@ public class CreateUpdateArtistDto
     
     [StringLength(500)]
     public string? WebsiteUrl { get; set; }
+    
+    public string? LogoUrl { get; set; }
+    public string? BannerUrl { get; set; }
+    
+    [StringLength(20)]
+    public string? HexColor { get; set; }
+    
+    public decimal DefaultTaxPercentage { get; set; }
 }
