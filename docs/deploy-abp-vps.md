@@ -663,4 +663,4 @@ curl -k https://localhost/health-status
 
 ---
 
-*Documento gerado em dezembro/2024 baseado no deploy do projeto ShowZen.*
+*Documento gerado em dezembro/2025 baseado no deploy do projeto ShowZen.*
