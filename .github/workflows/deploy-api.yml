@@ -88,6 +88,7 @@ jobs:
             rm -rf /opt/showzen/deploy-temp
             
             # Reload systemd and restart API
+            sed -i 's/dotnet ShowZen.dll/dotnet ShowZen.dll --migrate-database/' /etc/systemd/system/showzen-api.service
             systemctl daemon-reload
             systemctl restart showzen-api
             
