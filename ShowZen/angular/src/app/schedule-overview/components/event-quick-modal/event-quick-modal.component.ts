@@ -19,6 +19,8 @@ import { EventStatus } from '../../../proxy/entities/events/event-status.enum';
 import { ContractType } from '../../../proxy/entities/events/contract-type.enum';
 import { NegotiationType } from '../../../proxy/entities/events/negotiation-type.enum';
 import { FormArray } from '@angular/forms';
+import { CurrencyBrlInputDirective } from '../../../shared/directives/currency-brl-input.directive';
+import { PercentageInputDirective } from '../../../shared/directives/percentage-input.directive';
 
 @Component({
   selector: 'app-event-quick-modal',
@@ -33,7 +35,9 @@ import { FormArray } from '@angular/forms';
     NgbTimepickerModule,
     NgSelectModule,
     LocalizationPipe,
-    ModalComponent
+    ModalComponent,
+    CurrencyBrlInputDirective,
+    PercentageInputDirective
   ],
   providers: [{ provide: NgbDateAdapter, useClass: NgbDateNativeAdapter }]
 })
