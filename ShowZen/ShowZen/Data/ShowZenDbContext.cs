@@ -14,6 +14,7 @@ using ShowZen.Entities.Books;
 using ShowZen.Entities.Artists;
 using ShowZen.Entities.Clients;
 using ShowZen.Entities.Events;
+using ShowZen.Entities.Proposals;
 
 
 namespace ShowZen.Data;
@@ -34,6 +35,10 @@ public class ShowZenDbContext : AbpDbContext<ShowZenDbContext>
     public DbSet<Event> Events { get; set; }
     public DbSet<Location> Locations { get; set; }
     public DbSet<EventCommission> EventCommissions { get; set; }
+    
+    // Proposals Module
+    public DbSet<Proposal> Proposals { get; set; }
+    public DbSet<ProposalView> ProposalViews { get; set; }
     
     public const string DbTablePrefix = "App";
     public const string DbSchema = null;
@@ -214,6 +219,42 @@ public class ShowZenDbContext : AbpDbContext<ShowZenDbContext>
             b.Property(x => x.Percentage).HasColumnType("decimal(18,2)");
             
             b.HasIndex(x => x.EventId);
+        });
+        
+        // Proposals Module
+        builder.Entity<Proposal>(b =>
+        {
+            b.ToTable(DbTablePrefix + "Proposals", DbSchema);
+            b.ConfigureByConvention();
+            
+            b.Property(x => x.UniqueToken).IsRequired().HasMaxLength(100);
+            b.Property(x => x.PdfPath).HasMaxLength(500);
+            
+            b.HasIndex(x => x.UniqueToken).IsUnique();
+            b.HasIndex(x => x.EventId);
+            b.HasIndex(x => x.Status);
+            
+            b.HasOne(x => x.Event)
+                .WithMany()
+                .HasForeignKey(x => x.EventId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+        
+        builder.Entity<ProposalView>(b =>
+        {
+            b.ToTable(DbTablePrefix + "ProposalViews", DbSchema);
+            b.ConfigureByConvention();
+            
+            b.Property(x => x.IpAddress).HasMaxLength(50);
+            b.Property(x => x.UserAgent).HasMaxLength(500);
+            
+            b.HasIndex(x => x.ProposalId);
+            b.HasIndex(x => x.ViewedAt);
+            
+            b.HasOne(x => x.Proposal)
+                .WithMany()
+                .HasForeignKey(x => x.ProposalId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

@@ -21,6 +21,7 @@ public class Artist : FullAuditedAggregateRoot<Guid>, IMultiTenant
     public string? LogoUrl { get; set; }
     public string? BannerUrl { get; set; }
     public string? HexColor { get; set; }
+    public string? ProposalTemplateUrl { get; set; }
     
     // Financial Defaults
     public decimal DefaultTaxPercentage { get; set; }
