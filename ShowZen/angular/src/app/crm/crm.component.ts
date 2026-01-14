@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { EventService } from '../proxy/services/events';
 import { EventStatus } from '../proxy/entities/events';
 import { EventDto } from '../proxy/services/dtos/events';
 import { ToasterService } from '@abp/ng.theme.shared';
 import { finalize } from 'rxjs/operators';
+import { EventQuickModalComponent } from '../schedule-overview/components/event-quick-modal/event-quick-modal.component';
 
 interface KanbanColumn {
     status: EventStatus;
@@ -20,6 +21,7 @@ interface KanbanColumn {
     standalone: false
 })
 export class CrmComponent implements OnInit {
+    @ViewChild('eventQuickModal') eventQuickModal!: EventQuickModalComponent;
     loading = false;
 
     // Mapeamento de colunas
@@ -103,5 +105,9 @@ export class CrmComponent implements OnInit {
 
     getFeeTotal(items: EventDto[]): number {
         return items.reduce((sum, item) => sum + (item.fee || 0), 0);
+    }
+
+    editEvent(id: string): void {
+        this.eventQuickModal.edit(id);
     }
 }

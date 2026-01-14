@@ -5,6 +5,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType, Chart, registerables } from 'chart.js';
 import { DashboardService } from './dashboard.service';
 import { DashboardStats } from './models/dashboard.models';
+import { FormsModule } from '@angular/forms';
 import { BrazilMapComponent } from '../reports/components/brazil-map/brazil-map.component';
 
 // Register Chart.js components
@@ -13,7 +14,7 @@ Chart.register(...registerables);
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [CommonModule, RouterModule, BaseChartDirective, BrazilMapComponent],
+    imports: [CommonModule, RouterModule, BaseChartDirective, BrazilMapComponent, FormsModule],
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss']
 })
@@ -23,6 +24,14 @@ export class DashboardComponent implements OnInit {
     stats: DashboardStats | null = null;
     loading = true;
     error: string | null = null;
+    onlyConfirmed = true;
+
+    get filteredUpcomingEvents() {
+        if (!this.stats) return [];
+        return this.onlyConfirmed
+            ? this.stats.upcomingEvents.filter(e => e.status === 'Confirmado')
+            : this.stats.upcomingEvents;
+    }
 
     // Doughnut chart for events by status
     doughnutChartType: ChartType = 'doughnut';
@@ -136,6 +145,16 @@ export class DashboardComponent implements OnInit {
             style: 'currency',
             currency: 'BRL'
         }).format(value);
+    }
+
+    formatKpiValue(value: number): string {
+        if (value >= 1000000) {
+            return 'R$ ' + (value / 1000000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + 'M';
+        }
+        if (value >= 1000) {
+            return 'R$ ' + (value / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + 'k';
+        }
+        return this.formatCurrency(value);
     }
 
     formatDate(dateString: string): string {

@@ -6,6 +6,7 @@ import { CrmComponent } from './crm.component';
 import { CrmRoutingModule } from './crm-routing.module';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
+import { EventQuickModalComponent } from '../schedule-overview/components/event-quick-modal/event-quick-modal.component';
 
 @NgModule({
     declarations: [CrmComponent],
@@ -14,7 +15,8 @@ import { ThemeSharedModule } from '@abp/ng.theme.shared';
         CrmRoutingModule,
         DragDropModule,
         NgbDropdownModule,
-        ThemeSharedModule
+        ThemeSharedModule,
+        EventQuickModalComponent
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
