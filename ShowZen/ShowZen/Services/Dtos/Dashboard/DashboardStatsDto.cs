@@ -10,6 +10,9 @@ public class DashboardStatsDto
     public int ConfirmedEvents { get; set; }
     public decimal ExpectedRevenue { get; set; }
     public int OpenLeads { get; set; }
+    public int TotalShows { get; set; }
+    public decimal AverageFee { get; set; }
+    public decimal TotalPeriodFee { get; set; }
     public List<EventsByStatusDto> EventsByStatus { get; set; } = new();
     public List<UpcomingEventDto> UpcomingEvents { get; set; } = new();
     public List<RevenueByMonthDto> RevenueByMonth { get; set; } = new();
@@ -44,4 +47,5 @@ public class GetDashboardStatsInput
 {
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
+    public Guid? ArtistId { get; set; }
 }

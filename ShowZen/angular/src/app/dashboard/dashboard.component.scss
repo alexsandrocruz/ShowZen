@@ -73,7 +73,7 @@
     margin-bottom: spacer(6);
 
     // Mobile: horizontal scroll
-    @media (max-width: 767.98px) {
+    @media (max-width: 991.98px) {
         margin-left: -1rem;
         margin-right: -1rem;
         padding-left: 1rem;
@@ -91,21 +91,21 @@
     display: flex;
     gap: spacer(3);
 
-    // Mobile: horizontal layout with fixed-width cards
-    @media (max-width: 767.98px) {
+    // Mobile/Tablet: horizontal layout
+    @media (max-width: 991.98px) {
         flex-wrap: nowrap;
         padding-right: 1rem;
 
         .kpi-card {
-            flex: 0 0 200px; // Fixed width ~1.5 visible
-            min-width: 200px;
+            flex: 0 0 240px;
+            min-width: 240px;
         }
     }
 
-    // Desktop: 4-column grid
-    @include media-breakpoint-up('md') {
+    // Desktop: Flexible grid
+    @include media-breakpoint-up('lg') {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: spacer(4);
     }
 }
@@ -231,6 +231,46 @@
     .kpi-icon {
         background: rgba($warning, 0.1);
         color: $warning;
+    }
+}
+
+.kpi-white {
+    &::before {
+        background: $success;
+    }
+
+    .kpi-label {
+        color: $text-primary !important;
+        text-transform: none !important;
+        letter-spacing: normal !important;
+        font-size: 1rem !important;
+    }
+
+    .kpi-value {
+        color: $success !important;
+        font-size: 2rem !important;
+    }
+}
+
+// Filters style
+.dashboard-filters {
+    .custom-select {
+        .ng-select-container {
+            border-radius: $border-radius;
+            border-color: $gray-300;
+            box-shadow: none;
+            height: 38px;
+            background-color: white;
+        }
+    }
+
+    input[type="date"] {
+        font-size: 0.875rem;
+        color: $text-primary;
+
+        &:focus {
+            outline: none;
+        }
     }
 }
 

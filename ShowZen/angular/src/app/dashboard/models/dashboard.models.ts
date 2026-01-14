@@ -3,6 +3,9 @@ export interface DashboardStats {
     confirmedEvents: number;
     expectedRevenue: number;
     openLeads: number;
+    totalShows: number;
+    averageFee: number;
+    totalPeriodFee: number;
     eventsByStatus: EventsByStatus[];
     upcomingEvents: UpcomingEvent[];
     revenueByMonth: RevenueByMonth[];
@@ -33,4 +36,5 @@ export interface RevenueByMonth {
 export interface GetDashboardStatsInput {
     startDate?: string;
     endDate?: string;
+    artistId?: string;
 }

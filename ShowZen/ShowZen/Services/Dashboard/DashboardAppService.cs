@@ -33,10 +33,15 @@ public class DashboardAppService : ApplicationService, IDashboardAppService
             .Include(e => e.Artist)
             .Include(e => e.Client);
 
+        // Apply filters
+        var filteredQuery = queryable.Where(e => e.StartDateTime >= startDate && e.StartDateTime <= endDate);
+        if (input.ArtistId.HasValue)
+        {
+            filteredQuery = filteredQuery.Where(e => e.ArtistId == input.ArtistId.Value);
+        }
+
         // Get events for the period
-        var events = await AsyncExecuter.ToListAsync(
-            queryable.Where(e => e.StartDateTime >= startDate && e.StartDateTime <= endDate)
-        );
+        var events = await AsyncExecuter.ToListAsync(filteredQuery);
 
         // Calculate KPIs
         var totalEvents = events.Count;
@@ -47,6 +52,11 @@ public class DashboardAppService : ApplicationService, IDashboardAppService
         var openLeads = events.Count(e => 
             e.Status == EventStatus.Lead || 
             e.Status == EventStatus.ProposalSent);
+
+        // New KPIs
+        var totalShows = events.Count(e => e.Type == EventType.Show && e.Status == EventStatus.Confirmed);
+        var totalPeriodFee = expectedRevenue; // Sum of confirmed fees in period
+        var averageFee = totalShows > 0 ? totalPeriodFee / totalShows : 0;
 
         // Events by status
         var eventsByStatus = events
@@ -61,9 +71,16 @@ public class DashboardAppService : ApplicationService, IDashboardAppService
             .ToList();
 
         // Upcoming events
+        var upcomingEventsQuery = queryable
+            .Where(e => e.StartDateTime >= now && e.Status != EventStatus.Cancelled && e.Status != EventStatus.Lost);
+        
+        if (input.ArtistId.HasValue)
+        {
+            upcomingEventsQuery = upcomingEventsQuery.Where(e => e.ArtistId == input.ArtistId.Value);
+        }
+
         var upcomingEvents = await AsyncExecuter.ToListAsync(
-            queryable
-                .Where(e => e.StartDateTime >= now && e.Status != EventStatus.Cancelled && e.Status != EventStatus.Lost)
+            upcomingEventsQuery
                 .OrderBy(e => e.StartDateTime)
                 .Take(5)
         );
@@ -81,7 +98,7 @@ public class DashboardAppService : ApplicationService, IDashboardAppService
         }).ToList();
 
         // Revenue by month (last 6 months)
-        var revenueByMonth = await GetRevenueByMonthAsync(6);
+        var revenueByMonth = await GetRevenueByMonthAsync(6, input.ArtistId);
 
         return new DashboardStatsDto
         {
@@ -89,13 +106,16 @@ public class DashboardAppService : ApplicationService, IDashboardAppService
             ConfirmedEvents = confirmedEvents,
             ExpectedRevenue = expectedRevenue,
             OpenLeads = openLeads,
+            TotalShows = totalShows,
+            AverageFee = averageFee,
+            TotalPeriodFee = totalPeriodFee,
             EventsByStatus = eventsByStatus,
             UpcomingEvents = upcomingEventDtos,
             RevenueByMonth = revenueByMonth
         };
     }
 
-    private async Task<List<RevenueByMonthDto>> GetRevenueByMonthAsync(int months)
+    private async Task<List<RevenueByMonthDto>> GetRevenueByMonthAsync(int months, Guid? artistId = null)
     {
         var result = new List<RevenueByMonthDto>();
         var now = DateTime.Now;
@@ -107,12 +127,18 @@ public class DashboardAppService : ApplicationService, IDashboardAppService
             var monthStart = new DateTime(monthDate.Year, monthDate.Month, 1);
             var monthEnd = monthStart.AddMonths(1).AddDays(-1);
 
+            var monthlyQuery = queryable
+                .Where(e => e.StartDateTime >= monthStart && 
+                            e.StartDateTime <= monthEnd && 
+                            e.Status == EventStatus.Confirmed);
+
+            if (artistId.HasValue)
+            {
+                monthlyQuery = monthlyQuery.Where(e => e.ArtistId == artistId.Value);
+            }
+
             var monthlyRevenue = await AsyncExecuter.SumAsync(
-                queryable
-                    .Where(e => e.StartDateTime >= monthStart && 
-                                e.StartDateTime <= monthEnd && 
-                                e.Status == EventStatus.Confirmed)
-                    .Select(e => e.Fee ?? 0)
+                monthlyQuery.Select(e => e.Fee ?? 0)
             );
 
             result.Add(new RevenueByMonthDto

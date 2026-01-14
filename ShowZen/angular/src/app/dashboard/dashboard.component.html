@@ -9,6 +9,30 @@
                     <p class="page-subtitle">Visão geral do seu negócio</p>
                 </div>
             </div>
+
+            <!-- Dashboard Filters -->
+            <div class="dashboard-filters d-flex gap-2 align-items-center">
+                <div class="filter-artist" style="min-width: 220px;">
+                    <ng-select [items]="artists" bindLabel="name" bindValue="id" [(ngModel)]="selectedArtistId"
+                        (change)="onFilterChange()" placeholder="Selecione o Artista" [clearable]="true"
+                        class="custom-select">
+                        <ng-template ng-option-tmp let-item="item">
+                            {{item.name}}
+                        </ng-template>
+                        <ng-template ng-header-tmp>
+                            <div class="p-2 border-bottom fw-bold text-muted small">TODOS ARTISTAS</div>
+                        </ng-template>
+                    </ng-select>
+                </div>
+                <div class="filter-date-range d-flex align-items-center bg-white rounded border ps-2 px-1">
+                    <i class="fa fa-calendar-alt text-muted me-2 small"></i>
+                    <input type="date" class="form-control form-control-sm border-0 shadow-none px-1"
+                        [(ngModel)]="startDate" (change)="onFilterChange()" style="width: 130px;">
+                    <span class="mx-1 text-muted small">-</span>
+                    <input type="date" class="form-control form-control-sm border-0 shadow-none px-1"
+                        [(ngModel)]="endDate" (change)="onFilterChange()" style="width: 130px;">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -38,6 +62,35 @@
     <!-- KPI Cards - Horizontal Scroll on Mobile -->
     <div class="kpi-carousel-wrapper">
         <div class="kpi-carousel">
+            <!-- Qtde de shows -->
+            <div class="kpi-card kpi-white">
+                <div class="kpi-content text-start w-100">
+                    <div class="kpi-label mb-3 fw-bold text-dark border-bottom pb-2">Qtde de shows</div>
+                    <div class="kpi-value text-center text-success py-2">{{ stats.totalShows }}</div>
+                </div>
+            </div>
+
+            <!-- Cachê médio -->
+            <div class="kpi-card kpi-white">
+                <div class="kpi-content text-start w-100">
+                    <div class="kpi-label mb-3 fw-bold text-dark border-bottom pb-2">Cachê médio</div>
+                    <div class="kpi-value text-center text-success py-2" [title]="formatCurrency(stats.averageFee)">
+                        {{ formatKpiValue(stats.averageFee) }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cachê total -->
+            <div class="kpi-card kpi-white">
+                <div class="kpi-content text-start w-100">
+                    <div class="kpi-label mb-3 fw-bold text-dark border-bottom pb-2">Cachê total</div>
+                    <div class="kpi-value text-center text-success py-2 fw-bold"
+                        [title]="formatCurrency(stats.totalPeriodFee)">
+                        {{ formatCurrency(stats.totalPeriodFee) }}
+                    </div>
+                </div>
+            </div>
+
             <!-- Total Events -->
             <div class="kpi-card kpi-blue">
                 <div class="kpi-icon">

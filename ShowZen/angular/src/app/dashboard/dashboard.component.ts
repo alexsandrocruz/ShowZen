@@ -7,6 +7,10 @@ import { DashboardService } from './dashboard.service';
 import { DashboardStats } from './models/dashboard.models';
 import { FormsModule } from '@angular/forms';
 import { BrazilMapComponent } from '../reports/components/brazil-map/brazil-map.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { ArtistService } from '../proxy/services/artists/artist.service';
+import { ArtistDto } from '../proxy/services/dtos/artists/models';
 
 // Register Chart.js components
 Chart.register(...registerables);
@@ -14,17 +18,42 @@ Chart.register(...registerables);
 @Component({
     selector: 'app-dashboard',
     standalone: true,
-    imports: [CommonModule, RouterModule, BaseChartDirective, BrazilMapComponent, FormsModule],
+    imports: [
+        CommonModule,
+        RouterModule,
+        BaseChartDirective,
+        BrazilMapComponent,
+        FormsModule,
+        NgSelectModule,
+        NgbDatepickerModule
+    ],
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
     private dashboardService = inject(DashboardService);
+    private artistService = inject(ArtistService);
 
     stats: DashboardStats | null = null;
     loading = true;
     error: string | null = null;
     onlyConfirmed = true;
+
+    // Filters
+    artists: ArtistDto[] = [];
+    selectedArtistId: string | null = null;
+    startDate: string = '';
+    endDate: string = '';
+
+    constructor() {
+        // Initialize with last 30 days
+        const end = new Date();
+        const start = new Date();
+        start.setDate(end.getDate() - 30);
+
+        this.startDate = start.toISOString().substring(0, 10);
+        this.endDate = end.toISOString().substring(0, 10);
+    }
 
     get filteredUpcomingEvents() {
         if (!this.stats) return [];
@@ -88,26 +117,40 @@ export class DashboardComponent implements OnInit {
     };
 
     ngOnInit(): void {
+        this.loadArtists();
         this.loadStats();
+    }
+
+    loadArtists(): void {
+        this.artistService.getList({ maxResultCount: 100, skipCount: 0 }).subscribe(result => {
+            this.artists = result.items || [];
+        });
     }
 
     loadStats(): void {
         this.loading = true;
         this.error = null;
 
-        this.dashboardService.getStats().subscribe({
+        this.dashboardService.getStats({
+            startDate: this.startDate,
+            endDate: this.endDate,
+            artistId: this.selectedArtistId || undefined
+        }).subscribe({
             next: (data) => {
-                console.log('Dashboard Stats received:', data);
                 this.stats = data;
                 this.updateCharts();
                 this.loading = false;
             },
             error: (err) => {
-                console.error('Error loading dashboard stats:', err);
-                this.error = 'Erro ao carregar estatísticas';
+                this.error = 'Erro ao carregar dados do dashboard';
                 this.loading = false;
+                console.error(err);
             }
         });
+    }
+
+    onFilterChange(): void {
+        this.loadStats();
     }
 
     private updateCharts(): void {
