@@ -88,6 +88,11 @@ public partial class ShowZenCreateUpdateClientDtoToClientMapper : MapperBase<Cre
 [Mapper(RequiredMappingStrategy = RequiredMappingStrategy.Target)]
 public partial class ShowZenEventToEventDtoMapper : MapperBase<Event, EventDto>
 {
+    [MapperIgnoreTarget(nameof(EventDto.ArtistName))]
+    [MapperIgnoreTarget(nameof(EventDto.ClientName))]
+    [MapperIgnoreTarget(nameof(EventDto.LocationName))]
+    [MapperIgnoreTarget(nameof(EventDto.LocalPartnerName))]
+    [MapperIgnoreTarget(nameof(EventDto.SuggestedAlternativeArtistName))]
     public override partial EventDto Map(Event source);
     public override partial void Map(Event source, EventDto destination);
 }

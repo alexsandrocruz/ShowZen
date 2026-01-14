@@ -53,8 +53,8 @@ public class EventAppService : ApplicationService, IEventAppService
         }
         
         var dto = ObjectMapper.Map<Event, EventDto>(eventEntity);
-        dto.ArtistName = eventEntity.Artist.Name;
-        dto.ClientName = eventEntity.Client.Name;
+        dto.ArtistName = eventEntity.Artist?.Name ?? string.Empty;
+        dto.ClientName = eventEntity.Client?.Name ?? string.Empty;
         dto.LocationName = eventEntity.Location?.Name;
         dto.LocalPartnerName = eventEntity.LocalPartner?.Name;
         
@@ -121,8 +121,8 @@ public class EventAppService : ApplicationService, IEventAppService
         var eventDtos = events.Select(e =>
         {
             var dto = ObjectMapper.Map<Event, EventDto>(e);
-            dto.ArtistName = e.Artist.Name;
-            dto.ClientName = e.Client.Name;
+            dto.ArtistName = e.Artist?.Name ?? string.Empty;
+            dto.ClientName = e.Client?.Name ?? string.Empty;
             dto.LocationName = e.Location?.Name;
             dto.LocalPartnerName = e.LocalPartner?.Name;
             return dto;
@@ -351,10 +351,10 @@ public class EventAppService : ApplicationService, IEventAppService
             StartDateTime = e.StartDateTime,
             EndDateTime = e.EndDateTime,
             ArtistId = e.ArtistId,
-            ArtistName = e.Artist.Name,
-            ArtistHexColor = e.Artist.HexColor,
+            ArtistName = e.Artist?.Name ?? string.Empty,
+            ArtistHexColor = e.Artist?.HexColor,
             ClientId = e.ClientId,
-            ClientName = e.Client.Name,
+            ClientName = e.Client?.Name ?? string.Empty,
             LocationId = e.LocationId,
             LocationName = e.Location?.Name,
             Status = e.Status,
