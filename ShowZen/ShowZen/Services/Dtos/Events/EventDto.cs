@@ -21,8 +21,8 @@ public class EventDto : FullAuditedEntityDto<Guid>
     public Guid ClientId { get; set; }
     public string ClientName { get; set; } = string.Empty;
     
-    public Guid LocationId { get; set; }
-    public string LocationName { get; set; } = string.Empty;
+    public Guid? LocationId { get; set; }
+    public string? LocationName { get; set; }
     
     public Guid? LocalPartnerId { get; set; }
     public string? LocalPartnerName { get; set; }
