@@ -47,7 +47,7 @@ public class DashboardAppService : ApplicationService, IDashboardAppService
         var totalEvents = events.Count;
         var confirmedEvents = events.Count(e => e.Status == EventStatus.Confirmed);
         var expectedRevenue = events
-            .Where(e => e.Status == EventStatus.Confirmed)
+            .Where(e => e.Status != EventStatus.Cancelled && e.Status != EventStatus.Lost)
             .Sum(e => e.Fee ?? 0);
         var openLeads = events.Count(e => 
             e.Status == EventStatus.Lead || 
@@ -55,7 +55,9 @@ public class DashboardAppService : ApplicationService, IDashboardAppService
 
         // New KPIs
         var totalShows = events.Count(e => e.Type == EventType.Show && e.Status == EventStatus.Confirmed);
-        var totalPeriodFee = expectedRevenue; // Sum of confirmed fees in period
+        var totalPeriodFee = events
+            .Where(e => e.Status == EventStatus.Confirmed)
+            .Sum(e => e.Fee ?? 0);
         var averageFee = totalShows > 0 ? totalPeriodFee / totalShows : 0;
 
         // Events by status

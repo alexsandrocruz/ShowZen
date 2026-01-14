@@ -68,11 +68,14 @@
     color: $text-muted;
 }
 
-// KPI Carousel - Horizontal Scroll on Mobile
-.kpi-carousel-wrapper {
+// KPI Sections - Two Rows
+.kpi-sections-wrapper {
     margin-bottom: spacer(6);
+}
 
-    // Mobile: horizontal scroll
+.kpi-row {
+
+    // Mobile: horizontal scroll per row
     @media (max-width: 991.98px) {
         margin-left: -1rem;
         margin-right: -1rem;
@@ -87,7 +90,7 @@
     }
 }
 
-.kpi-carousel {
+.kpi-grid {
     display: flex;
     gap: spacer(3);
 
@@ -102,10 +105,10 @@
         }
     }
 
-    // Desktop: Flexible grid
+    // Desktop: 3-column grid for each row
     @include media-breakpoint-up('lg') {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: spacer(4);
     }
 }

@@ -59,81 +59,78 @@
 
     <!-- Dashboard Content -->
     @if (stats && !loading) {
-    <!-- KPI Cards - Horizontal Scroll on Mobile -->
-    <div class="kpi-carousel-wrapper">
-        <div class="kpi-carousel">
-            <!-- Qtde de shows -->
-            <div class="kpi-card kpi-white">
-                <div class="kpi-content text-start w-100">
-                    <div class="kpi-label mb-3 fw-bold text-dark border-bottom pb-2">Qtde de shows</div>
-                    <div class="kpi-value text-center text-success py-2">{{ stats.totalShows }}</div>
+    <!-- KPI Cards - Two Rows -->
+    <div class="kpi-sections-wrapper">
+        <!-- Row 1: Shows and Confirmed Metrics (White Cards) -->
+        <div class="kpi-row mb-4">
+            <div class="kpi-grid">
+                <!-- Qtde de shows -->
+                <div class="kpi-card kpi-white">
+                    <div class="kpi-content text-start w-100">
+                        <div class="kpi-label mb-3 fw-bold text-dark border-bottom pb-2">Qtde de shows</div>
+                        <div class="kpi-value text-center text-success py-2">{{ stats.totalShows }}</div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Cachê médio -->
-            <div class="kpi-card kpi-white">
-                <div class="kpi-content text-start w-100">
-                    <div class="kpi-label mb-3 fw-bold text-dark border-bottom pb-2">Cachê médio</div>
-                    <div class="kpi-value text-center text-success py-2" [title]="formatCurrency(stats.averageFee)">
-                        {{ formatKpiValue(stats.averageFee) }}
+                <!-- Cachê médio -->
+                <div class="kpi-card kpi-white">
+                    <div class="kpi-content text-start w-100">
+                        <div class="kpi-label mb-3 fw-bold text-dark border-bottom pb-2">Cachê médio (Confirmado)</div>
+                        <div class="kpi-value text-center text-success py-2" [title]="formatCurrency(stats.averageFee)">
+                            {{ formatKpiValue(stats.averageFee) }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cachê total -->
+                <div class="kpi-card kpi-white">
+                    <div class="kpi-content text-start w-100">
+                        <div class="kpi-label mb-3 fw-bold text-dark border-bottom pb-2">Cachê Confirmado</div>
+                        <div class="kpi-value text-center text-success py-2 fw-bold"
+                            [title]="formatCurrency(stats.totalPeriodFee)">
+                            {{ formatCurrency(stats.totalPeriodFee) }}
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Cachê total -->
-            <div class="kpi-card kpi-white">
-                <div class="kpi-content text-start w-100">
-                    <div class="kpi-label mb-3 fw-bold text-dark border-bottom pb-2">Cachê total</div>
-                    <div class="kpi-value text-center text-success py-2 fw-bold"
-                        [title]="formatCurrency(stats.totalPeriodFee)">
-                        {{ formatCurrency(stats.totalPeriodFee) }}
+        <!-- Row 2: General Period Metrics (Colored Cards) -->
+        <div class="kpi-row mb-4">
+            <div class="kpi-grid">
+                <!-- Total Events (Period) -->
+                <div class="kpi-card kpi-blue">
+                    <div class="kpi-icon">
+                        <i class="fa fa-calendar-alt"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <div class="kpi-value">{{ stats.totalEvents }}</div>
+                        <div class="kpi-label">Eventos do PERÍODO</div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Total Events -->
-            <div class="kpi-card kpi-blue">
-                <div class="kpi-icon">
-                    <i class="fa fa-calendar-alt"></i>
-                </div>
-                <div class="kpi-content">
-                    <div class="kpi-value">{{ stats.totalEvents }}</div>
-                    <div class="kpi-label">Eventos do Mês</div>
-                </div>
-            </div>
-
-            <!-- Confirmed Events -->
-            <div class="kpi-card kpi-green">
-                <div class="kpi-icon">
-                    <i class="fa fa-check-circle"></i>
-                </div>
-                <div class="kpi-content">
-                    <div class="kpi-value">{{ stats.confirmedEvents }}</div>
-                    <div class="kpi-label">Confirmados</div>
-                </div>
-            </div>
-
-            <!-- Expected Revenue -->
-            <div class="kpi-card kpi-purple">
-                <div class="kpi-icon">
-                    <i class="fa fa-dollar-sign"></i>
-                </div>
-                <div class="kpi-content">
-                    <div class="kpi-value" [title]="formatCurrency(stats.expectedRevenue)">
-                        {{ formatKpiValue(stats.expectedRevenue) }}
+                <!-- Open Leads -->
+                <div class="kpi-card kpi-orange">
+                    <div class="kpi-icon">
+                        <i class="fa fa-bullseye"></i>
                     </div>
-                    <div class="kpi-label">Receita Prevista</div>
+                    <div class="kpi-content">
+                        <div class="kpi-value">{{ stats.openLeads }}</div>
+                        <div class="kpi-label">Leads Abertos</div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Open Leads -->
-            <div class="kpi-card kpi-orange">
-                <div class="kpi-icon">
-                    <i class="fa fa-bullseye"></i>
-                </div>
-                <div class="kpi-content">
-                    <div class="kpi-value">{{ stats.openLeads }}</div>
-                    <div class="kpi-label">Leads Abertos</div>
+                <!-- Expected Revenue (All) -->
+                <div class="kpi-card kpi-purple">
+                    <div class="kpi-icon">
+                        <i class="fa fa-dollar-sign"></i>
+                    </div>
+                    <div class="kpi-content">
+                        <div class="kpi-value" [title]="formatCurrency(stats.expectedRevenue)">
+                            {{ formatKpiValue(stats.expectedRevenue) }}
+                        </div>
+                        <div class="kpi-label">Receita Prevista</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -210,12 +207,12 @@
         </div>
     </div>
 
-    <!-- Brazil Map Section -->
-    <div class="row mb-4">
+    <!-- Brazil Map Section (Hidden) -->
+    <!-- <div class="row mb-4">
         <div class="col-12">
             <app-brazil-map></app-brazil-map>
         </div>
-    </div>
+    </div> -->
 
     <!-- Revenue Chart -->
     <div class="row">
