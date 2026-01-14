@@ -11,7 +11,7 @@ import { ThemeBasicModule } from '@abp/ng.theme.basic';
 import { provideLogo, withEnvironmentOptions } from "@abp/ng.theme.shared";
 import { ApplicationConfig, APP_INITIALIZER, importProvidersFrom } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { ReplaceableComponentsService } from '@abp/ng.core';
+import { ReplaceableComponentsService, SessionStateService } from '@abp/ng.core';
 
 import { LogoComponent } from './logo/logo.component';
 import { provideRouter } from '@angular/router';
@@ -60,6 +60,18 @@ export const appConfig: ApplicationConfig = {
         });
       },
       deps: [ReplaceableComponentsService, ApplicationRef],
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (sessionState: SessionStateService) => () => {
+        // Set default tenant if specified in environment and no tenant is currently set
+        const defaultTenantName = (environment as any).tenantManagement?.defaultTenantName;
+        if (defaultTenantName && !sessionState.getTenant()?.name) {
+          sessionState.setTenant({ name: defaultTenantName } as any);
+        }
+      },
+      deps: [SessionStateService],
       multi: true,
     },
 

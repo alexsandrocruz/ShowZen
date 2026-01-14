@@ -21,5 +21,8 @@ export const environment = {
       rootNamespace: 'ShowZen',
     },
   },
+  tenantManagement: {
+    defaultTenantName: 'Divina'
+  },
   googleMapsApiKey: 'YOUR_API_KEY_HERE',
 } as Environment;

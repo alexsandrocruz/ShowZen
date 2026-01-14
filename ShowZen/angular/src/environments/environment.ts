@@ -28,5 +28,8 @@ export const environment = {
       rootNamespace: 'AbpAccountPublic',
     },
   },
+  tenantManagement: {
+    defaultTenantName: 'Divina'
+  },
   googleMapsApiKey: 'YOUR_API_KEY_HERE',
 } as Environment;

@@ -141,7 +141,7 @@
                 <div class="col-md-12 mb-3">
                     <label for="event-fee" class="form-label">{{ '::Fee' | abpLocalization }} (R$)</label>
                     <input type="number" id="event-fee" class="form-control" formControlName="fee" min="0" step="0.01"
-                        placeholder="0,00">
+                        placeholder="0.00">
                 </div>
             </div>
 
@@ -158,12 +158,14 @@
 
                     <div class="row" *ngIf="form.get('hasProduction')?.value">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">{{ '::ProductionValue' | abpLocalization }}</label>
-                            <input type="number" class="form-control" formControlName="productionValue">
+                            <label class="form-label">{{ '::ProductionValue' | abpLocalization }} (R$)</label>
+                            <input type="number" class="form-control" formControlName="productionValue" min="0"
+                                step="0.01" placeholder="0.00">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">{{ '::ProductionPercentage' | abpLocalization }}</label>
-                            <input type="number" class="form-control" formControlName="productionPercentage">
+                            <label class="form-label">{{ '::ProductionPercentage' | abpLocalization }} (%)</label>
+                            <input type="number" class="form-control" formControlName="productionPercentage" min="0"
+                                max="100" step="0.01" placeholder="0.00">
                         </div>
                     </div>
                 </div>
@@ -183,18 +185,21 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">{{ '::GuaranteeValue' | abpLocalization }}</label>
-                            <input type="number" class="form-control" formControlName="guaranteeValue">
+                            <label class="form-label">{{ '::GuaranteeValue' | abpLocalization }} (R$)</label>
+                            <input type="number" class="form-control" formControlName="guaranteeValue" min="0"
+                                step="0.01" placeholder="0.00">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">{{ '::TicketPercentage' | abpLocalization }}</label>
-                            <input type="number" class="form-control" formControlName="ticketPercentage">
+                            <label class="form-label">{{ '::TicketPercentage' | abpLocalization }} (%)</label>
+                            <input type="number" class="form-control" formControlName="ticketPercentage" min="0"
+                                max="100" step="0.01" placeholder="0.00">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">{{ '::DiscountValue' | abpLocalization }}</label>
-                            <input type="number" class="form-control" formControlName="discountValue">
+                            <label class="form-label">{{ '::DiscountValue' | abpLocalization }} (R$)</label>
+                            <input type="number" class="form-control" formControlName="discountValue" min="0"
+                                step="0.01" placeholder="0.00">
                         </div>
                     </div>
                 </div>
@@ -206,36 +211,40 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">{{ '::TaxPercentage' | abpLocalization }}</label>
-                            <input type="number" class="form-control" formControlName="taxPercentage">
+                            <label class="form-label">{{ '::TaxPercentage' | abpLocalization }} (%)</label>
+                            <input type="number" class="form-control" formControlName="taxPercentage" min="0" max="100"
+                                step="0.01" placeholder="0.00">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">{{ '::TaxValue' | abpLocalization }}</label>
-                            <input type="number" class="form-control" formControlName="taxValue">
+                            <label class="form-label">{{ '::TaxValue' | abpLocalization }} (R$)</label>
+                            <input type="number" class="form-control" formControlName="taxValue" min="0" step="0.01"
+                                placeholder="0.00">
                         </div>
                     </div>
 
                     <h6>{{ '::InternalCommissions' | abpLocalization }}</h6>
                     <div formArrayName="commissions">
                         <div *ngFor="let comm of commissions.controls; let i=index" [formGroupName]="i"
-                            class="row mb-2 align-items-end">
-                            <div class="col-md-5">
+                            class="row mb-3 align-items-end">
+                            <div class="col-12 col-sm-12 col-md-5 mb-2 mb-md-0">
                                 <label class="small">Descrição</label>
                                 <input type="text" class="form-control form-control-sm" formControlName="description"
                                     placeholder="Ex: Secretaria">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-6 col-sm-6 col-md-3 mb-2 mb-md-0">
                                 <label class="small">Valor (R$)</label>
-                                <input type="number" class="form-control form-control-sm" formControlName="value">
+                                <input type="number" class="form-control form-control-sm" formControlName="value"
+                                    min="0" step="0.01" placeholder="0.00">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-6 col-sm-6 col-md-3 mb-2 mb-md-0">
                                 <label class="small">%</label>
-                                <input type="number" class="form-control form-control-sm" formControlName="percentage">
+                                <input type="number" class="form-control form-control-sm" formControlName="percentage"
+                                    min="0" max="100" step="0.01" placeholder="0.00">
                             </div>
-                            <div class="col-md-1">
-                                <button type="button" class="btn btn-sm btn-outline-danger"
+                            <div class="col-12 col-sm-12 col-md-1 text-center text-md-start">
+                                <button type="button" class="btn btn-sm btn-outline-danger w-100 w-md-auto"
                                     (click)="removeCommission(i)">
-                                    <i class="fa fa-trash"></i>
+                                    <i class="fa fa-trash"></i> <span class="d-md-none">Remover</span>
                                 </button>
                             </div>
                         </div>
