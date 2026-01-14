@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { LocalizationPipe } from '@abp/ng.core';
 import { ModalComponent } from '@abp/ng.theme.shared';
 import { ClientService } from '../../../proxy/services/clients/client.service';
 import { ClientDto } from '../../../proxy/services/dtos/clients/models';
@@ -10,7 +11,7 @@ import { ClientType, clientTypeOptions } from '../../../proxy/entities/clients/c
     selector: 'app-client-quick-modal',
     templateUrl: './client-quick-modal.component.html',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, ModalComponent]
+    imports: [CommonModule, ReactiveFormsModule, ModalComponent, LocalizationPipe]
 })
 export class ClientQuickModalComponent {
     @Output() onSave = new EventEmitter<ClientDto>();
