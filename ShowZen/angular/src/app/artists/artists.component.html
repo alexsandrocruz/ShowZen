@@ -9,24 +9,59 @@
                     <p class="page-subtitle">{{ artists.totalCount }} {{ '::Artists' | abpLocalization }}</p>
                 </div>
             </div>
-            <button *abpPermission="'ShowZen.Artists.Create'" class="btn btn-primary" type="button"
-                (click)="createArtist()">
-                <i class="fa fa-plus me-2"></i>
-                <span>{{ '::NewArtist' | abpLocalization }}</span>
-            </button>
+            <div class="header-actions">
+                <div class="btn-group me-3" role="group">
+                    <button type="button" class="btn btn-outline-secondary" [class.active]="viewMode === 'table'"
+                        (click)="viewMode = 'table'" title="Tabela">
+                        <i class="fa fa-list"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" [class.active]="viewMode === 'grid'"
+                        (click)="viewMode = 'grid'" title="Grade">
+                        <i class="fa fa-th-large"></i>
+                    </button>
+                </div>
+                <button *abpPermission="'ShowZen.Artists.Create'" class="btn btn-primary" type="button"
+                    (click)="createArtist()">
+                    <i class="fa fa-plus me-2"></i>
+                    <span>{{ '::NewArtist' | abpLocalization }}</span>
+                </button>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <form [formGroup]="filterForm" class="w-100">
-                <div class="search-wrapper">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="form-control search-input" formControlName="filter"
-                        [placeholder]="'::SearchArtists' | abpLocalization">
+    <div class="card mb-4">
+        <div class="card-body p-3">
+            <form [formGroup]="filterForm">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="search-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="form-control" formControlName="filter"
+                                [placeholder]="'::Search' | abpLocalization">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" formControlName="type">
+                            <option [ngValue]="null">{{ '::AllTypes' | abpLocalization }}</option>
+                            <option *ngFor="let type of artistTypes" [ngValue]="type.value">
+                                {{ '::ArtistType:' + type.label | abpLocalization }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" formControlName="isActive">
+                            <option [ngValue]="null">{{ '::AllStatus' | abpLocalization }}</option>
+                            <option [ngValue]="true">{{ '::Active' | abpLocalization }}</option>
+                            <option [ngValue]="false">{{ '::Inactive' | abpLocalization }}</option>
+                        </select>
+                    </div>
                 </div>
             </form>
         </div>
+    </div>
+
+    <!-- Table View -->
+    <div class="card" *ngIf="viewMode === 'table'">
         <div class="card-body">
             <ngx-datatable [rows]="artists.items" [count]="artists.totalCount" [list]="list" default>
                 <ngx-datatable-column [name]="'::ArtistName' | abpLocalization" prop="name" [minWidth]="200">
@@ -59,6 +94,43 @@
                     </ng-template>
                 </ngx-datatable-column>
             </ngx-datatable>
+        </div>
+    </div>
+
+    <!-- Grid View (Cards) -->
+    <div class="row" *ngIf="viewMode === 'grid'">
+        <div class="col-xl-3 col-lg-4 col-md-6 mb-4" *ngFor="let artist of artists.items">
+            <div class="artist-card-v2">
+                <div class="card-body-content">
+                    <div class="card-status-badge" [class.active]="artist.isActive">
+                        {{ (artist.isActive ? '::Active' : '::Inactive') | abpLocalization }}
+                    </div>
+                    <div class="card-profile-wrapper">
+                        <div class="profile-pic">
+                            <img *ngIf="artist.logoUrl" [src]="artist.logoUrl" alt="Logo">
+                            <i *ngIf="!artist.logoUrl" class="fas fa-user-music"></i>
+                        </div>
+                    </div>
+                    <div class="card-text-center">
+                        <h4 class="artist-name">{{ artist.name }}</h4>
+                        <span class="artist-type-badge">
+                            {{ '::ArtistType:' + getArtistTypeName(artist.type) | abpLocalization }}
+                        </span>
+                        <p class="artist-bio">{{ artist.biography | slice:0:100 }}{{ artist.biography?.length > 100 ?
+                            '...' : '' }}</p>
+                    </div>
+                    <div class="card-footer-actions">
+                        <button *abpPermission="'ShowZen.Artists.Edit'"
+                            class="btn btn-outline-primary btn-sm rounded-pill" (click)="editArtist(artist.id)">
+                            <i class="fas fa-edit me-1"></i> {{ '::Edit' | abpLocalization }}
+                        </button>
+                        <button *abpPermission="'ShowZen.Artists.Delete'"
+                            class="btn btn-outline-danger btn-sm rounded-pill" (click)="delete(artist.id)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -123,12 +195,32 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="artist-logo" class="form-label">URL do Logo</label>
-                        <input type="text" id="artist-logo" class="form-control" formControlName="logoUrl" />
+                        <label for="artist-logo" class="form-label">{{ '::Logo' | abpLocalization }}</label>
+                        <div class="image-upload-wrapper">
+                            <div class="preview-box" *ngIf="logoPreview">
+                                <img [src]="logoPreview" class="img-thumbnail" alt="Logo Preview">
+                                <button type="button" class="btn btn-sm btn-danger delete-img"
+                                    (click)="logoFile = null; logoPreview = null;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <input type="file" id="artist-logo" class="form-control" (change)="onLogoSelected($event)"
+                                accept="image/*" />
+                        </div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="artist-banner" class="form-label">URL do Banner</label>
-                        <input type="text" id="artist-banner" class="form-control" formControlName="bannerUrl" />
+                        <label for="artist-banner" class="form-label">{{ '::Banner' | abpLocalization }}</label>
+                        <div class="image-upload-wrapper">
+                            <div class="preview-box" *ngIf="bannerPreview">
+                                <img [src]="bannerPreview" class="img-thumbnail" alt="Banner Preview">
+                                <button type="button" class="btn btn-sm btn-danger delete-img"
+                                    (click)="bannerFile = null; bannerPreview = null;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <input type="file" id="artist-banner" class="form-control"
+                                (change)="onBannerSelected($event)" accept="image/*" />
+                        </div>
                     </div>
                 </div>
 

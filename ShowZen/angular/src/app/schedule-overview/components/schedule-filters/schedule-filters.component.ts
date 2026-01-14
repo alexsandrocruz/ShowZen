@@ -48,7 +48,11 @@ export class ScheduleFiltersComponent implements OnInit {
     ];
 
     periodPresets = [
-        { label: 'Próximos 7 dias', days: 7 },
+        { label: 'Todos', days: 9999 },
+        { label: 'Ano Atual', days: -2 },
+        { label: 'Ano Passado', days: -3 },
+        { label: 'Próximos 6 meses', days: 180 },
+        { label: 'Próximos 12 meses', days: 365 },
         { label: 'Próximos 30 dias', days: 30 },
         { label: 'Próximos 60 dias', days: 60 },
         { label: 'Mês atual', days: -1 }
@@ -69,18 +73,12 @@ export class ScheduleFiltersComponent implements OnInit {
             const diffTime = Math.abs(end.getTime() - start.getTime());
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            // Check if it matches 'Current Month' logic (roughly) or specific presets
-            // For now, let's try to match exact presets, otherwise default to 30 to avoid weird UI state
-            // Or simple logic: use the preset that matches closely or keep 30 if custom
             const match = this.periodPresets.find(p => p.days === diffDays);
             if (match) {
                 periodDays = match.days;
             } else if (diffDays > 25 && diffDays < 35) {
-                // Close enough to 30
                 periodDays = 30;
             }
-            // Check for "Current Month" special case (-1 logic is internal to component, persistence saves dates)
-            // If the saved dates look like current month, we could set -1, but 30 is safer fallback for now.
         }
 
         this.filterForm = this.fb.group({
@@ -89,8 +87,6 @@ export class ScheduleFiltersComponent implements OnInit {
             selectedTypes: [this.filters?.types || []],
             periodPreset: [periodDays]
         });
-
-        // We manually trigger emitFilters on changes now due to complex UI
     }
 
     // Dropdown Toggling
@@ -118,17 +114,39 @@ export class ScheduleFiltersComponent implements OnInit {
         this.filterForm.patchValue({ periodPreset: days });
 
         const now = new Date();
+        let startDate = new Date(now);
         let endDate: Date;
 
-        if (days === -1) {
-            endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-        } else {
-            endDate = new Date(now);
-            endDate.setDate(endDate.getDate() + days);
+        switch (days) {
+            case 9999: // Todos (Range: -2 Years to +2 Years)
+                startDate = new Date(now.getFullYear() - 2, 0, 1);
+                endDate = new Date(now.getFullYear() + 2, 11, 31);
+                break;
+            case -2: // Ano Atual
+                startDate = new Date(now.getFullYear(), 0, 1);
+                endDate = new Date(now.getFullYear(), 11, 31);
+                break;
+            case -3: // Ano Passado
+                startDate = new Date(now.getFullYear() - 1, 0, 1);
+                endDate = new Date(now.getFullYear() - 1, 11, 31);
+                break;
+            case -1: // Mês atual (1st to Last Day)
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                break;
+            case 30:
+            case 60:
+            case 180:
+            case 365:
+            default:
+                // Próximos X dias (Start = Now)
+                endDate = new Date(startDate);
+                endDate.setDate(endDate.getDate() + days);
+                break;
         }
 
         this.filters.dateRange = {
-            start: now,
+            start: startDate,
             end: endDate
         };
 

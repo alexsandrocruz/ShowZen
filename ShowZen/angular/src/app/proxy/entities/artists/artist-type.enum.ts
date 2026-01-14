@@ -1,6 +1,7 @@
 import { mapEnumToOptions } from '@abp/ng.core';
 
 export enum ArtistType {
+  Singer = 0,
   Musician = 1,
   Speaker = 2,
   Teacher = 3,

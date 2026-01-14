@@ -56,6 +56,7 @@ using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.PostgreSql;
+using Volo.Abp.BlobStoring.Database;
 using Volo.Abp.Studio.Client.AspNetCore;
 
 namespace ShowZen;
@@ -192,6 +193,7 @@ public class ShowZenModule : AbpModule
         ConfigureVirtualFiles(hostingEnvironment);
         ConfigureEfCore(context);
         ConfigureAntiForgery();
+        ConfigureBlobStoring();
     }
 
     private void ConfigureAntiForgery()
@@ -380,6 +382,17 @@ public class ShowZenModule : AbpModule
         
     }
 
+
+    private void ConfigureBlobStoring()
+    {
+        Configure<Volo.Abp.BlobStoring.AbpBlobStoringOptions>(options =>
+        {
+            options.Containers.ConfigureDefault(container =>
+            {
+                container.UseDatabase();
+            });
+        });
+    }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {

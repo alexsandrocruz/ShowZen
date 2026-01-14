@@ -21,6 +21,9 @@ import { PageModule } from '@abp/ng.components/page';
 import { ArtistService } from '../proxy/services/artists/artist.service';
 import { ArtistDto, GetArtistListDto } from '../proxy/services/dtos/artists/models';
 import { ArtistType } from '../proxy/entities/artists/artist-type.enum';
+import { ArtistImageService } from '../proxy/services/artists/artist-image.service';
+import { forkJoin, of, concat } from 'rxjs';
+import { switchMap, toArray } from 'rxjs/operators';
 
 @Component({
     selector: 'app-artists',
@@ -47,10 +50,17 @@ export class ArtistsComponent implements OnInit {
 
     isModalOpen = false;
     selectedArtist = {} as ArtistDto;
+    viewMode: 'table' | 'grid' = 'grid';
 
     form!: FormGroup;
 
+    logoFile: File | null = null;
+    bannerFile: File | null = null;
+    logoPreview: string | null = null;
+    bannerPreview: string | null = null;
+
     artistTypes = [
+        { value: ArtistType.Singer, label: 'Singer' },
         { value: ArtistType.Musician, label: 'Musician' },
         { value: ArtistType.Speaker, label: 'Speaker' },
         { value: ArtistType.Teacher, label: 'Teacher' },
@@ -65,6 +75,7 @@ export class ArtistsComponent implements OnInit {
     constructor(
         public readonly list: ListService<GetArtistListDto>,
         private artistService: ArtistService,
+        private artistImageService: ArtistImageService,
         private fb: FormBuilder,
         private confirmation: ConfirmationService
     ) { }
@@ -73,7 +84,12 @@ export class ArtistsComponent implements OnInit {
         this.buildForm();
         this.buildFilterForm();
 
-        const artistStreamCreator = (query: GetArtistListDto) => this.artistService.getList(query);
+        const artistStreamCreator = (query: GetArtistListDto) => {
+            return this.artistService.getList({
+                ...query,
+                ...this.filterForm.value
+            });
+        };
 
         this.list.hookToQuery(artistStreamCreator).subscribe((response) => {
             this.artists = response;
@@ -102,7 +118,6 @@ export class ArtistsComponent implements OnInit {
         });
 
         this.filterForm.valueChanges.subscribe(() => {
-            this.list.filter = this.filterForm.value.filter;
             this.list.get();
         });
     }
@@ -110,6 +125,10 @@ export class ArtistsComponent implements OnInit {
     createArtist() {
         this.selectedArtist = {} as ArtistDto;
         this.form.reset();
+        this.logoFile = null;
+        this.bannerFile = null;
+        this.logoPreview = null;
+        this.bannerPreview = null;
         this.isModalOpen = true;
     }
 
@@ -117,8 +136,32 @@ export class ArtistsComponent implements OnInit {
         this.artistService.get(id).subscribe((artist) => {
             this.selectedArtist = artist;
             this.form.patchValue(artist);
+            this.logoFile = null;
+            this.bannerFile = null;
+            this.logoPreview = artist.logoUrl || null;
+            this.bannerPreview = artist.bannerUrl || null;
             this.isModalOpen = true;
         });
+    }
+
+    onLogoSelected(event: any) {
+        const file = event.target.files[0];
+        if (file) {
+            this.logoFile = file;
+            const reader = new FileReader();
+            reader.onload = () => this.logoPreview = reader.result as string;
+            reader.readAsDataURL(file);
+        }
+    }
+
+    onBannerSelected(event: any) {
+        const file = event.target.files[0];
+        if (file) {
+            this.bannerFile = file;
+            const reader = new FileReader();
+            reader.onload = () => this.bannerPreview = reader.result as string;
+            reader.readAsDataURL(file);
+        }
     }
 
     save() {
@@ -130,7 +173,18 @@ export class ArtistsComponent implements OnInit {
             ? this.artistService.update(this.selectedArtist.id, this.form.value)
             : this.artistService.create(this.form.value);
 
-        request.subscribe(() => {
+        request.pipe(
+            switchMap((artist: ArtistDto) => {
+                const uploads = [];
+                if (this.logoFile) {
+                    uploads.push(this.artistImageService.uploadLogo(artist.id, this.logoFile));
+                }
+                if (this.bannerFile) {
+                    uploads.push(this.artistImageService.uploadBanner(artist.id, this.bannerFile));
+                }
+                return uploads.length > 0 ? concat(...uploads).pipe(toArray()) : of(null);
+            })
+        ).subscribe(() => {
             this.isModalOpen = false;
             this.form.reset();
             this.list.get();

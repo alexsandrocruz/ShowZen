@@ -26,7 +26,12 @@ public class ArtistAppService : ApplicationService, IArtistAppService
     public async Task<ArtistDto> GetAsync(Guid id)
     {
         var artist = await _artistRepository.GetAsync(id);
-        return ObjectMapper.Map<Artist, ArtistDto>(artist);
+        var dto = ObjectMapper.Map<Artist, ArtistDto>(artist);
+        
+        if (!string.IsNullOrEmpty(dto.LogoUrl)) dto.LogoUrl = $"/api/app/artist-image/{dto.Id}/logo";
+        if (!string.IsNullOrEmpty(dto.BannerUrl)) dto.BannerUrl = $"/api/app/artist-image/{dto.Id}/banner";
+        
+        return dto;
     }
     
     public async Task<PagedResultDto<ArtistDto>> GetListAsync(GetArtistListDto input)
@@ -61,10 +66,14 @@ public class ArtistAppService : ApplicationService, IArtistAppService
                 .Take(input.MaxResultCount)
         );
         
-        return new PagedResultDto<ArtistDto>(
-            totalCount,
-            ObjectMapper.Map<List<Artist>, List<ArtistDto>>(artists)
-        );
+        var dtos = ObjectMapper.Map<List<Artist>, List<ArtistDto>>(artists);
+        foreach (var dto in dtos)
+        {
+            if (!string.IsNullOrEmpty(dto.LogoUrl)) dto.LogoUrl = $"/api/app/artist-image/{dto.Id}/logo";
+            if (!string.IsNullOrEmpty(dto.BannerUrl)) dto.BannerUrl = $"/api/app/artist-image/{dto.Id}/banner";
+        }
+        
+        return new PagedResultDto<ArtistDto>(totalCount, dtos);
     }
     
     [Authorize(ShowZenPermissions.Artists.Create)]

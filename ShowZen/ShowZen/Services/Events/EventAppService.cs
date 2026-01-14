@@ -165,6 +165,14 @@ public class EventAppService : ApplicationService, IEventAppService
             foreach (var commInput in input.Commissions)
             {
                 var commission = ObjectMapper.Map<CreateUpdateEventCommissionDto, EventCommission>(commInput);
+                try 
+                {
+                    commission.SetId(GuidGenerator.Create());
+                }
+                catch
+                {
+                    commission.SetId(Guid.NewGuid());
+                }
                 eventEntity.Commissions.Add(commission);
             }
         }
@@ -223,6 +231,14 @@ public class EventAppService : ApplicationService, IEventAppService
             foreach (var commInput in input.Commissions)
             {
                 var commission = ObjectMapper.Map<CreateUpdateEventCommissionDto, EventCommission>(commInput);
+                try
+                {
+                    commission.SetId(GuidGenerator.Create());
+                }
+                catch
+                {
+                     commission.SetId(Guid.NewGuid());
+                }
                 eventEntity.Commissions.Add(commission);
             }
         }

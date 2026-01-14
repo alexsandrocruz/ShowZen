@@ -25,8 +25,9 @@ public static class HealthChecksBuilderExtensions
         {
             // HealthChecks UI needs an absolute URL and cannot use 0.0.0.0
             // Use localhost for local health check monitoring
+            var selfUrl = configuration["App:SelfUrl"]?.RemovePostFix("/") ?? "http://localhost:5000";
             var healthCheckEndpoint = string.IsNullOrEmpty(healthCheckUrl) || healthCheckUrl.StartsWith("/")
-                ? $"http://localhost:5000{healthCheckUrl}"
+                ? $"{selfUrl}{healthCheckUrl}"
                 : healthCheckUrl;
             
             settings.AddHealthCheckEndpoint("ShowZen Health Status", healthCheckEndpoint);

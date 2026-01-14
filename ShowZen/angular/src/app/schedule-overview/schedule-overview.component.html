@@ -34,27 +34,6 @@
     </div>
   </div>
 
-  <!-- Statistics Summary - Horizontal Scroll on Mobile -->
-  <div class="kpi-carousel-wrapper" *ngIf="scheduleData?.statistics">
-    <div class="kpi-carousel">
-      <div class="kpi-card kpi-success">
-        <span class="stat-label">{{ '::Confirmed' | abpLocalization }}</span>
-        <span class="stat-value">{{ scheduleData.statistics.confirmedEvents }}</span>
-      </div>
-      <div class="kpi-card kpi-info">
-        <span class="stat-label">{{ '::Proposals' | abpLocalization }}</span>
-        <span class="stat-value">{{ scheduleData.statistics.proposalEvents }}</span>
-      </div>
-      <div class="kpi-card kpi-warning">
-        <span class="stat-label">{{ '::Leads' | abpLocalization }}</span>
-        <span class="stat-value">{{ scheduleData.statistics.leadEvents }}</span>
-      </div>
-      <div class="kpi-card kpi-primary">
-        <span class="stat-label">{{ '::ConfirmedRevenue' | abpLocalization }}</span>
-        <span class="stat-value">R$ {{ scheduleData.statistics.totalConfirmedRevenue | number:'1.2-2' }}</span>
-      </div>
-    </div>
-  </div>
 
   <!-- Filters Card -->
   <div class="card mb-4">

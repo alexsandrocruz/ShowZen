@@ -12,4 +12,9 @@ public class EventCommission : Entity<Guid>
     
     // Navigation property
     public Event Event { get; set; } = null!;
+
+    public void SetId(Guid id)
+    {
+        Id = id;
+    }
 }

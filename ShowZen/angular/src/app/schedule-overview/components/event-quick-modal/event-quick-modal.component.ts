@@ -148,6 +148,10 @@ export class EventQuickModalComponent implements OnInit {
     this.form.get('fee')?.valueChanges.subscribe(() => {
       this.calculateTaxFromPercentage(this.form.get('taxPercentage')?.value);
       this.calculateProductionFromPercentage(this.form.get('productionPercentage')?.value);
+
+      this.commissions.controls.forEach(control => {
+        this.calculateCommissionValue(control as FormGroup);
+      });
     });
   }
 
@@ -157,7 +161,36 @@ export class EventQuickModalComponent implements OnInit {
       value: [null],
       percentage: [null]
     });
+    this.setupCommissionListeners(commissionForm);
     this.commissions.push(commissionForm);
+  }
+
+  private setupCommissionListeners(group: FormGroup): void {
+    group.get('percentage')?.valueChanges.subscribe(val => {
+      this.calculateCommissionValue(group);
+    });
+
+    group.get('value')?.valueChanges.subscribe(val => {
+      this.calculateCommissionPercentage(group);
+    });
+  }
+
+  private calculateCommissionValue(group: FormGroup): void {
+    const fee = this.form.get('fee')?.value || 0;
+    const percentage = group.get('percentage')?.value || 0;
+    if (fee > 0) {
+      const value = (percentage / 100) * fee;
+      group.get('value')?.setValue(Number(value.toFixed(2)), { emitEvent: false });
+    }
+  }
+
+  private calculateCommissionPercentage(group: FormGroup): void {
+    const fee = this.form.get('fee')?.value || 0;
+    const value = group.get('value')?.value || 0;
+    if (fee > 0) {
+      const percentage = (value / fee) * 100;
+      group.get('percentage')?.setValue(Number(percentage.toFixed(2)), { emitEvent: false });
+    }
   }
 
   removeCommission(index: number): void {
@@ -243,11 +276,13 @@ export class EventQuickModalComponent implements OnInit {
       this.commissions.clear();
       if (event.commissions) {
         event.commissions.forEach(c => {
-          this.commissions.push(this.fb.group({
+          const group = this.fb.group({
             description: [c.description, Validators.required],
             value: [c.value],
             percentage: [c.percentage]
-          }));
+          });
+          this.setupCommissionListeners(group);
+          this.commissions.push(group);
         });
       }
 
@@ -312,6 +347,11 @@ export class EventQuickModalComponent implements OnInit {
     // Calculate End Date Time based on duration in minutes
     const endDateTime = new Date(startDateTime.getTime() + formValue.durationInMinutes * 60000);
 
+    const mins = formValue.durationInMinutes || 0;
+    const hours = Math.floor(mins / 60);
+    const remMins = mins % 60;
+    const durationStr = `${hours.toString().padStart(2, '0')}:${remMins.toString().padStart(2, '0')}`;
+
     const input = {
       ...formValue,
       type: Number(formValue.type),
@@ -320,6 +360,8 @@ export class EventQuickModalComponent implements OnInit {
       negotiationType: Number(formValue.negotiationType),
       startDateTime: toLocalISOString(startDateTime),
       endDateTime: toLocalISOString(endDateTime),
+      startTime: `${formValue.startTime.hour.toString().padStart(2, '0')}:${formValue.startTime.minute.toString().padStart(2, '0')}`,
+      duration: durationStr
     };
 
     // Check for conflict before saving
