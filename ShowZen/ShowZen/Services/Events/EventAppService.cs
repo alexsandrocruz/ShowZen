@@ -145,6 +145,9 @@ public class EventAppService : ApplicationService, IEventAppService
         eventEntity.Status = EventStatus.Lead;
         eventEntity.HasConflict = hasConflict; // Mark conflict but don't block
         
+        // Clear automatically mapped commissions to avoid EF tracking conflicts with default/empty IDs
+        eventEntity.Commissions.Clear();
+        
         // Store suggested alternative if there's a conflict
         if (hasConflict)
         {
@@ -165,14 +168,7 @@ public class EventAppService : ApplicationService, IEventAppService
             foreach (var commInput in input.Commissions)
             {
                 var commission = ObjectMapper.Map<CreateUpdateEventCommissionDto, EventCommission>(commInput);
-                try 
-                {
-                    commission.SetId(GuidGenerator.Create());
-                }
-                catch
-                {
-                    commission.SetId(Guid.NewGuid());
-                }
+                commission.SetId(GuidGenerator.Create());
                 eventEntity.Commissions.Add(commission);
             }
         }
@@ -231,14 +227,7 @@ public class EventAppService : ApplicationService, IEventAppService
             foreach (var commInput in input.Commissions)
             {
                 var commission = ObjectMapper.Map<CreateUpdateEventCommissionDto, EventCommission>(commInput);
-                try
-                {
-                    commission.SetId(GuidGenerator.Create());
-                }
-                catch
-                {
-                     commission.SetId(Guid.NewGuid());
-                }
+                commission.SetId(GuidGenerator.Create());
                 eventEntity.Commissions.Add(commission);
             }
         }
