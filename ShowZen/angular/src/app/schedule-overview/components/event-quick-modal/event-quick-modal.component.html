@@ -273,4 +273,6 @@
             {{ '::Save' | abpLocalization }}
         </button>
     </ng-template>
+
+    <app-client-quick-modal #clientQuickModal (onSave)="onClientCreated($event)"></app-client-quick-modal>
 </abp-modal>

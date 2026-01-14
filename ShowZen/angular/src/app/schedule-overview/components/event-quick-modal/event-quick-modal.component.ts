@@ -21,6 +21,7 @@ import { NegotiationType } from '../../../proxy/entities/events/negotiation-type
 import { FormArray } from '@angular/forms';
 import { CurrencyBrlInputDirective } from '../../../shared/directives/currency-brl-input.directive';
 import { PercentageInputDirective } from '../../../shared/directives/percentage-input.directive';
+import { ClientQuickModalComponent } from '../../../shared/components/client-quick-modal/client-quick-modal.component';
 
 @Component({
   selector: 'app-event-quick-modal',
@@ -37,18 +38,22 @@ import { PercentageInputDirective } from '../../../shared/directives/percentage-
     LocalizationPipe,
     ModalComponent,
     CurrencyBrlInputDirective,
-    PercentageInputDirective
+    PercentageInputDirective,
+    ClientQuickModalComponent
   ],
   providers: [{ provide: NgbDateAdapter, useClass: NgbDateNativeAdapter }]
 })
 export class EventQuickModalComponent implements OnInit {
   @ViewChild('abpModal') abpModal!: ModalComponent;
+  @ViewChild('clientQuickModal') clientQuickModal!: ClientQuickModalComponent;
   @Output() onSave = new EventEmitter<void>();
 
   isModalOpen = false;
   isEditMode = false;
   editingEventId: string | null = null;
   form!: FormGroup;
+
+  private clientResolve?: (value: ClientDto | PromiseLike<ClientDto>) => void;
 
   artists: ArtistDto[] = [];
   clients: ClientDto[] = [];
@@ -450,24 +455,19 @@ export class EventQuickModalComponent implements OnInit {
 
   // Client Quick Add
   onAddClient = (name: string): ClientDto | Promise<ClientDto> => {
-    const newClient: CreateUpdateClientDto = {
-      name: name,
-      type: ClientType.PrivateCompany,
-      email: undefined,
-      phone: undefined,
-      address: undefined,
-      city: undefined,
-      state: undefined,
-      notes: 'Criado via Quick Add'
-    };
-
     return new Promise((resolve) => {
-      this.clientService.create(newClient).subscribe(created => {
-        this.clients.push(created);
-        resolve(created);
-      });
+      this.clientResolve = resolve;
+      this.clientQuickModal.open(name);
     });
   };
+
+  onClientCreated(client: ClientDto): void {
+    this.clients.push(client);
+    if (this.clientResolve) {
+      this.clientResolve(client);
+      this.clientResolve = undefined;
+    }
+  }
 
   customSearchFnClient = (term: string, item: ClientDto): boolean => {
     if (!term) return true;
