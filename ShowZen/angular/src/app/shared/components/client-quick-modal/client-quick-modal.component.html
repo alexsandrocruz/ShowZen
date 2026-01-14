@@ -1,29 +1,30 @@
 <abp-modal [(visible)]="isModalOpen" [options]="{ size: 'md' }">
     <ng-template #abpHeader>
-        <h3>Novo Cliente</h3>
+        <h3>{{ '::NewClient' | abpLocalization }}</h3>
     </ng-template>
 
     <ng-template #abpBody>
         <form [formGroup]="form" (ngSubmit)="save()">
             <div class="mb-3">
-                <label class="form-label" for="client-name">Nome do Cliente *</label>
+                <label class="form-label" for="client-name">{{ '::ClientName' | abpLocalization }} *</label>
                 <input type="text" id="client-name" class="form-control" formControlName="name" autofocus />
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="client-type">Tipo de Cliente *</label>
+                <label class="form-label" for="client-type">{{ '::ClientType' | abpLocalization }} *</label>
                 <select id="client-type" class="form-select" formControlName="type">
-                    <option *ngFor="let opt of clientTypes" [ngValue]="opt.value">{{ opt.key }}</option>
+                    <option *ngFor="let opt of clientTypes" [ngValue]="opt.value">{{ '::ClientType:' + opt.key |
+                        abpLocalization }}</option>
                 </select>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label" for="client-email">E-mail</label>
+                    <label class="form-label" for="client-email">{{ '::Email' | abpLocalization }}</label>
                     <input type="email" id="client-email" class="form-control" formControlName="email" />
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label" for="client-phone">Telefone</label>
+                    <label class="form-label" for="client-phone">{{ '::Phone' | abpLocalization }}</label>
                     <input type="text" id="client-phone" class="form-control" formControlName="phone" />
                 </div>
             </div>
@@ -32,11 +33,11 @@
 
     <ng-template #abpFooter>
         <button type="button" class="btn btn-secondary" (click)="close()">
-            Cancelar
+            {{ '::Cancel' | abpLocalization }}
         </button>
         <button class="btn btn-primary" type="button" [disabled]="form.invalid" (click)="save()">
             <i class="fa fa-check me-1"></i>
-            Salvar Cliente
+            {{ '::Save' | abpLocalization }} {{ '::Client' | abpLocalization }}
         </button>
     </ng-template>
 </abp-modal>
