@@ -13,6 +13,7 @@ using ShowZen.Services.Dtos.Artists;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.Content;
 
