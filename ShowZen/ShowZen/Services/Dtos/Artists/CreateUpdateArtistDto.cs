@@ -29,4 +29,5 @@ public class CreateUpdateArtistDto
     public string? HexColor { get; set; }
     
     public decimal DefaultTaxPercentage { get; set; }
+    public string? ProposalTemplateUrl { get; set; }
 }

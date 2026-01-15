@@ -40,6 +40,7 @@ public class ArtistAppService : ApplicationService, IArtistAppService
         
         if (!string.IsNullOrEmpty(dto.LogoUrl)) dto.LogoUrl = $"/api/app/artist-image/{dto.Id}/logo";
         if (!string.IsNullOrEmpty(dto.BannerUrl)) dto.BannerUrl = $"/api/app/artist-image/{dto.Id}/banner";
+        if (!string.IsNullOrEmpty(dto.ProposalTemplateUrl)) dto.ProposalTemplateUrl = $"/api/app/artist/{dto.Id}/proposal-template";
         
         return dto;
     }
@@ -81,6 +82,7 @@ public class ArtistAppService : ApplicationService, IArtistAppService
         {
             if (!string.IsNullOrEmpty(dto.LogoUrl)) dto.LogoUrl = $"/api/app/artist-image/{dto.Id}/logo";
             if (!string.IsNullOrEmpty(dto.BannerUrl)) dto.BannerUrl = $"/api/app/artist-image/{dto.Id}/banner";
+            if (!string.IsNullOrEmpty(dto.ProposalTemplateUrl)) dto.ProposalTemplateUrl = $"/api/app/artist/{dto.Id}/proposal-template";
         }
         
         return new PagedResultDto<ArtistDto>(totalCount, dtos);

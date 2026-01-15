@@ -18,6 +18,7 @@ public class ArtistDto : FullAuditedEntityDto<Guid>
     public string? BannerUrl { get; set; }
     public string? HexColor { get; set; }
     public decimal DefaultTaxPercentage { get; set; }
+    public string? ProposalTemplateUrl { get; set; }
     
     public List<ArtistSpecialtyDto> Specialties { get; set; } = new();
 }
