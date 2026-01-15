@@ -77,7 +77,6 @@ namespace ShowZen.Services.Proposals
             {
                 try
                 {
-                    Console.WriteLine($"[DEBUG] Attempting to load template for artist {artist.Id} from {artist.ProposalTemplateUrl}");
                     // Check if blob exists
                     if (await _blobContainer.ExistsAsync(artist.ProposalTemplateUrl))
                     {
@@ -87,25 +86,18 @@ namespace ShowZen.Services.Proposals
                             await blobStream.CopyToAsync(ms);
                             artistTemplate = ms.ToArray();
                         }
-                        Console.WriteLine($"[DEBUG] Template loaded successfully. Size: {artistTemplate.Length} bytes.");
                     }
                     else
                     {
-                        Console.WriteLine($"[DEBUG] Template blob not found at {artist.ProposalTemplateUrl}");
                         Logger.LogWarning($"Proposal template blob not found for artist {artist.Name} (ID: {artist.Id}) at path: {artist.ProposalTemplateUrl}");
                     }
                 }
                 catch (Exception ex)
                 {
-                     Console.WriteLine($"[DEBUG] Exception loading template: {ex.Message}");
                     // If template loading fails, continue with budget only but log the error
                     Logger.LogError(ex, $"Failed to load proposal template for artist {artist.Name} (ID: {artist.Id})");
                     artistTemplate = null;
                 }
-            }
-            else 
-            {
-                Console.WriteLine($"[DEBUG] No ProposalTemplateUrl set for artist {artist.Id}");
             }
 
             var finalPdf = await _pdfGenerator.MergePdfsAsync(artistTemplate, budgetPdf);
