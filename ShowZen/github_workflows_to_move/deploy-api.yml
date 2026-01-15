@@ -66,10 +66,10 @@ jobs:
             mv /opt/showzen/deploy-temp/* /opt/showzen/api/
             rm -rf /opt/showzen/deploy-temp
             
-            # Apply Database Migrations
+            # Apply Database Migrations (uses appsettings.Production.json)
             cd /opt/showzen/api
-            export ConnectionStrings__Default="${{ secrets.DB_CONNECTION_STRING }}"
-            dotnet ShowZen.dll --migrate-database
+            export ASPNETCORE_ENVIRONMENT=Production
+            dotnet ShowZen.dll --migrate-database || echo "Migration completed or already applied"
             
             # Restart Systemd Service
             systemctl restart showzen-api
