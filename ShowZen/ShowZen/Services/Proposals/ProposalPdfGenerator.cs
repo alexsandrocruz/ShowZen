@@ -102,7 +102,11 @@ namespace ShowZen.Services.Proposals
 
                                 // Row 3: Location and Emission Date
                                 info.Item().Row(r => {
-                                    r.RelativeItem().Text($"Local: {eventData.Location?.City ?? "A definir"} - {eventData.Location?.State}").FontSize(11);
+                                    var locationText = eventData.Location != null 
+                                        ? $"{eventData.Location.City}/{eventData.Location.State}" 
+                                        : "A definir";
+
+                                    r.RelativeItem().Text($"Local: {locationText}").FontSize(11);
                                     r.RelativeItem().AlignRight().Text($"Emissão: {DateTime.Now:dd/MM/yyyy}").FontSize(10).FontColor(Colors.Grey.Darken2);
                                 });
                                 
