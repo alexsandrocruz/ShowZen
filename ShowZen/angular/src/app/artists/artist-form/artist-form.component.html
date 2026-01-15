@@ -13,11 +13,11 @@
                 <div>
                     <button type="button" class="btn btn-outline-secondary me-2" (click)="cancel()">
                         <i class="fas fa-times me-1"></i>
-                        {{ '::Cancel' | abpLocalization }}
+                        {{ 'Cancel' | abpLocalization }}
                     </button>
                     <button type="button" class="btn btn-primary" (click)="save()" [disabled]="form.invalid || saving">
                         <i class="fas fa-check me-1"></i>
-                        {{ '::Save' | abpLocalization }}
+                        {{ 'Save' | abpLocalization }}
                     </button>
                 </div>
             </div>
@@ -88,7 +88,7 @@
                                 <select id="artist-type" class="form-select" formControlName="type">
                                     <option [ngValue]="null">{{ '::PleaseSelect' | abpLocalization }}</option>
                                     <option *ngFor="let type of artistTypes" [ngValue]="type.value">
-                                        {{ '::ArtistType:' + type.label | abpLocalization }}
+                                        {{ 'ArtistType:' + type.label | abpLocalization }}
                                     </option>
                                 </select>
                                 <div *ngIf="form.get('type')?.invalid && form.get('type')?.touched"
@@ -125,7 +125,7 @@
                             <div class="mb-3">
                                 <label for="artist-instagram" class="form-label">
                                     <i class="fab fa-instagram me-1"></i>
-                                    {{ '::InstagramHandle' | abpLocalization }}
+                                    {{ 'InstagramHandle' | abpLocalization }}
                                 </label>
                                 <input type="text" id="artist-instagram" class="form-control"
                                     formControlName="instagramHandle" placeholder="@username" />
@@ -134,7 +134,7 @@
                             <div class="mb-3">
                                 <label for="artist-website" class="form-label">
                                     <i class="fas fa-globe me-1"></i>
-                                    {{ '::WebsiteUrl' | abpLocalization }}
+                                    {{ 'WebsiteUrl' | abpLocalization }}
                                 </label>
                                 <input type="url" id="artist-website" class="form-control" formControlName="websiteUrl"
                                     placeholder="https://example.com" />
@@ -153,7 +153,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="artist-logo" class="form-label">{{ '::Logo' | abpLocalization }}</label>
+                                    <label for="artist-logo" class="form-label">{{ 'Logo' | abpLocalization }}</label>
                                     <div class="image-upload-wrapper">
                                         <div class="preview-box" *ngIf="logoPreview">
                                             <img [src]="logoPreview" class="img-thumbnail" alt="Logo Preview">
@@ -167,7 +167,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="artist-banner" class="form-label">{{ '::Banner' | abpLocalization
+                                    <label for="artist-banner" class="form-label">{{ 'Banner' | abpLocalization
                                         }}</label>
                                     <div class="image-upload-wrapper">
                                         <div class="preview-box" *ngIf="bannerPreview">
@@ -190,12 +190,12 @@
                         <div class="card-header">
                             <h5 class="mb-0">
                                 <i class="fas fa-file-pdf me-2"></i>
-                                {{ '::ProposalTemplate' | abpLocalization }}
+                                {{ 'ProposalTemplate' | abpLocalization }}
                             </h5>
                         </div>
                         <div class="card-body">
                             <p class="text-muted small mb-3">
-                                {{ '::ProposalTemplateInfo' | abpLocalization }}
+                                {{ 'ProposalTemplateInfo' | abpLocalization }}
                             </p>
 
                             <!-- Current Template Display -->
@@ -208,7 +208,7 @@
                                 <button type="button" class="btn btn-sm btn-danger" (click)="deleteTemplate()"
                                     [disabled]="deletingTemplate">
                                     <i class="fas fa-trash me-1"></i>
-                                    {{ '::DeleteProposalTemplate' | abpLocalization }}
+                                    {{ 'DeleteProposalTemplate' | abpLocalization }}
                                 </button>
                             </div>
 

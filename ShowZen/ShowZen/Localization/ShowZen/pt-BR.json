@@ -148,6 +148,14 @@
     "EventType:InstitutionalEvent": "Evento Institucional",
     "EventType:Corporate": "Corporativo",
     "EventType:Training": "Treinamento",
-    "EventType:Other": "Outro"
+    "EventType:Other": "Outro",
+    "ProposalTemplate": "PDF de Apresentação",
+    "UploadProposalTemplate": "Fazer Upload do PDF",
+    "DeleteProposalTemplate": "Remover PDF",
+    "ProposalTemplateInfo": "Faça upload do PDF de apresentação artística (Media Kit). Este arquivo será anexado automaticamente às propostas geradas para este artista.",
+    "ProposalTemplateUploaded": "PDF de apresentação enviado com sucesso",
+    "ProposalTemplateDeleted": "PDF de apresentação removido",
+    "Logo": "Logo",
+    "Banner": "Banner"
   }
 }
