@@ -83,4 +83,16 @@ jobs:
             mv /opt/showzen/angular-temp/* /opt/showzen/angular/
             rm -rf /opt/showzen/angular-temp
             
-            docker exec showzen-nginx nginx -s reload
+            # Reload Nginx if it's running
+            if docker ps --format '{{.Names}}' | grep -q "^showzen-nginx$"; then
+              docker exec showzen-nginx nginx -s reload
+            else
+              echo "Container 'showzen-nginx' not found. Attempting to find any nginx container..."
+              NGINX_ID=$(docker ps -q --filter ancestor=nginx:alpine)
+              if [ -n "$NGINX_ID" ]; then
+                docker exec $NGINX_ID nginx -s reload
+                echo "Reloaded Nginx container: $NGINX_ID"
+              else
+                 echo "No Nginx container found running. Skipping reload."
+              fi
+            fi
