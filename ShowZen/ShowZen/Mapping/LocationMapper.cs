@@ -9,5 +9,6 @@ public partial class LocationMapper
 {
     public partial LocationDto ToDto(Location entity);
     public partial Location ToEntity(CreateUpdateLocationDto dto);
+    [MapperIgnoreTarget(nameof(Event.IsDeleted))]
     public partial void UpdateEntity(CreateUpdateEventDto dto, Event entity);
 }
