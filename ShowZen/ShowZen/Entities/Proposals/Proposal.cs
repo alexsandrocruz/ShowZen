@@ -1,13 +1,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Entities.Auditing;
 using ShowZen.Entities.Events;
 
 namespace ShowZen.Entities.Proposals
 {
     [Table("Proposals")]
-    public class Proposal : Entity<Guid>
+    public class Proposal : AuditedAggregateRoot<Guid>
     {
         [Required]
         public Guid EventId { get; set; }

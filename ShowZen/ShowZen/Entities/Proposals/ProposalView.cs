@@ -1,12 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Volo.Abp.Domain.Entities;
+using Volo.Abp.Domain.Entities.Auditing;
 
 namespace ShowZen.Entities.Proposals
 {
     [Table("ProposalViews")]
-    public class ProposalView : Entity<Guid>
+    public class ProposalView : CreationAuditedEntity<Guid>
     {
         [Required]
         public Guid ProposalId { get; set; }
