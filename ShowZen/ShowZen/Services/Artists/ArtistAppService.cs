@@ -116,7 +116,7 @@ public class ArtistAppService : ApplicationService, IArtistAppService
     [Route("api/app/artist/{artistId}/proposal-template")]
     [IgnoreAntiforgeryToken]
     [Authorize(ShowZenPermissions.Artists.Edit)]
-    public async Task<string> UploadProposalTemplateAsync(Guid artistId, IRemoteStreamContent input)
+    public async Task UploadProposalTemplateAsync(Guid artistId, IRemoteStreamContent input)
     {
         if (input == null || input.ContentLength == 0)
         {
@@ -145,8 +145,6 @@ public class ArtistAppService : ApplicationService, IArtistAppService
         // Update artist
         artist.ProposalTemplateUrl = blobName;
         await _artistRepository.UpdateAsync(artist);
-
-        return blobName;
     }
 
     [HttpDelete]

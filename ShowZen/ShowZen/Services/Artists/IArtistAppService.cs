@@ -14,7 +14,7 @@ public interface IArtistAppService : IApplicationService
     Task<ArtistDto> CreateAsync(CreateUpdateArtistDto input);
     Task<ArtistDto> UpdateAsync(Guid id, CreateUpdateArtistDto input);
     Task DeleteAsync(Guid id);
-    Task<string> UploadProposalTemplateAsync(Guid artistId, IRemoteStreamContent input);
+    Task UploadProposalTemplateAsync(Guid artistId, IRemoteStreamContent input);
     Task DeleteProposalTemplateAsync(Guid artistId);
     Task<IRemoteStreamContent> GetProposalTemplateAsync(Guid artistId);
 }

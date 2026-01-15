@@ -58,7 +58,7 @@ export class ArtistService {
     const formData = new FormData();
     formData.append('input', file);
 
-    return this.restService.request<any, string>({
+    return this.restService.request<any, void>({
       method: 'POST',
       url: `/api/app/artist/${artistId}/proposal-template`,
       body: formData,
