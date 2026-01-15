@@ -42,6 +42,16 @@ export const APP_ROUTES: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'artists/new',
+    loadComponent: () => import('./artists/artist-form/artist-form.component').then(c => c.ArtistFormComponent),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'artists/edit/:id',
+    loadComponent: () => import('./artists/artist-form/artist-form.component').then(c => c.ArtistFormComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'clients',
     loadComponent: () => import('./clients/clients.component').then(c => c.ClientsComponent),
     canActivate: [authGuard],

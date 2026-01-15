@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import {
@@ -13,17 +14,12 @@ import {
     ConfirmationService,
     Confirmation,
     NgxDatatableDefaultDirective,
-    NgxDatatableListDirective,
-    ModalCloseDirective,
-    ModalComponent
+    NgxDatatableListDirective
 } from '@abp/ng.theme.shared';
 import { PageModule } from '@abp/ng.components/page';
 import { ArtistService } from '../proxy/services/artists/artist.service';
 import { ArtistDto, GetArtistListDto } from '../proxy/services/dtos/artists/models';
 import { ArtistType } from '../proxy/entities/artists/artist-type.enum';
-import { ArtistImageService } from '../proxy/services/artists/artist-image.service';
-import { forkJoin, of, concat } from 'rxjs';
-import { switchMap, toArray } from 'rxjs/operators';
 
 @Component({
     selector: 'app-artists',
@@ -37,9 +33,7 @@ import { switchMap, toArray } from 'rxjs/operators';
         LocalizationPipe,
         PermissionDirective,
         NgxDatatableDefaultDirective,
-        NgxDatatableListDirective,
-        NgxDatatableListDirective,
-        ModalComponent
+        NgxDatatableListDirective
     ],
     providers: [ListService],
     templateUrl: './artists.component.html',
@@ -47,19 +41,7 @@ import { switchMap, toArray } from 'rxjs/operators';
 })
 export class ArtistsComponent implements OnInit {
     artists: PagedResultDto<ArtistDto> = { items: [], totalCount: 0 };
-
-    isModalOpen = false;
-    selectedArtist = {} as ArtistDto;
     viewMode: 'table' | 'grid' = 'grid';
-
-    form!: FormGroup;
-
-    logoFile: File | null = null;
-    bannerFile: File | null = null;
-    logoPreview: string | null = null;
-    bannerPreview: string | null = null;
-    templateFile: File | null = null;
-    deletingTemplate = false;
 
     artistTypes = [
         { value: ArtistType.Singer, label: 'Singer' },
@@ -77,13 +59,12 @@ export class ArtistsComponent implements OnInit {
     constructor(
         public readonly list: ListService<GetArtistListDto>,
         private artistService: ArtistService,
-        private artistImageService: ArtistImageService,
         private fb: FormBuilder,
+        private router: Router,
         private confirmation: ConfirmationService
     ) { }
 
     ngOnInit() {
-        this.buildForm();
         this.buildFilterForm();
 
         const artistStreamCreator = (query: GetArtistListDto) => {
@@ -95,20 +76,6 @@ export class ArtistsComponent implements OnInit {
 
         this.list.hookToQuery(artistStreamCreator).subscribe((response) => {
             this.artists = response;
-        });
-    }
-
-    buildForm() {
-        this.form = this.fb.group({
-            name: ['', [Validators.required, Validators.maxLength(200)]],
-            type: [null, Validators.required],
-            biography: ['', [Validators.required, Validators.maxLength(2000)]],
-            instagramHandle: ['', Validators.maxLength(100)],
-            websiteUrl: ['', Validators.maxLength(500)],
-            logoUrl: [null],
-            bannerUrl: [null],
-            hexColor: ['#000000'],
-            defaultTaxPercentage: [0, [Validators.min(0), Validators.max(100)]]
         });
     }
 
@@ -125,118 +92,11 @@ export class ArtistsComponent implements OnInit {
     }
 
     createArtist() {
-        this.selectedArtist = {} as ArtistDto;
-        this.form.reset();
-        this.logoFile = null;
-        this.bannerFile = null;
-        this.logoPreview = null;
-        this.bannerPreview = null;
-        this.templateFile = null;
-        this.isModalOpen = true;
+        this.router.navigate(['/artists/new']);
     }
 
     editArtist(id: string) {
-        this.artistService.get(id).subscribe((artist) => {
-            this.selectedArtist = artist;
-            this.form.patchValue(artist);
-            this.logoFile = null;
-            this.bannerFile = null;
-            this.logoPreview = artist.logoUrl || null;
-            this.bannerPreview = artist.bannerUrl || null;
-            this.templateFile = null;
-            this.isModalOpen = true;
-        });
-    }
-
-    onLogoSelected(event: any) {
-        const file = event.target.files[0];
-        if (file) {
-            this.logoFile = file;
-            const reader = new FileReader();
-            reader.onload = () => this.logoPreview = reader.result as string;
-            reader.readAsDataURL(file);
-        }
-    }
-
-    onBannerSelected(event: any) {
-        const file = event.target.files[0];
-        if (file) {
-            this.bannerFile = file;
-            const reader = new FileReader();
-            reader.onload = () => this.bannerPreview = reader.result as string;
-            reader.readAsDataURL(file);
-        }
-    }
-
-    onTemplateSelected(event: any) {
-        const file = event.target.files[0];
-        if (file) {
-            // Validate PDF
-            if (file.type !== 'application/pdf') {
-                alert('Apenas arquivos PDF são permitidos');
-                return;
-            }
-            // Validate size (max 10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                alert('O arquivo deve ter no máximo 10MB');
-                return;
-            }
-            this.templateFile = file;
-        }
-    }
-
-    deleteTemplate() {
-        if (!this.selectedArtist.id) return;
-
-        this.confirmation.warn(
-            '::AreYouSure',
-            'Tem certeza que deseja remover o PDF de apresentação?'
-        ).subscribe((status) => {
-            if (status === Confirmation.Status.confirm) {
-                this.deletingTemplate = true;
-                this.artistService.deleteProposalTemplate(this.selectedArtist.id).subscribe({
-                    next: () => {
-                        this.deletingTemplate = false;
-                        this.selectedArtist.proposalTemplateUrl = null;
-                        this.list.get();
-                    },
-                    error: () => {
-                        this.deletingTemplate = false;
-                        alert('Erro ao remover PDF');
-                    }
-                });
-            }
-        });
-    }
-
-    save() {
-        if (this.form.invalid) {
-            return;
-        }
-
-        const request = this.selectedArtist.id
-            ? this.artistService.update(this.selectedArtist.id, this.form.value)
-            : this.artistService.create(this.form.value);
-
-        request.pipe(
-            switchMap((artist: ArtistDto) => {
-                const uploads = [];
-                if (this.logoFile) {
-                    uploads.push(this.artistImageService.uploadLogo(artist.id, this.logoFile));
-                }
-                if (this.bannerFile) {
-                    uploads.push(this.artistImageService.uploadBanner(artist.id, this.bannerFile));
-                }
-                if (this.templateFile) {
-                    uploads.push(this.artistService.uploadProposalTemplate(artist.id, this.templateFile));
-                }
-                return uploads.length > 0 ? concat(...uploads).pipe(toArray()) : of(null);
-            })
-        ).subscribe(() => {
-            this.isModalOpen = false;
-            this.form.reset();
-            this.list.get();
-        });
+        this.router.navigate(['/artists/edit', id]);
     }
 
     delete(id: string) {
