@@ -13,6 +13,7 @@ export interface ArtistDto extends FullAuditedEntityDto<string> {
   bannerUrl?: string;
   hexColor?: string;
   defaultTaxPercentage: number;
+  proposalTemplateUrl?: string;
   specialties: ArtistSpecialtyDto[];
 }
 
