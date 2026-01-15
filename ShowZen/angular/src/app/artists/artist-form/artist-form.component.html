@@ -88,7 +88,7 @@
                                 <select id="artist-type" class="form-select" formControlName="type">
                                     <option [ngValue]="null">{{ '::PleaseSelect' | abpLocalization }}</option>
                                     <option *ngFor="let type of artistTypes" [ngValue]="type.value">
-                                        {{ 'ArtistType:' + type.label | abpLocalization }}
+                                        {{ type.key | abpLocalization }}
                                     </option>
                                 </select>
                                 <div *ngIf="form.get('type')?.invalid && form.get('type')?.touched"

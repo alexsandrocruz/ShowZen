@@ -6,7 +6,7 @@ import { LocalizationPipe } from '@abp/ng.core';
 import { ConfirmationService, Confirmation } from '@abp/ng.theme.shared';
 import { ArtistService } from '../../proxy/services/artists/artist.service';
 import { ArtistDto } from '../../proxy/services/dtos/artists/models';
-import { ArtistType } from '../../proxy/entities/artists/artist-type.enum';
+import { ArtistType, artistTypeOptions } from '../../proxy/entities/artists/artist-type.enum';
 import { ArtistImageService } from '../../proxy/services/artists/artist-image.service';
 import { forkJoin, of, concat } from 'rxjs';
 import { switchMap, toArray } from 'rxjs/operators';
@@ -37,16 +37,7 @@ export class ArtistFormComponent implements OnInit {
     templateFile: File | null = null;
     deletingTemplate = false;
 
-    artistTypes = [
-        { value: ArtistType.Singer, label: 'Singer' },
-        { value: ArtistType.Musician, label: 'Musician' },
-        { value: ArtistType.Speaker, label: 'Speaker' },
-        { value: ArtistType.Teacher, label: 'Teacher' },
-        { value: ArtistType.Activist, label: 'Activist' },
-        { value: ArtistType.Influencer, label: 'Influencer' },
-        { value: ArtistType.Actor, label: 'Actor' },
-        { value: ArtistType.Other, label: 'Other' }
-    ];
+    artistTypes = artistTypeOptions;
 
     constructor(
         private fb: FormBuilder,
