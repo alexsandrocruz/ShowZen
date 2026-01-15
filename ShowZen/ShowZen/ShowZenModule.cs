@@ -399,6 +399,9 @@ public class ShowZenModule : AbpModule
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
+        // Configure QuestPDF Community License
+        QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
