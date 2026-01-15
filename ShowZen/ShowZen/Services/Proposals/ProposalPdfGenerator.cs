@@ -120,22 +120,14 @@ namespace ShowZen.Services.Proposals
                                     // Fee
                                     if (eventData.Fee > 0)
                                     {
-                                        costs.Item().Row(r => 
-                                        {
-                                            r.RelativeItem().Text("Cachê Artístico").FontSize(12);
-                                            r.AutoItem().Text($"R$ {eventData.Fee:N2}").FontSize(12).SemiBold();
-                                        });
+                                        costs.Item().Text("Cachê Artístico").FontSize(12);
                                         costs.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                                     }
 
                                     // Production
                                     if (eventData.ProductionValue > 0)
                                     {
-                                         costs.Item().Row(r => 
-                                        {
-                                            r.RelativeItem().Text("Custos de Produção").FontSize(12);
-                                            r.AutoItem().Text($"R$ {eventData.ProductionValue:N2}").FontSize(12).SemiBold();
-                                        });
+                                        costs.Item().Text("Custos de Produção").FontSize(12);
                                         costs.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                                     }
                                 });
