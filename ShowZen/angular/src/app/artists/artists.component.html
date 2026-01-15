@@ -224,6 +224,48 @@
                     </div>
                 </div>
 
+                <!-- PDF Template Upload -->
+                <div class="mb-3">
+                    <label for="artist-template" class="form-label">
+                        {{ '::ProposalTemplate' | abpLocalization }}
+                    </label>
+                    <small class="text-muted d-block mb-2">
+                        {{ '::ProposalTemplateInfo' | abpLocalization }}
+                    </small>
+
+                    <!-- Current Template Display -->
+                    <div *ngIf="selectedArtist?.proposalTemplateUrl && !templateFile"
+                        class="alert alert-info d-flex align-items-center justify-content-between mb-2">
+                        <div>
+                            <i class="fas fa-file-pdf me-2"></i>
+                            <span>PDF de apresentação já cadastrado</span>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-danger" (click)="deleteTemplate()"
+                            [disabled]="deletingTemplate">
+                            <i class="fas fa-trash me-1"></i>
+                            {{ '::DeleteProposalTemplate' | abpLocalization }}
+                        </button>
+                    </div>
+
+                    <!-- Upload Input -->
+                    <div class="input-group">
+                        <input type="file" id="artist-template" class="form-control"
+                            (change)="onTemplateSelected($event)" accept="application/pdf" />
+                        <button type="button" class="btn btn-outline-secondary" *ngIf="templateFile"
+                            (click)="templateFile = null">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <!-- Selected File Display -->
+                    <div *ngIf="templateFile" class="mt-2">
+                        <small class="text-success">
+                            <i class="fas fa-check-circle me-1"></i>
+                            {{ templateFile.name }} ({{ (templateFile.size / 1024 / 1024).toFixed(2) }} MB)
+                        </small>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="artist-color" class="form-label">Cor de Identificação</label>

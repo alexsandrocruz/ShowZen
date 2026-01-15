@@ -58,6 +58,8 @@ export class ArtistsComponent implements OnInit {
     bannerFile: File | null = null;
     logoPreview: string | null = null;
     bannerPreview: string | null = null;
+    templateFile: File | null = null;
+    deletingTemplate = false;
 
     artistTypes = [
         { value: ArtistType.Singer, label: 'Singer' },
@@ -129,6 +131,7 @@ export class ArtistsComponent implements OnInit {
         this.bannerFile = null;
         this.logoPreview = null;
         this.bannerPreview = null;
+        this.templateFile = null;
         this.isModalOpen = true;
     }
 
@@ -140,6 +143,7 @@ export class ArtistsComponent implements OnInit {
             this.bannerFile = null;
             this.logoPreview = artist.logoUrl || null;
             this.bannerPreview = artist.bannerUrl || null;
+            this.templateFile = null;
             this.isModalOpen = true;
         });
     }
@@ -164,6 +168,47 @@ export class ArtistsComponent implements OnInit {
         }
     }
 
+    onTemplateSelected(event: any) {
+        const file = event.target.files[0];
+        if (file) {
+            // Validate PDF
+            if (file.type !== 'application/pdf') {
+                alert('Apenas arquivos PDF são permitidos');
+                return;
+            }
+            // Validate size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('O arquivo deve ter no máximo 10MB');
+                return;
+            }
+            this.templateFile = file;
+        }
+    }
+
+    deleteTemplate() {
+        if (!this.selectedArtist.id) return;
+
+        this.confirmation.warn(
+            '::AreYouSure',
+            'Tem certeza que deseja remover o PDF de apresentação?'
+        ).subscribe((status) => {
+            if (status === Confirmation.Status.confirm) {
+                this.deletingTemplate = true;
+                this.artistService.deleteProposalTemplate(this.selectedArtist.id).subscribe({
+                    next: () => {
+                        this.deletingTemplate = false;
+                        this.selectedArtist.proposalTemplateUrl = null;
+                        this.list.get();
+                    },
+                    error: () => {
+                        this.deletingTemplate = false;
+                        alert('Erro ao remover PDF');
+                    }
+                });
+            }
+        });
+    }
+
     save() {
         if (this.form.invalid) {
             return;
@@ -181,6 +226,9 @@ export class ArtistsComponent implements OnInit {
                 }
                 if (this.bannerFile) {
                     uploads.push(this.artistImageService.uploadBanner(artist.id, this.bannerFile));
+                }
+                if (this.templateFile) {
+                    uploads.push(this.artistService.uploadProposalTemplate(artist.id, this.templateFile));
                 }
                 return uploads.length > 0 ? concat(...uploads).pipe(toArray()) : of(null);
             })
