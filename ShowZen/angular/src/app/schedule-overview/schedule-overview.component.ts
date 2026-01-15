@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { PermissionDirective, CoreModule } from '@abp/ng.core';
 import { ThemeSharedModule } from '@abp/ng.theme.shared';
@@ -34,7 +35,7 @@ import { ConflictAlertComponent } from './components/conflict-alert/conflict-ale
     CalendarWeekComponent,
     EventsGridComponent,
     ScheduleFiltersComponent,
-    EventQuickModalComponent,
+    // EventQuickModalComponent, // Removed as we use page now
     ConflictAlertComponent,
     ThemeSharedModule, // Required for abpLocalization
     CoreModule
@@ -69,11 +70,10 @@ export class ScheduleOverviewComponent implements OnInit, OnDestroy {
     }
   };
 
-  @ViewChild(EventQuickModalComponent) quickModal!: EventQuickModalComponent;
-
   constructor(
     private eventService: EventService,
-    private artistService: ArtistService
+    private artistService: ArtistService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -86,27 +86,24 @@ export class ScheduleOverviewComponent implements OnInit, OnDestroy {
     localStorage.setItem(this.STORAGE_KEYS.VIEW_MODE, this.currentView);
     localStorage.setItem(this.STORAGE_KEYS.FILTERS, JSON.stringify({
       ...this.filters,
-      dateRange: undefined // Don't persist date range as it usually should be relative to "now" or handled differently
+      dateRange: undefined
     }));
   }
 
   private loadState(): void {
-    // Load View Mode
     const savedView = localStorage.getItem(this.STORAGE_KEYS.VIEW_MODE);
     if (savedView && Object.values(ViewMode).includes(savedView as ViewMode)) {
       this.currentView = savedView as ViewMode;
     }
 
-    // Load Filters
     const savedFilters = localStorage.getItem(this.STORAGE_KEYS.FILTERS);
     if (savedFilters) {
       try {
         const parsed = JSON.parse(savedFilters);
-        // Date range is reconstructed in init or separate logic, ensuring we keep defaults if not present
         this.filters = {
           ...this.filters,
           ...parsed,
-          dateRange: this.filters.dateRange // Keep default date range
+          dateRange: this.filters.dateRange
         };
       } catch (e) {
         console.error('Failed to load filters', e);
@@ -169,7 +166,7 @@ export class ScheduleOverviewComponent implements OnInit, OnDestroy {
   }
 
   onNewEvent(): void {
-    this.quickModal.open();
+    this.router.navigate(['/events/new']);
   }
 
   onEventSaved(): void {
@@ -178,7 +175,7 @@ export class ScheduleOverviewComponent implements OnInit, OnDestroy {
 
   onEventClick(event: EventSummaryDto): void {
     if (event.id) {
-      this.quickModal.edit(event.id);
+      this.router.navigate(['/events/edit', event.id]);
     }
   }
 

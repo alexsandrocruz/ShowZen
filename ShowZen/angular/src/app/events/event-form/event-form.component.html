@@ -1,0 +1,349 @@
+<div class="event-form-page">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-1">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        {{ (isEditMode ? 'EditEvent' : 'NewEvent') | abpLocalization:'ShowZen' }}
+                    </h2>
+                    <p class="text-muted mb-0">{{ form.get('title')?.value || 'Novo Evento' }}</p>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-outline-secondary me-2" (click)="cancel()">
+                        <i class="fas fa-times me-1"></i>
+                        {{ 'Cancel' | abpLocalization:'ShowZen' }}
+                    </button>
+                    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="form.invalid || saving">
+                        <i class="fas fa-check me-1"></i>
+                        {{ 'Save' | abpLocalization:'ShowZen' }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="card sticky-top" style="top: 20px;">
+                    <div class="card-body">
+                        <h6 class="text-uppercase text-muted mb-3">Seções</h6>
+                        <nav class="nav flex-column">
+                            <a class="nav-link" href="#basic-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Informações Principais
+                            </a>
+                            <a class="nav-link" href="#schedule">
+                                <i class="fas fa-clock me-2"></i>
+                                Data e Horário
+                            </a>
+                            <a class="nav-link" href="#entities">
+                                <i class="fas fa-users me-2"></i>
+                                Envolvidos
+                            </a>
+                            <a class="nav-link" href="#financials">
+                                <i class="fas fa-dollar-sign me-2"></i>
+                                Financeiro
+                            </a>
+                            <a class="nav-link" href="#commissions">
+                                <i class="fas fa-handshake me-2"></i>
+                                Comissões
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="col-md-9">
+                <form [formGroup]="form">
+
+                    <!-- Basic Info -->
+                    <div class="card mb-4" id="basic-info">
+                        <div class="card-header">
+                            <h5 class="mb-0">Informações Principais</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">{{ 'Title' | abpLocalization:'ShowZen' }} *</label>
+                                    <input type="text" class="form-control" formControlName="title"
+                                        placeholder="Ex: Show Festival de Verão">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ 'Type' | abpLocalization:'ShowZen' }} *</label>
+                                    <ng-select [items]="eventTypes" bindLabel="value" bindValue="key"
+                                        formControlName="type" [clearable]="false">
+                                        <ng-template ng-label-tmp let-item="item">
+                                            {{ item.value | abpLocalization:'ShowZen' }}
+                                        </ng-template>
+                                        <ng-template ng-option-tmp let-item="item">
+                                            {{ item.value | abpLocalization:'ShowZen' }}
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ 'Status' | abpLocalization:'ShowZen' }}</label>
+                                    <ng-select [items]="eventStatuses" bindLabel="value" bindValue="key"
+                                        formControlName="status" [clearable]="false">
+                                        <ng-template ng-label-tmp let-item="item">
+                                            <span class="badge" [ngClass]="{
+                                                'bg-secondary': item.key === 0,
+                                                'bg-primary': item.key === 1,
+                                                'bg-warning': item.key === 2,
+                                                'bg-success': item.key === 3
+                                            }">{{ item.value | abpLocalization:'ShowZen' }}</span>
+                                        </ng-template>
+                                        <ng-template ng-option-tmp let-item="item">
+                                            {{ item.value | abpLocalization:'ShowZen' }}
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">{{ 'Description' | abpLocalization:'ShowZen' }}</label>
+                                    <textarea class="form-control" formControlName="description" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Date & Time -->
+                    <div class="card mb-4" id="schedule">
+                        <div class="card-header">
+                            <h5 class="mb-0">Data e Horário</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">{{ 'Date' | abpLocalization:'ShowZen' }} *</label>
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="yyyy-mm-dd" name="dp"
+                                            formControlName="startDate" ngbDatepicker #d="ngbDatepicker">
+                                        <button class="btn btn-outline-secondary bi bi-calendar3" (click)="d.toggle()"
+                                            type="button">
+                                            <i class="fas fa-calendar"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">{{ 'Time' | abpLocalization:'ShowZen' }} *</label>
+                                    <ngb-timepicker formControlName="startTime" [spinners]="false"></ngb-timepicker>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Duração (minutos) *</label>
+                                    <input type="number" class="form-control" formControlName="durationInMinutes"
+                                        step="30">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Entities -->
+                    <div class="card mb-4" id="entities">
+                        <div class="card-header">
+                            <h5 class="mb-0">Envolvidos</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ 'Artist' | abpLocalization:'ShowZen' }} *</label>
+                                    <ng-select [items]="artists" bindLabel="name" bindValue="id"
+                                        formControlName="artistId" placeholder="Selecione o artista...">
+                                        <ng-template ng-option-tmp let-item="item">
+                                            <div class="d-flex align-items-center">
+                                                <img [src]="item.logoUrl || 'assets/images/logo-placeholder.png'"
+                                                    class="rounded-circle me-2" width="24" height="24"
+                                                    style="object-fit: cover;">
+                                                {{ item.name }}
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ 'Client' | abpLocalization:'ShowZen' }} *</label>
+                                    <ng-select [items]="clients" bindLabel="name" bindValue="id"
+                                        formControlName="clientId" [addTag]="true"
+                                        [addTagText]="'SearchOrCreateClient' | abpLocalization:'ShowZen'"
+                                        (add)="onAddClient($event)" [searchFn]="customSearchFnClient"
+                                        placeholder="Selecione o cliente...">
+                                    </ng-select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ 'Location' | abpLocalization:'ShowZen' }}</label>
+                                    <ng-select [items]="locations" bindLabel="name" bindValue="id"
+                                        formControlName="locationId" [addTag]="true"
+                                        [addTagText]="'SearchOrCreateLocation' | abpLocalization:'ShowZen'"
+                                        (add)="onAddLocation($event)" [searchFn]="customSearchFn"
+                                        placeholder="Selecione o local...">
+                                    </ng-select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ 'LocalPartner' | abpLocalization:'ShowZen' }}</label>
+                                    <ng-select [items]="clients" bindLabel="name" bindValue="id"
+                                        formControlName="localPartnerId" placeholder="Selecione o parceiro local..."
+                                        [searchFn]="customSearchFnClient">
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Financials -->
+                    <div class="card mb-4" id="financials">
+                        <div class="card-header">
+                            <h5 class="mb-0">Financeiro</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">{{ 'ContractType' | abpLocalization:'ShowZen' }}</label>
+                                    <ng-select [items]="contractTypes" bindLabel="value" bindValue="key"
+                                        formControlName="contractType" [clearable]="false">
+                                        <ng-template ng-label-tmp let-item="item">{{ item.value |
+                                            abpLocalization:'ShowZen' }}</ng-template>
+                                        <ng-template ng-option-tmp let-item="item">{{ item.value |
+                                            abpLocalization:'ShowZen' }}</ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">{{ 'NegotiationType' | abpLocalization:'ShowZen'
+                                        }}</label>
+                                    <ng-select [items]="negotiationTypes" bindLabel="value" bindValue="key"
+                                        formControlName="negotiationType" [clearable]="false">
+                                        <ng-template ng-label-tmp let-item="item">{{ item.value |
+                                            abpLocalization:'ShowZen' }}</ng-template>
+                                        <ng-template ng-option-tmp let-item="item">{{ item.value |
+                                            abpLocalization:'ShowZen' }}</ng-template>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <!-- Fee & Production -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-uppercase text-muted fs-7 mb-3">Cachê e Produção</h6>
+                                    <div class="mb-3">
+                                        <label class="form-label">{{ 'Fee' | abpLocalization:'ShowZen' }}</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">R$</span>
+                                            <input type="text" class="form-control" formControlName="fee"
+                                                appCurrencyBrlInput placeholder="0,00">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch mb-2">
+                                            <input class="form-check-input" type="checkbox" id="hasProduction"
+                                                formControlName="hasProduction">
+                                            <label class="form-check-label" for="hasProduction">{{ 'HasProduction' |
+                                                abpLocalization:'ShowZen' }}</label>
+                                        </div>
+                                        <div *ngIf="form.get('hasProduction')?.value">
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <label class="form-label fs-7">{{ 'ProductionValue' |
+                                                        abpLocalization:'ShowZen' }}</label>
+                                                    <div class="input-group input-group-sm">
+                                                        <span class="input-group-text">R$</span>
+                                                        <input type="text" class="form-control"
+                                                            formControlName="productionValue" appCurrencyBrlInput
+                                                            placeholder="0,00">
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label fs-7">{{ 'ProductionPercentage' |
+                                                        abpLocalization:'ShowZen' }}</label>
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="text" class="form-control"
+                                                            formControlName="productionPercentage" appPercentageInput
+                                                            placeholder="0">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Taxes -->
+                                <div class="col-md-6 border-start ps-4">
+                                    <h6 class="text-uppercase text-muted fs-7 mb-3">{{ 'TaxesAndCommissions' |
+                                        abpLocalization:'ShowZen' }}</h6>
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-6">
+                                            <label class="form-label">{{ 'TaxPercentage' | abpLocalization:'ShowZen'
+                                                }}</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" formControlName="taxPercentage"
+                                                    appPercentageInput placeholder="0">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">{{ 'TaxValue' | abpLocalization:'ShowZen'
+                                                }}</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">R$</span>
+                                                <input type="text" class="form-control" formControlName="taxValue"
+                                                    appCurrencyBrlInput placeholder="0,00">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Commissions -->
+                    <div class="card mb-4" id="commissions">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">{{ 'InternalCommissions' | abpLocalization:'ShowZen' }}</h5>
+                            <button type="button" class="btn btn-sm btn-outline-primary" (click)="addCommission()">
+                                <i class="fas fa-plus me-1"></i> {{ 'AddCommission' | abpLocalization:'ShowZen' }}
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div formArrayName="commissions">
+                                <div *ngFor="let commission of commissions.controls; let i = index" [formGroupName]="i"
+                                    class="row g-2 align-items-end mb-3 pb-3 border-bottom">
+                                    <div class="col-md-5">
+                                        <label class="form-label small">Descrição</label>
+                                        <input type="text" class="form-control form-control-sm"
+                                            formControlName="description" placeholder="Ex: Vendedor">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small">Valor (R$)</label>
+                                        <input type="text" class="form-control form-control-sm" formControlName="value"
+                                            appCurrencyBrlInput placeholder="0,00">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label small">%</label>
+                                        <input type="text" class="form-control form-control-sm"
+                                            formControlName="percentage" appPercentageInput placeholder="0">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-sm btn-outline-danger w-100"
+                                            (click)="removeCommission(i)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div *ngIf="commissions.length === 0" class="text-center text-muted py-3">
+                                    <small>Nenhuma comissão cadastrada.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-client-quick-modal #clientQuickModal (onSave)="onClientCreated($event)"></app-client-quick-modal>

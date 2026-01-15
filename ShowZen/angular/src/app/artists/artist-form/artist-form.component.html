@@ -1,265 +1,266 @@
-<div class="artist-form-page">
-    <!-- Header -->
-    <div class="page-header">
-        <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="mb-1">
-                        <i class="fas fa-user me-2"></i>
-                        {{ (isEditMode ? '::EditArtist' : '::NewArtist') | abpLocalization }}
-                    </h2>
-                    <p class="text-muted mb-0" *ngIf="isEditMode && artist">{{ artist.name }}</p>
-                </div>
-                <div>
-                    <button type="button" class="btn btn-outline-secondary me-2" (click)="cancel()">
-                        <i class="fas fa-times me-1"></i>
-                        {{ 'Cancel' | abpLocalization }}
-                    </button>
-                    <button type="button" class="btn btn-primary" (click)="save()" [disabled]="form.invalid || saving">
-                        <i class="fas fa-check me-1"></i>
-                        {{ 'Save' | abpLocalization }}
-                    </button>
-                </div>
+<!-- Header -->
+<div class="page-header">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="mb-1">
+                    <i class="fas fa-user me-2"></i>
+                    {{ (isEditMode ? 'EditArtist' : 'NewArtist') | abpLocalization:'ShowZen' }}
+                </h2>
+                <p class="text-muted mb-0" *ngIf="isEditMode && artist">{{ artist.name }}</p>
+            </div>
+            <div>
+                <button type="button" class="btn btn-outline-secondary me-2" (click)="cancel()">
+                    <i class="fas fa-times me-1"></i>
+                    {{ 'Cancel' | abpLocalization:'ShowZen' }}
+                </button>
+                <button type="button" class="btn btn-primary" (click)="save()" [disabled]="form.invalid || saving">
+                    <i class="fas fa-check me-1"></i>
+                    {{ 'Save' | abpLocalization:'ShowZen' }}
+                </button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Content -->
-    <div class="container-fluid mt-4">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3">
-                <div class="card sticky-top" style="top: 20px;">
+<!-- Content -->
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card sticky-top" style="top: 20px;">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted mb-3">Seções</h6>
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="#basic-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Informações Básicas
+                        </a>
+                        <a class="nav-link" href="#social">
+                            <i class="fas fa-share-alt me-2"></i>
+                            Redes Sociais
+                        </a>
+                        <a class="nav-link" href="#media">
+                            <i class="fas fa-images me-2"></i>
+                            Mídia
+                        </a>
+                        <a class="nav-link" href="#template">
+                            <i class="fas fa-file-pdf me-2"></i>
+                            PDF de Apresentação
+                        </a>
+                        <a class="nav-link" href="#settings">
+                            <i class="fas fa-cog me-2"></i>
+                            Configurações
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <div class="col-md-9">
+            <form [formGroup]="form">
+                <!-- Basic Info Section -->
+                <div class="card mb-4" id="basic-info">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Informações Básicas
+                        </h5>
+                    </div>
                     <div class="card-body">
-                        <h6 class="text-uppercase text-muted mb-3">Seções</h6>
-                        <nav class="nav flex-column">
-                            <a class="nav-link" href="#basic-info">
-                                <i class="fas fa-info-circle me-2"></i>
-                                Informações Básicas
-                            </a>
-                            <a class="nav-link" href="#social">
-                                <i class="fas fa-share-alt me-2"></i>
-                                Redes Sociais
-                            </a>
-                            <a class="nav-link" href="#media">
-                                <i class="fas fa-images me-2"></i>
-                                Mídia
-                            </a>
-                            <a class="nav-link" href="#template">
-                                <i class="fas fa-file-pdf me-2"></i>
-                                PDF de Apresentação
-                            </a>
-                            <a class="nav-link" href="#settings">
-                                <i class="fas fa-cog me-2"></i>
-                                Configurações
-                            </a>
-                        </nav>
+                        <div class="mb-3">
+                            <label for="artist-name" class="form-label">{{ 'ArtistName' | abpLocalization:'ShowZen' }}
+                                *</label>
+                            <input type="text" id="artist-name" class="form-control" formControlName="name"
+                                placeholder="Nome completo do artista" />
+                            <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
+                                class="invalid-feedback d-block">
+                                <span *ngIf="form.get('name')?.errors?.['required']">{{ 'ThisFieldIsRequired' |
+                                    abpLocalization:'ShowZen' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="artist-type" class="form-label">{{ 'ArtistType' | abpLocalization:'ShowZen' }}
+                                *</label>
+                            <select id="artist-type" class="form-select" formControlName="type">
+                                <option [ngValue]="null">{{ 'PleaseSelect' | abpLocalization:'ShowZen' }}</option>
+                                <option *ngFor="let type of artistTypes" [ngValue]="type.value">
+                                    {{ type.key | abpLocalization:'ShowZen' }}
+                                </option>
+                            </select>
+                            <div *ngIf="form.get('type')?.invalid && form.get('type')?.touched"
+                                class="invalid-feedback d-block">
+                                <span *ngIf="form.get('type')?.errors?.['required']">{{ 'ThisFieldIsRequired' |
+                                    abpLocalization:'ShowZen' }}</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="artist-biography" class="form-label">{{ 'Biography' | abpLocalization:'ShowZen'
+                                }}
+                                *</label>
+                            <textarea id="artist-biography" class="form-control" formControlName="biography" rows="6"
+                                placeholder="Biografia do artista"></textarea>
+                            <div *ngIf="form.get('biography')?.invalid && form.get('biography')?.touched"
+                                class="invalid-feedback d-block">
+                                <span *ngIf="form.get('biography')?.errors?.['required']">{{ 'ThisFieldIsRequired'
+                                    |
+                                    abpLocalization:'ShowZen' }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Form -->
-            <div class="col-md-9">
-                <form [formGroup]="form">
-                    <!-- Basic Info Section -->
-                    <div class="card mb-4" id="basic-info">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <i class="fas fa-info-circle me-2"></i>
-                                Informações Básicas
-                            </h5>
+                <!-- Social Media Section -->
+                <div class="card mb-4" id="social">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-share-alt me-2"></i>
+                            Redes Sociais
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="artist-instagram" class="form-label">
+                                <i class="fab fa-instagram me-1"></i>
+                                {{ 'InstagramHandle' | abpLocalization:'ShowZen' }}
+                            </label>
+                            <input type="text" id="artist-instagram" class="form-control"
+                                formControlName="instagramHandle" placeholder="@username" />
                         </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label for="artist-name" class="form-label">{{ '::ArtistName' | abpLocalization }}
-                                    *</label>
-                                <input type="text" id="artist-name" class="form-control" formControlName="name"
-                                    placeholder="Nome completo do artista" />
-                                <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
-                                    class="invalid-feedback d-block">
-                                    <span *ngIf="form.get('name')?.errors?.['required']">{{ '::ThisFieldIsRequired' |
-                                        abpLocalization }}</span>
-                                </div>
-                            </div>
 
-                            <div class="mb-3">
-                                <label for="artist-type" class="form-label">{{ '::ArtistType' | abpLocalization }}
-                                    *</label>
-                                <select id="artist-type" class="form-select" formControlName="type">
-                                    <option [ngValue]="null">{{ '::PleaseSelect' | abpLocalization }}</option>
-                                    <option *ngFor="let type of artistTypes" [ngValue]="type.value">
-                                        {{ type.key | abpLocalization }}
-                                    </option>
-                                </select>
-                                <div *ngIf="form.get('type')?.invalid && form.get('type')?.touched"
-                                    class="invalid-feedback d-block">
-                                    <span *ngIf="form.get('type')?.errors?.['required']">{{ '::ThisFieldIsRequired' |
-                                        abpLocalization }}</span>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="artist-biography" class="form-label">{{ '::Biography' | abpLocalization }}
-                                    *</label>
-                                <textarea id="artist-biography" class="form-control" formControlName="biography"
-                                    rows="6" placeholder="Biografia do artista"></textarea>
-                                <div *ngIf="form.get('biography')?.invalid && form.get('biography')?.touched"
-                                    class="invalid-feedback d-block">
-                                    <span *ngIf="form.get('biography')?.errors?.['required']">{{ '::ThisFieldIsRequired'
-                                        |
-                                        abpLocalization }}</span>
-                                </div>
-                            </div>
+                        <div class="mb-3">
+                            <label for="artist-website" class="form-label">
+                                <i class="fas fa-globe me-1"></i>
+                                {{ 'WebsiteUrl' | abpLocalization:'ShowZen' }}
+                            </label>
+                            <input type="url" id="artist-website" class="form-control" formControlName="websiteUrl"
+                                placeholder="https://example.com" />
                         </div>
                     </div>
+                </div>
 
-                    <!-- Social Media Section -->
-                    <div class="card mb-4" id="social">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <i class="fas fa-share-alt me-2"></i>
-                                Redes Sociais
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <label for="artist-instagram" class="form-label">
-                                    <i class="fab fa-instagram me-1"></i>
-                                    {{ 'InstagramHandle' | abpLocalization }}
-                                </label>
-                                <input type="text" id="artist-instagram" class="form-control"
-                                    formControlName="instagramHandle" placeholder="@username" />
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="artist-website" class="form-label">
-                                    <i class="fas fa-globe me-1"></i>
-                                    {{ 'WebsiteUrl' | abpLocalization }}
-                                </label>
-                                <input type="url" id="artist-website" class="form-control" formControlName="websiteUrl"
-                                    placeholder="https://example.com" />
-                            </div>
-                        </div>
+                <!-- Media Section -->
+                <div class="card mb-4" id="media">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-images me-2"></i>
+                            Mídia
+                        </h5>
                     </div>
-
-                    <!-- Media Section -->
-                    <div class="card mb-4" id="media">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <i class="fas fa-images me-2"></i>
-                                Mídia
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="artist-logo" class="form-label">{{ 'Logo' | abpLocalization }}</label>
-                                    <div class="image-upload-wrapper">
-                                        <div class="preview-box" *ngIf="logoPreview">
-                                            <img [src]="logoPreview" class="img-thumbnail" alt="Logo Preview">
-                                            <button type="button" class="btn btn-sm btn-danger delete-img"
-                                                (click)="logoFile = null; logoPreview = null;">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                        <input type="file" id="artist-logo" class="form-control"
-                                            (change)="onLogoSelected($event)" accept="image/*" />
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="artist-logo" class="form-label">{{ 'Logo' | abpLocalization:'ShowZen'
+                                    }}</label>
+                                <div class="image-upload-wrapper">
+                                    <div class="preview-box" *ngIf="logoPreview">
+                                        <img [src]="logoPreview" class="img-thumbnail" alt="Logo Preview">
+                                        <button type="button" class="btn btn-sm btn-danger delete-img"
+                                            (click)="logoFile = null; logoPreview = null;">
+                                            <i class="fas fa-times"></i>
+                                        </button>
                                     </div>
+                                    <input type="file" id="artist-logo" class="form-control"
+                                        (change)="onLogoSelected($event)" accept="image/*" />
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="artist-banner" class="form-label">{{ 'Banner' | abpLocalization
-                                        }}</label>
-                                    <div class="image-upload-wrapper">
-                                        <div class="preview-box" *ngIf="bannerPreview">
-                                            <img [src]="bannerPreview" class="img-thumbnail" alt="Banner Preview">
-                                            <button type="button" class="btn btn-sm btn-danger delete-img"
-                                                (click)="bannerFile = null; bannerPreview = null;">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </div>
-                                        <input type="file" id="artist-banner" class="form-control"
-                                            (change)="onBannerSelected($event)" accept="image/*" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="artist-banner" class="form-label">{{ 'Banner' | abpLocalization:'ShowZen'
+                                    }}</label>
+                                <div class="image-upload-wrapper">
+                                    <div class="preview-box" *ngIf="bannerPreview">
+                                        <img [src]="bannerPreview" class="img-thumbnail" alt="Banner Preview">
+                                        <button type="button" class="btn btn-sm btn-danger delete-img"
+                                            (click)="bannerFile = null; bannerPreview = null;">
+                                            <i class="fas fa-times"></i>
+                                        </button>
                                     </div>
+                                    <input type="file" id="artist-banner" class="form-control"
+                                        (change)="onBannerSelected($event)" accept="image/*" />
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- PDF Template Section -->
-                    <div class="card mb-4" id="template">
-                        <div class="card-header">
-                            <h5 class="mb-0">
+                <!-- PDF Template Section -->
+                <div class="card mb-4" id="template">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-file-pdf me-2"></i>
+                            {{ 'ProposalTemplate' | abpLocalization:'ShowZen' }}
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted small mb-3">
+                            {{ 'ProposalTemplateInfo' | abpLocalization:'ShowZen' }}
+                        </p>
+
+                        <!-- Current Template Display -->
+                        <div *ngIf="artist?.proposalTemplateUrl && !templateFile"
+                            class="alert alert-info d-flex align-items-center justify-content-between mb-3">
+                            <div>
                                 <i class="fas fa-file-pdf me-2"></i>
-                                {{ 'ProposalTemplate' | abpLocalization }}
-                            </h5>
+                                <span>PDF de apresentação já cadastrado</span>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-danger" (click)="deleteTemplate()"
+                                [disabled]="deletingTemplate">
+                                <i class="fas fa-trash me-1"></i>
+                                {{ 'DeleteProposalTemplate' | abpLocalization:'ShowZen' }}
+                            </button>
                         </div>
-                        <div class="card-body">
-                            <p class="text-muted small mb-3">
-                                {{ 'ProposalTemplateInfo' | abpLocalization }}
-                            </p>
 
-                            <!-- Current Template Display -->
-                            <div *ngIf="artist?.proposalTemplateUrl && !templateFile"
-                                class="alert alert-info d-flex align-items-center justify-content-between mb-3">
-                                <div>
-                                    <i class="fas fa-file-pdf me-2"></i>
-                                    <span>PDF de apresentação já cadastrado</span>
+                        <!-- Upload Input -->
+                        <div class="input-group">
+                            <input type="file" id="artist-template" class="form-control"
+                                (change)="onTemplateSelected($event)" accept="application/pdf" />
+                            <button type="button" class="btn btn-outline-secondary" *ngIf="templateFile"
+                                (click)="templateFile = null">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+
+                        <!-- Selected File Display -->
+                        <div *ngIf="templateFile" class="mt-2">
+                            <small class="text-success">
+                                <i class="fas fa-check-circle me-1"></i>
+                                {{ templateFile.name }} ({{ (templateFile.size / 1024 / 1024).toFixed(2) }} MB)
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div class="card mb-4" id="settings">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-cog me-2"></i>
+                            Configurações
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="artist-color" class="form-label">Cor de Identificação</label>
+                                <div class="d-flex align-items-center">
+                                    <input type="color" id="artist-color" class="form-control form-control-color"
+                                        formControlName="hexColor" />
+                                    <span class="ms-2 text-muted small">{{ form.get('hexColor')?.value }}</span>
                                 </div>
-                                <button type="button" class="btn btn-sm btn-danger" (click)="deleteTemplate()"
-                                    [disabled]="deletingTemplate">
-                                    <i class="fas fa-trash me-1"></i>
-                                    {{ 'DeleteProposalTemplate' | abpLocalization }}
-                                </button>
                             </div>
-
-                            <!-- Upload Input -->
-                            <div class="input-group">
-                                <input type="file" id="artist-template" class="form-control"
-                                    (change)="onTemplateSelected($event)" accept="application/pdf" />
-                                <button type="button" class="btn btn-outline-secondary" *ngIf="templateFile"
-                                    (click)="templateFile = null">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-
-                            <!-- Selected File Display -->
-                            <div *ngIf="templateFile" class="mt-2">
-                                <small class="text-success">
-                                    <i class="fas fa-check-circle me-1"></i>
-                                    {{ templateFile.name }} ({{ (templateFile.size / 1024 / 1024).toFixed(2) }} MB)
-                                </small>
+                            <div class="col-md-6 mb-3">
+                                <label for="artist-tax" class="form-label">Imposto Padrão (%)</label>
+                                <input type="number" id="artist-tax" class="form-control"
+                                    formControlName="defaultTaxPercentage" min="0" max="100" />
                             </div>
                         </div>
                     </div>
-
-                    <!-- Settings Section -->
-                    <div class="card mb-4" id="settings">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <i class="fas fa-cog me-2"></i>
-                                Configurações
-                            </h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="artist-color" class="form-label">Cor de Identificação</label>
-                                    <div class="d-flex align-items-center">
-                                        <input type="color" id="artist-color" class="form-control form-control-color"
-                                            formControlName="hexColor" />
-                                        <span class="ms-2 text-muted small">{{ form.get('hexColor')?.value }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="artist-tax" class="form-label">Imposto Padrão (%)</label>
-                                    <input type="number" id="artist-tax" class="form-control"
-                                        formControlName="defaultTaxPercentage" min="0" max="100" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 </div>
