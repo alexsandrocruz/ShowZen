@@ -37,6 +37,31 @@
     }
 }
 
+// Responsive adjustments
+@media (max-width: 768px) {
+    .sticky-top {
+        position: static !important;
+        margin-bottom: 2rem;
+    }
+
+    // Hide sidebar on mobile if it takes too much space, or stack it properly
+    .col-md-3 {
+        display: none; // Hiding sidebar navigation on mobile for simpler view
+    }
+
+    .col-md-9 {
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding-left: 15px; // Ensure proper padding
+        padding-right: 15px;
+    }
+
+    .event-form-page {
+        overflow-x: hidden; // Prevent horizontal scroll
+    }
+}
+
 // Sidebar Navigation
 .nav-link {
     color: #6c757d;
