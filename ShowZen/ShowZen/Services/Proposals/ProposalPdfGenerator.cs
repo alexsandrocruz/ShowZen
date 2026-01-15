@@ -78,67 +78,72 @@ namespace ShowZen.Services.Proposals
                         {
                             column.Spacing(20);
 
-                            // "PROPOSTA" Badge
-                            column.Item().Background(GoldColor).Width(150).PaddingVertical(5).PaddingHorizontal(20)
-                                .Text("PROPOSTA").FontColor(Colors.White).Bold().LetterSpacing(0.1f).AlignCenter();
-
-                            // Client & Event Info (Styled as clean lines)
-                            column.Item().PaddingTop(20).Column(info => 
+                            // Client & Event Info (Refined)
+                            column.Item().PaddingTop(10).Column(info => 
                             {
-                                info.Spacing(10);
+                                info.Spacing(5);
                                 
-                                // Event Name / Description
+                                // Row 1: Event Title and Date/Time
                                 info.Item().Row(r => {
-                                    r.RelativeItem().Text(t => {
-                                        t.Span(eventData.Description ?? "Show Artístico").FontSize(14).Medium();
-                                    });
-                                    r.AutoItem().Text(eventData.StartDateTime.ToString("dd/MM/yyyy")).FontSize(14).Italic().FontColor(Colors.Grey.Darken1);
+                                    r.RelativeItem().Text(eventData.Title).FontSize(14).Bold().FontColor(PrimaryColor);
+                                    
+                                    var timeString = eventData.StartDateTime.ToString("HH:mm");
+                                    if (eventData.EndDateTime.HasValue)
+                                    {
+                                        timeString += $" - {eventData.EndDateTime.Value:HH:mm}";
+                                    }
+                                    
+                                    r.AutoItem().Text($"{eventData.StartDateTime:dd/MM/yyyy} • {timeString}")
+                                        .FontSize(12).FontColor(Colors.Black);
                                 });
 
-                                info.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
+                                // Row 2: Client
+                                info.Item().Text($"Cliente: {client.Name}").FontSize(11);
 
-                                // Client
-                                info.Item().PaddingTop(5).Row(r => {
-                                    r.RelativeItem().Text($"Cliente: {client.Name}").FontSize(12);
+                                // Row 3: Location and Emission Date
+                                info.Item().Row(r => {
+                                    r.RelativeItem().Text($"Local: {eventData.Location?.City ?? "A definir"} - {eventData.Location?.State}").FontSize(11);
+                                    r.RelativeItem().AlignRight().Text($"Emissão: {DateTime.Now:dd/MM/yyyy}").FontSize(10).FontColor(Colors.Grey.Darken2);
                                 });
                                 
-                                // Location
-                                info.Item().Row(r => {
-                                    r.RelativeItem().Text($"Local: {eventData.Location?.City ?? "A definir"} - {eventData.Location?.State}").FontSize(12);
-                                });
+                                info.Item().PaddingTop(5).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                             });
 
-                            // Financial Items List (Values)
-                            column.Item().PaddingTop(20).Column(items => 
+                            // Financial Items & Total (Side by Side)
+                            column.Item().PaddingTop(15).Row(row => 
                             {
-                                items.Spacing(10);
-
-                                // Fee
-                                if (eventData.Fee > 0)
+                                // Left: List of Costs
+                                row.RelativeItem().Column(costs => 
                                 {
-                                    items.Item().Row(row => 
+                                    costs.Spacing(10);
+                                    
+                                    // Fee
+                                    if (eventData.Fee > 0)
                                     {
-                                        row.RelativeItem().Text("Cachê Artístico").FontSize(12);
-                                        row.AutoItem().Text($"R$ {eventData.Fee:N2}").FontSize(12).SemiBold();
-                                    });
-                                    items.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-                                }
+                                        costs.Item().Row(r => 
+                                        {
+                                            r.RelativeItem().Text("Cachê Artístico").FontSize(12);
+                                            r.AutoItem().Text($"R$ {eventData.Fee:N2}").FontSize(12).SemiBold();
+                                        });
+                                        costs.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
+                                    }
 
-                                // Production
-                                if (eventData.ProductionValue > 0)
-                                {
-                                     items.Item().Row(row => 
+                                    // Production
+                                    if (eventData.ProductionValue > 0)
                                     {
-                                        row.RelativeItem().Text("Custos de Produção").FontSize(12);
-                                        row.AutoItem().Text($"R$ {eventData.ProductionValue:N2}").FontSize(12).SemiBold();
-                                    });
-                                    items.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-                                }
-                            });
+                                         costs.Item().Row(r => 
+                                        {
+                                            r.RelativeItem().Text("Custos de Produção").FontSize(12);
+                                            r.AutoItem().Text($"R$ {eventData.ProductionValue:N2}").FontSize(12).SemiBold();
+                                        });
+                                        costs.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
+                                    }
+                                });
 
-                            // Total Section
-                            column.Item().PaddingTop(10).AlignRight().Row(row => 
-                            {
+                                // Spacer
+                                row.ConstantItem(30);
+
+                                // Right: Total Block
                                 row.AutoItem().Background(PrimaryColor)
                                     .PaddingVertical(10).PaddingHorizontal(30)
                                     .Text($"TOTAL: R$ {(eventData.Fee + (eventData.ProductionValue ?? 0)):N2}")
