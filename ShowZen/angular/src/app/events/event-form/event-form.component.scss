@@ -44,9 +44,9 @@
         margin-bottom: 2rem;
     }
 
-    // Hide sidebar on mobile if it takes too much space, or stack it properly
-    .col-md-3 {
-        display: none; // Hiding sidebar navigation on mobile for simpler view
+    // Hide sidebar on mobile
+    .sidebar-column {
+        display: none;
     }
 
     .col-md-9 {

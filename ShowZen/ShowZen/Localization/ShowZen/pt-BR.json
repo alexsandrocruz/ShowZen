@@ -119,7 +119,6 @@
     "TaxPercentage": "Imposto (%)",
     "TaxValue": "Imposto (R$)",
     "InternalCommissions": "Comissões Internas",
-    "AddCommission": "Adicionar Comissão",
     "LocalPartner": "Parceiro Local",
     "SelectPartner": "Selecionar parceiro...",
     "SearchOrCreateClient": "Buscar ou criar cliente...",
@@ -164,6 +163,13 @@
     "ProposalTemplateUploaded": "PDF de apresentação enviado com sucesso",
     "ProposalTemplateDeleted": "PDF de apresentação removido",
     "Logo": "Logo",
-    "Banner": "Banner"
+    "Banner": "Banner",
+    "BasicInfo": "Informações Principais",
+    "DateTime": "Data e Horário",
+    "InvolvedParties": "Envolvidos",
+    "Financial": "Financeiro",
+    "FeeAndProduction": "Cachê e Produção",
+    "NoCommissions": "Nenhuma comissão cadastrada.",
+    "AddCommission": "Adicionar Comissão"
   }
 }
