@@ -74,7 +74,15 @@ namespace ShowZen.Services.Proposals
                 {
                     // Load from ArtistAppService
                     var artistAppService = LazyServiceProvider.LazyGetRequiredService<IArtistAppService>();
-                    artistTemplate = await artistAppService.GetProposalTemplateAsync(artist.Id);
+                    var remoteStream = await artistAppService.GetProposalTemplateAsync(artist.Id);
+                    if (remoteStream != null)
+                    {
+                        using (var ms = new System.IO.MemoryStream())
+                        {
+                            await remoteStream.GetStream().CopyToAsync(ms);
+                            artistTemplate = ms.ToArray();
+                        }
+                    }
                 }
                 catch
                 {

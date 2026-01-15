@@ -111,19 +111,18 @@ public class ArtistAppService : ApplicationService, IArtistAppService
     }
 
     [HttpPost]
-    [Route("proposal-template/{artistId}")]
+    [Route("api/app/artist/{artistId}/proposal-template")]
     [IgnoreAntiforgeryToken]
     [Authorize(ShowZenPermissions.Artists.Edit)]
-    public async Task<string> UploadProposalTemplateAsync([FromRoute] Guid artistId, [FromForm] IFormFile file)
+    public async Task<string> UploadProposalTemplateAsync(Guid artistId, IRemoteStreamContent input)
     {
-        if (file == null || file.Length == 0)
+        if (input == null || input.ContentLength == 0)
         {
             throw new Exception("No file provided");
         }
 
         // Validate PDF
-        if (!file.ContentType.Equals("application/pdf", StringComparison.OrdinalIgnoreCase) && 
-            !file.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
+        if (!input.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
         {
             throw new Exception("Only PDF files are allowed");
         }
@@ -139,10 +138,7 @@ public class ArtistAppService : ApplicationService, IArtistAppService
         // Save new template
         var blobName = $"artist-templates/{artistId}/{Guid.NewGuid()}.pdf";
         
-        using (var stream = file.OpenReadStream())
-        {
-            await _blobContainer.SaveAsync(blobName, stream, overrideExisting: true);
-        }
+        await _blobContainer.SaveAsync(blobName, input.GetStream(), overrideExisting: true);
 
         // Update artist
         artist.ProposalTemplateUrl = blobName;
@@ -152,9 +148,9 @@ public class ArtistAppService : ApplicationService, IArtistAppService
     }
 
     [HttpDelete]
-    [Route("proposal-template/{artistId}")]
+    [Route("api/app/artist/{artistId}/proposal-template")]
     [Authorize(ShowZenPermissions.Artists.Edit)]
-    public async Task DeleteProposalTemplateAsync([FromRoute] Guid artistId)
+    public async Task DeleteProposalTemplateAsync(Guid artistId)
     {
         var artist = await _artistRepository.GetAsync(artistId);
 
@@ -167,21 +163,23 @@ public class ArtistAppService : ApplicationService, IArtistAppService
     }
 
     [HttpGet]
-    public async Task<byte[]?> GetProposalTemplateAsync(Guid artistId)
+    [Route("api/app/artist/{artistId}/proposal-template")]
+    public async Task<IRemoteStreamContent> GetProposalTemplateAsync(Guid artistId)
     {
         var artist = await _artistRepository.GetAsync(artistId);
 
         if (string.IsNullOrEmpty(artist.ProposalTemplateUrl))
         {
-            return null;
+            throw new UserFriendlyException("Sem template para este artista.");
         }
 
         var exists = await _blobContainer.ExistsAsync(artist.ProposalTemplateUrl);
         if (!exists)
         {
-            return null;
+            throw new UserFriendlyException("Arquivo não encontrado.");
         }
 
-        return await _blobContainer.GetAllBytesAsync(artist.ProposalTemplateUrl);
+        var stream = await _blobContainer.GetAsync(artist.ProposalTemplateUrl);
+        return new RemoteStreamContent(stream, artist.ProposalTemplateUrl, "application/pdf");
     }
 }

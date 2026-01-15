@@ -56,11 +56,11 @@ export class ArtistService {
 
   uploadProposalTemplate = (artistId: string, file: File, config?: Partial<Rest.Config>) => {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('input', file);
 
     return this.restService.request<any, string>({
       method: 'POST',
-      url: `/api/app/artist/proposal-template/${artistId}`,
+      url: `/api/app/artist/${artistId}/proposal-template`,
       body: formData,
     },
       { apiName: this.apiName, ...config });
@@ -69,7 +69,7 @@ export class ArtistService {
   deleteProposalTemplate = (artistId: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, void>({
       method: 'DELETE',
-      url: `/api/app/artist/proposal-template/${artistId}`,
+      url: `/api/app/artist/${artistId}/proposal-template`,
     },
       { apiName: this.apiName, ...config });
 }
