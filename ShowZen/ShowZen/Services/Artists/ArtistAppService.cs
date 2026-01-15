@@ -110,6 +110,9 @@ public class ArtistAppService : ApplicationService, IArtistAppService
         await _artistRepository.DeleteAsync(id);
     }
 
+    [HttpPost]
+    [Route("{artistId}/proposal-template")]
+    [IgnoreAntiforgeryToken]
     [Authorize(ShowZenPermissions.Artists.Edit)]
     public async Task<string> UploadProposalTemplateAsync(Guid artistId, IFormFile file)
     {
@@ -147,6 +150,8 @@ public class ArtistAppService : ApplicationService, IArtistAppService
         return blobName;
     }
 
+    [HttpDelete]
+    [Route("{artistId}/proposal-template")]
     [Authorize(ShowZenPermissions.Artists.Edit)]
     public async Task DeleteProposalTemplateAsync(Guid artistId)
     {
