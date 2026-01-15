@@ -92,7 +92,7 @@ namespace ShowZen.Services.Proposals
                                     r.RelativeItem().Text(t => {
                                         t.Span(eventData.Description ?? "Show Artístico").FontSize(14).Medium();
                                     });
-                                    r.AutoItem().Text(eventData.Date.ToString("dd/MM/yyyy")).FontSize(14).Italic().FontColor(Colors.Grey.Darken1);
+                                    r.AutoItem().Text(eventData.StartDateTime.ToString("dd/MM/yyyy")).FontSize(14).Italic().FontColor(Colors.Grey.Darken1);
                                 });
 
                                 info.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
@@ -125,12 +125,12 @@ namespace ShowZen.Services.Proposals
                                 }
 
                                 // Production
-                                if (eventData.ProductionCost > 0)
+                                if (eventData.ProductionValue > 0)
                                 {
                                      items.Item().Row(row => 
                                     {
                                         row.RelativeItem().Text("Custos de Produção").FontSize(12);
-                                        row.AutoItem().Text($"R$ {eventData.ProductionCost:N2}").FontSize(12).SemiBold();
+                                        row.AutoItem().Text($"R$ {eventData.ProductionValue:N2}").FontSize(12).SemiBold();
                                     });
                                     items.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                                 }
@@ -143,7 +143,7 @@ namespace ShowZen.Services.Proposals
                             {
                                 row.AutoItem().Background(PrimaryColor)
                                     .PaddingVertical(10).PaddingHorizontal(30)
-                                    .Text($"TOTAL: R$ {(eventData.Fee + (eventData.ProductionCost ?? 0)):N2}")
+                                    .Text($"TOTAL: R$ {(eventData.Fee + (eventData.ProductionValue ?? 0)):N2}")
                                     .FontSize(14).Bold().FontColor(Colors.White);
                             });
 
