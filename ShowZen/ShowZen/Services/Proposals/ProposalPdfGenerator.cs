@@ -13,6 +13,13 @@ namespace ShowZen.Services.Proposals
 {
     public class ProposalPdfGenerator : ITransientDependency
     {
+        private readonly ILogger<ProposalPdfGenerator> _logger;
+
+        public ProposalPdfGenerator(ILogger<ProposalPdfGenerator> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task<byte[]> GenerateBudgetPageAsync(Event eventData, Artist artist, Client client)
         {
             return await Task.Run(() =>
@@ -194,8 +201,9 @@ namespace ShowZen.Services.Proposals
                     return outputStream.ToArray();
                 });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Failed to merge artist template PDF with budget page.");
                 // If merge fails, return budget page only
                 return budgetPage;
             }

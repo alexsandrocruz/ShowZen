@@ -11,6 +11,8 @@ using ShowZen.Entities.Artists;
 using ShowZen.Entities.Clients;
 using ShowZen.Services.Dtos.Proposals;
 using ShowZen.Services.Artists;
+using Volo.Abp.BlobStoring;
+using Microsoft.Extensions.Logging;
 
 namespace ShowZen.Services.Proposals
 {
@@ -23,6 +25,7 @@ namespace ShowZen.Services.Proposals
         private readonly IRepository<Client, Guid> _clientRepository;
         private readonly ProposalPdfGenerator _pdfGenerator;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IBlobContainer _blobContainer;
 
         public ProposalAppService(
             IRepository<Proposal, Guid> proposalRepository,
@@ -31,7 +34,8 @@ namespace ShowZen.Services.Proposals
             IRepository<Artist, Guid> artistRepository,
             IRepository<Client, Guid> clientRepository,
             ProposalPdfGenerator pdfGenerator,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IBlobContainer blobContainer)
         {
             _proposalRepository = proposalRepository;
             _proposalViewRepository = proposalViewRepository;
@@ -40,6 +44,7 @@ namespace ShowZen.Services.Proposals
             _clientRepository = clientRepository;
             _pdfGenerator = pdfGenerator;
             _webHostEnvironment = webHostEnvironment;
+            _blobContainer = blobContainer;
         }
 
         public async Task<ProposalDto> GenerateProposalAsync(CreateProposalInput input)
@@ -72,21 +77,25 @@ namespace ShowZen.Services.Proposals
             {
                 try
                 {
-                    // Load from ArtistAppService
-                    var artistAppService = LazyServiceProvider.LazyGetRequiredService<IArtistAppService>();
-                    var remoteStream = await artistAppService.GetProposalTemplateAsync(artist.Id);
-                    if (remoteStream != null)
+                    // Check if blob exists
+                    if (await _blobContainer.ExistsAsync(artist.ProposalTemplateUrl))
                     {
+                        var blobStream = await _blobContainer.GetAsync(artist.ProposalTemplateUrl);
                         using (var ms = new System.IO.MemoryStream())
                         {
-                            await remoteStream.GetStream().CopyToAsync(ms);
+                            await blobStream.CopyToAsync(ms);
                             artistTemplate = ms.ToArray();
                         }
                     }
+                    else
+                    {
+                        Logger.LogWarning($"Proposal template blob not found for artist {artist.Name} (ID: {artist.Id}) at path: {artist.ProposalTemplateUrl}");
+                    }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // If template loading fails, continue with budget only
+                    // If template loading fails, continue with budget only but log the error
+                    Logger.LogError(ex, $"Failed to load proposal template for artist {artist.Name} (ID: {artist.Id})");
                     artistTemplate = null;
                 }
             }

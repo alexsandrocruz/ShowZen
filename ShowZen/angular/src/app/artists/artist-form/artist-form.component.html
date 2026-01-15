@@ -5,18 +5,18 @@
             <div>
                 <h2 class="mb-1">
                     <i class="fas fa-user me-2"></i>
-                    {{ (isEditMode ? 'EditArtist' : 'NewArtist') | abpLocalization:'ShowZen' }}
+                    {{ (isEditMode ? '::EditArtist' : '::NewArtist') | abpLocalization }}
                 </h2>
                 <p class="text-muted mb-0" *ngIf="isEditMode && artist">{{ artist.name }}</p>
             </div>
             <div>
                 <button type="button" class="btn btn-outline-secondary me-2" (click)="cancel()">
                     <i class="fas fa-times me-1"></i>
-                    {{ 'Cancel' | abpLocalization:'ShowZen' }}
+                    {{ '::Cancel' | abpLocalization }}
                 </button>
                 <button type="button" class="btn btn-primary" (click)="save()" [disabled]="form.invalid || saving">
                     <i class="fas fa-check me-1"></i>
-                    {{ 'Save' | abpLocalization:'ShowZen' }}
+                    {{ '::Save' | abpLocalization }}
                 </button>
             </div>
         </div>
@@ -70,44 +70,43 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label for="artist-name" class="form-label">{{ 'ArtistName' | abpLocalization:'ShowZen' }}
+                            <label for="artist-name" class="form-label">{{ '::ArtistName' | abpLocalization }}
                                 *</label>
                             <input type="text" id="artist-name" class="form-control" formControlName="name"
                                 placeholder="Nome completo do artista" />
                             <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
                                 class="invalid-feedback d-block">
-                                <span *ngIf="form.get('name')?.errors?.['required']">{{ 'ThisFieldIsRequired' |
-                                    abpLocalization:'ShowZen' }}</span>
+                                <span *ngIf="form.get('name')?.errors?.['required']">{{ '::ThisFieldIsRequired' |
+                                    abpLocalization }}</span>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="artist-type" class="form-label">{{ 'ArtistType' | abpLocalization:'ShowZen' }}
+                            <label for="artist-type" class="form-label">{{ '::ArtistType' | abpLocalization }}
                                 *</label>
                             <select id="artist-type" class="form-select" formControlName="type">
-                                <option [ngValue]="null">{{ 'PleaseSelect' | abpLocalization:'ShowZen' }}</option>
+                                <option [ngValue]="null">{{ '::PleaseSelect' | abpLocalization }}</option>
                                 <option *ngFor="let type of artistTypes" [ngValue]="type.value">
-                                    {{ type.key | abpLocalization:'ShowZen' }}
+                                    {{ '::Enum:ArtistType.' + type.value | abpLocalization }}
                                 </option>
                             </select>
                             <div *ngIf="form.get('type')?.invalid && form.get('type')?.touched"
                                 class="invalid-feedback d-block">
-                                <span *ngIf="form.get('type')?.errors?.['required']">{{ 'ThisFieldIsRequired' |
-                                    abpLocalization:'ShowZen' }}</span>
+                                <span *ngIf="form.get('type')?.errors?.['required']">{{ '::ThisFieldIsRequired' |
+                                    abpLocalization }}</span>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="artist-biography" class="form-label">{{ 'Biography' | abpLocalization:'ShowZen'
-                                }}
+                            <label for="artist-biography" class="form-label">{{ '::Biography' | abpLocalization }}
                                 *</label>
                             <textarea id="artist-biography" class="form-control" formControlName="biography" rows="6"
                                 placeholder="Biografia do artista"></textarea>
                             <div *ngIf="form.get('biography')?.invalid && form.get('biography')?.touched"
                                 class="invalid-feedback d-block">
-                                <span *ngIf="form.get('biography')?.errors?.['required']">{{ 'ThisFieldIsRequired'
+                                <span *ngIf="form.get('biography')?.errors?.['required']">{{ '::ThisFieldIsRequired'
                                     |
-                                    abpLocalization:'ShowZen' }}</span>
+                                    abpLocalization }}</span>
                             </div>
                         </div>
                     </div>
@@ -125,7 +124,7 @@
                         <div class="mb-3">
                             <label for="artist-instagram" class="form-label">
                                 <i class="fab fa-instagram me-1"></i>
-                                {{ 'InstagramHandle' | abpLocalization:'ShowZen' }}
+                                {{ '::InstagramHandle' | abpLocalization }}
                             </label>
                             <input type="text" id="artist-instagram" class="form-control"
                                 formControlName="instagramHandle" placeholder="@username" />
@@ -134,7 +133,7 @@
                         <div class="mb-3">
                             <label for="artist-website" class="form-label">
                                 <i class="fas fa-globe me-1"></i>
-                                {{ 'WebsiteUrl' | abpLocalization:'ShowZen' }}
+                                {{ '::WebsiteUrl' | abpLocalization }}
                             </label>
                             <input type="url" id="artist-website" class="form-control" formControlName="websiteUrl"
                                 placeholder="https://example.com" />
@@ -153,7 +152,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label for="artist-logo" class="form-label">{{ 'Logo' | abpLocalization:'ShowZen'
+                                <label for="artist-logo" class="form-label">{{ '::Logo' | abpLocalization
                                     }}</label>
                                 <div class="image-upload-wrapper">
                                     <div class="preview-box" *ngIf="logoPreview">
@@ -168,7 +167,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label for="artist-banner" class="form-label">{{ 'Banner' | abpLocalization:'ShowZen'
+                                <label for="artist-banner" class="form-label">{{ '::Banner' | abpLocalization
                                     }}</label>
                                 <div class="image-upload-wrapper">
                                     <div class="preview-box" *ngIf="bannerPreview">
@@ -191,12 +190,12 @@
                     <div class="card-header">
                         <h5 class="mb-0">
                             <i class="fas fa-file-pdf me-2"></i>
-                            {{ 'ProposalTemplate' | abpLocalization:'ShowZen' }}
+                            {{ '::ProposalTemplate' | abpLocalization }}
                         </h5>
                     </div>
                     <div class="card-body">
                         <p class="text-muted small mb-3">
-                            {{ 'ProposalTemplateInfo' | abpLocalization:'ShowZen' }}
+                            {{ '::ProposalTemplateInfo' | abpLocalization }}
                         </p>
 
                         <!-- Current Template Display -->
@@ -214,7 +213,7 @@
                             <button type="button" class="btn btn-sm btn-danger" (click)="deleteTemplate()"
                                 [disabled]="deletingTemplate">
                                 <i class="fas fa-trash me-1"></i>
-                                {{ 'DeleteProposalTemplate' | abpLocalization:'ShowZen' }}
+                                {{ '::DeleteProposalTemplate' | abpLocalization }}
                             </button>
                         </div>
 
