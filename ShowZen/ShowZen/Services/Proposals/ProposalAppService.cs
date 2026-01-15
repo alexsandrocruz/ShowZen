@@ -10,6 +10,7 @@ using ShowZen.Entities.Events;
 using ShowZen.Entities.Artists;
 using ShowZen.Entities.Clients;
 using ShowZen.Services.Dtos.Proposals;
+using ShowZen.Services.Artists;
 
 namespace ShowZen.Services.Proposals
 {
