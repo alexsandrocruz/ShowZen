@@ -81,16 +81,19 @@ export class EventsGridComponent {
         this.generatingProposal = false;
         const proposalUrl = this.proposalService.getPdfUrl(proposal.uniqueToken);
 
+        // Open PDF in new tab
+        window.open(proposalUrl, '_blank');
+
         // Copy to clipboard
         navigator.clipboard.writeText(proposalUrl).then(() => {
           this.toaster.success(
-            `Proposta gerada com sucesso! Link copiado para a área de transferência.`,
+            `Proposta gerada com sucesso! PDF aberto em nova aba e link copiado para a área de transferência.`,
             'Sucesso',
             { life: 5000 }
           );
         }).catch(() => {
           this.toaster.success(
-            `Proposta gerada! Link: ${proposalUrl}`,
+            `Proposta gerada e aberta em nova aba! Link: ${proposalUrl}`,
             'Sucesso',
             { life: 8000 }
           );
