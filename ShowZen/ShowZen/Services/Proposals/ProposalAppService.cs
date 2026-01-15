@@ -65,12 +65,21 @@ namespace ShowZen.Services.Proposals
             // Generate budget page PDF
             var budgetPdf = await _pdfGenerator.GenerateBudgetPageAsync(eventData, artist, client);
 
-            // TODO: Load artist template if exists and merge
+            // Load artist template if exists
             byte[]? artistTemplate = null;
             if (!string.IsNullOrEmpty(artist.ProposalTemplateUrl))
             {
-                // Load artist template from file system
-                // artistTemplate = await File.ReadAllBytesAsync(artist.ProposalTemplateUrl);
+                try
+                {
+                    // Load from ArtistAppService
+                    var artistAppService = LazyServiceProvider.LazyGetRequiredService<ArtistAppService>();
+                    artistTemplate = await artistAppService.GetProposalTemplateAsync(artist.Id);
+                }
+                catch
+                {
+                    // If template loading fails, continue with budget only
+                    artistTemplate = null;
+                }
             }
 
             var finalPdf = await _pdfGenerator.MergePdfsAsync(artistTemplate, budgetPdf);

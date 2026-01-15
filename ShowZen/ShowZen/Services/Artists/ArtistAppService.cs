@@ -1,15 +1,19 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq.Dynamic.Core;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using ShowZen.Entities.Artists;
 using ShowZen.Permissions;
 using ShowZen.Services.Dtos.Artists;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
+using Volo.Abp.BlobStoring;
 
 namespace ShowZen.Services.Artists;
 
@@ -17,10 +21,14 @@ namespace ShowZen.Services.Artists;
 public class ArtistAppService : ApplicationService, IArtistAppService
 {
     private readonly IRepository<Artist, Guid> _artistRepository;
+    private readonly IBlobContainer _blobContainer;
     
-    public ArtistAppService(IRepository<Artist, Guid> artistRepository)
+    public ArtistAppService(
+        IRepository<Artist, Guid> artistRepository,
+        IBlobContainer blobContainer)
     {
         _artistRepository = artistRepository;
+        _blobContainer = blobContainer;
     }
     
     public async Task<ArtistDto> GetAsync(Guid id)
@@ -100,5 +108,74 @@ public class ArtistAppService : ApplicationService, IArtistAppService
     public async Task DeleteAsync(Guid id)
     {
         await _artistRepository.DeleteAsync(id);
+    }
+
+    [Authorize(ShowZenPermissions.Artists.Edit)]
+    public async Task<string> UploadProposalTemplateAsync(Guid artistId, IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+        {
+            throw new Exception("No file provided");
+        }
+
+        // Validate PDF
+        if (!file.ContentType.Equals("application/pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            throw new Exception("Only PDF files are allowed");
+        }
+
+        var artist = await _artistRepository.GetAsync(artistId);
+
+        // Delete old template if exists
+        if (!string.IsNullOrEmpty(artist.ProposalTemplateUrl))
+        {
+            await _blobContainer.DeleteAsync(artist.ProposalTemplateUrl);
+        }
+
+        // Save new template
+        var blobName = $"artist-templates/{artistId}/{Guid.NewGuid()}.pdf";
+        
+        using (var stream = file.OpenReadStream())
+        {
+            await _blobContainer.SaveAsync(blobName, stream, overrideExisting: true);
+        }
+
+        // Update artist
+        artist.ProposalTemplateUrl = blobName;
+        await _artistRepository.UpdateAsync(artist);
+
+        return blobName;
+    }
+
+    [Authorize(ShowZenPermissions.Artists.Edit)]
+    public async Task DeleteProposalTemplateAsync(Guid artistId)
+    {
+        var artist = await _artistRepository.GetAsync(artistId);
+
+        if (!string.IsNullOrEmpty(artist.ProposalTemplateUrl))
+        {
+            await _blobContainer.DeleteAsync(artist.ProposalTemplateUrl);
+            artist.ProposalTemplateUrl = null;
+            await _artistRepository.UpdateAsync(artist);
+        }
+    }
+
+    [HttpGet]
+    public async Task<byte[]?> GetProposalTemplateAsync(Guid artistId)
+    {
+        var artist = await _artistRepository.GetAsync(artistId);
+
+        if (string.IsNullOrEmpty(artist.ProposalTemplateUrl))
+        {
+            return null;
+        }
+
+        var exists = await _blobContainer.ExistsAsync(artist.ProposalTemplateUrl);
+        if (!exists)
+        {
+            return null;
+        }
+
+        return await _blobContainer.GetAllBytesAsync(artist.ProposalTemplateUrl);
     }
 }

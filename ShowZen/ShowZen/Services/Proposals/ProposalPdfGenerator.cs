@@ -166,9 +166,39 @@ namespace ShowZen.Services.Proposals
                 return budgetPage;
             }
 
-            // TODO: Implement PDF merging using a library like iTextSharp or PdfSharp
-            // For now, return budget page only
-            return await Task.FromResult(budgetPage);
+            try
+            {
+                return await Task.Run(() =>
+                {
+                    using var outputStream = new MemoryStream();
+                    using var writer = new iText.Kernel.Pdf.PdfWriter(outputStream);
+                    using var mergedPdf = new iText.Kernel.Pdf.PdfDocument(writer);
+
+                    // Add artist template pages
+                    using (var templateStream = new MemoryStream(artistTemplate))
+                    using (var templateReader = new iText.Kernel.Pdf.PdfReader(templateStream))
+                    using (var templatePdf = new iText.Kernel.Pdf.PdfDocument(templateReader))
+                    {
+                        templatePdf.CopyPagesTo(1, templatePdf.GetNumberOfPages(), mergedPdf);
+                    }
+
+                    // Add budget page
+                    using (var budgetStream = new MemoryStream(budgetPage))
+                    using (var budgetReader = new iText.Kernel.Pdf.PdfReader(budgetStream))
+                    using (var budgetPdf = new iText.Kernel.Pdf.PdfDocument(budgetReader))
+                    {
+                        budgetPdf.CopyPagesTo(1, budgetPdf.GetNumberOfPages(), mergedPdf);
+                    }
+
+                    mergedPdf.Close();
+                    return outputStream.ToArray();
+                });
+            }
+            catch (Exception)
+            {
+                // If merge fails, return budget page only
+                return budgetPage;
+            }
         }
 
         public async Task<string> SavePdfAsync(byte[] pdfBytes, string token, string wwwrootPath)
