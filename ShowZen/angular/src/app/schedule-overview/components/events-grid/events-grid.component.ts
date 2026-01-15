@@ -1,7 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventSummaryDto, AvailabilityStatus } from '../../../proxy/services/dtos/events/models';
 import { EventStatus, EventType } from '../../../proxy/entities/events';
+import { ProposalService } from '../../../services/proposal.service';
+import { ToasterService } from '@abp/ng.theme.shared';
 
 @Component({
   selector: 'app-events-grid',
@@ -14,8 +16,12 @@ export class EventsGridComponent {
   @Input() events: EventSummaryDto[] = [];
   @Output() eventClick = new EventEmitter<EventSummaryDto>();
 
+  private proposalService = inject(ProposalService);
+  private toaster = inject(ToasterService);
+
   EventStatus = EventStatus;
   EventType = EventType;
+  generatingProposal = false;
 
   onEventClick(event: EventSummaryDto): void {
     this.eventClick.emit(event);
@@ -61,5 +67,43 @@ export class EventsGridComponent {
       99: '❓ Outro'
     };
     return icons[type] || 'Evento';
+  }
+
+  onGenerateProposal(event: EventSummaryDto): void {
+    if (this.generatingProposal) {
+      return;
+    }
+
+    this.generatingProposal = true;
+
+    this.proposalService.generateProposal({ eventId: event.id }).subscribe({
+      next: (proposal) => {
+        this.generatingProposal = false;
+        const proposalUrl = this.proposalService.getPdfUrl(proposal.uniqueToken);
+
+        // Copy to clipboard
+        navigator.clipboard.writeText(proposalUrl).then(() => {
+          this.toaster.success(
+            `Proposta gerada com sucesso! Link copiado para a área de transferência.`,
+            'Sucesso',
+            { life: 5000 }
+          );
+        }).catch(() => {
+          this.toaster.success(
+            `Proposta gerada! Link: ${proposalUrl}`,
+            'Sucesso',
+            { life: 8000 }
+          );
+        });
+      },
+      error: (err) => {
+        this.generatingProposal = false;
+        this.toaster.error(
+          'Erro ao gerar proposta. Tente novamente.',
+          'Erro'
+        );
+        console.error('Error generating proposal:', err);
+      }
+    });
   }
 }

@@ -9,6 +9,7 @@
                 <th scope="col">Local</th>
                 <th scope="col">Status</th>
                 <th scope="col" class="text-end">Cachê</th>
+                <th scope="col" class="text-center">Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -72,11 +73,20 @@
                     </span>
                     <span *ngIf="!event.fee" class="text-muted">-</span>
                 </td>
+
+                <!-- Actions -->
+                <td class="text-center" (click)="$event.stopPropagation()">
+                    <button class="btn btn-sm btn-outline-primary" (click)="onGenerateProposal(event)"
+                        title="Gerar Proposta">
+                        <i class="fa fa-file-pdf me-1"></i>
+                        Proposta
+                    </button>
+                </td>
             </tr>
 
             <!-- Empty State -->
             <tr *ngIf="events.length === 0">
-                <td colspan="7" class="text-center py-5">
+                <td colspan="8" class="text-center py-5">
                     <div class="text-muted">
                         <i class="fa fa-calendar-times fs-2 mb-3"></i>
                         <p class="mb-0">Nenhum evento encontrado para os filtros selecionados.</p>

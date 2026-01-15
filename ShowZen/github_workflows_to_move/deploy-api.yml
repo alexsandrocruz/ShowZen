@@ -66,6 +66,11 @@ jobs:
             mv /opt/showzen/deploy-temp/* /opt/showzen/api/
             rm -rf /opt/showzen/deploy-temp
             
+            # Apply Database Migrations
+            cd /opt/showzen/api
+            export ConnectionStrings__Default="${{ secrets.DB_CONNECTION_STRING }}"
+            dotnet ShowZen.dll --migrate-database
+            
             # Restart Systemd Service
             systemctl restart showzen-api
             
