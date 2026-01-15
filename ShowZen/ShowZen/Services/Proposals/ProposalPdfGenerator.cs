@@ -108,10 +108,10 @@ namespace ShowZen.Services.Proposals
                                 });
                             });
 
-                            // Financial Items List (Simulating the clean "Item ......... Price" look)
-                            column.Item().PaddingTop(30).Column(items => 
+                            // Financial Items List (Values)
+                            column.Item().PaddingTop(20).Column(items => 
                             {
-                                items.Spacing(15);
+                                items.Spacing(10);
 
                                 // Fee
                                 if (eventData.Fee > 0)
@@ -134,12 +134,10 @@ namespace ShowZen.Services.Proposals
                                     });
                                     items.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                                 }
-                                
-                                // Other costs placeholder if we had them detailing
                             });
 
                             // Total Section
-                            column.Item().PaddingTop(20).AlignRight().Row(row => 
+                            column.Item().PaddingTop(10).AlignRight().Row(row => 
                             {
                                 row.AutoItem().Background(PrimaryColor)
                                     .PaddingVertical(10).PaddingHorizontal(30)
@@ -147,39 +145,63 @@ namespace ShowZen.Services.Proposals
                                     .FontSize(14).Bold().FontColor(Colors.White);
                             });
 
-                            // Terms Section
-                            column.Item().PaddingTop(40).Column(terms => 
+                            // Scope Lists (Inclusos / Não Inclusos)
+                            column.Item().PaddingTop(20).Table(table =>
                             {
-                                terms.Spacing(15);
-
-                                // Delivery/Execution
-                                terms.Item().Column(c => 
+                                table.ColumnsDefinition(columns =>
                                 {
-                                    c.Item().Text("Data do Evento:").FontSize(10).Bold();
-                                    c.Item().Text($"O evento está programado para ocorrer em {eventData.StartDateTime:dd 'de' MMMM 'de' yyyy}, com início previsto para {eventData.StartDateTime:HH:mm}.").FontSize(10).FontColor(Colors.Grey.Darken2);
+                                    columns.RelativeColumn();
+                                    columns.ConstantColumn(20); // Spacer
+                                    columns.RelativeColumn();
                                 });
 
-                                // Payment
-                                terms.Item().Column(c => 
+                                // Headers
+                                table.Header(header =>
                                 {
-                                    c.Item().Text("Pagamento:").FontSize(10).Bold();
-                                    c.Item().PaddingLeft(10).Column(ul => 
+                                    header.Cell().Column(col => 
                                     {
-                                        ul.Spacing(5);
-                                        ul.Item().Row(li => {
-                                            li.AutoItem().Text("• ").FontSize(10);
-                                            li.RelativeItem().Text("50% na assinatura do contrato.").FontSize(10).FontColor(Colors.Grey.Darken2);
-                                        });
-                                        ul.Item().Row(li => {
-                                            li.AutoItem().Text("• ").FontSize(10);
-                                            li.RelativeItem().Text("50% restante até 24h antes do show/evento.").FontSize(10).FontColor(Colors.Grey.Darken2);
-                                        });
-                                        ul.Item().Row(li => {
-                                            li.AutoItem().Text("• ").FontSize(10);
-                                            li.RelativeItem().Text("Condições sujeitas a alteração sem aviso prévio.").FontSize(10).FontColor(Colors.Grey.Darken2);
-                                        });
+                                        col.Item().Text("CUSTOS INCLUSOS").Bold().FontColor(PrimaryColor);
+                                        col.Item().LineHorizontal(2).LineColor(PrimaryColor);
+                                    });
+                                    
+                                    header.Cell(); // Spacer
+
+                                    header.Cell().Column(col => 
+                                    {
+                                        col.Item().Text("CUSTOS NÃO INCLUSOS").Bold().FontColor(Colors.Red.Darken2);
+                                        col.Item().LineHorizontal(2).LineColor(Colors.Red.Darken2);
                                     });
                                 });
+
+                                // Content
+                                table.Cell().PaddingTop(10).Column(col => 
+                                {
+                                    col.Spacing(5);
+                                    var items = new[] { "Cachê", "Despesa Logística", "Transporte", "Translado", "Aéreos", "Alimentação", "Despesas Administrativas", "IMPOSTOS/Encargos" };
+                                    foreach(var item in items) col.Item().Text($"• {item}").FontSize(10);
+                                });
+
+                                table.Cell(); // Spacer
+
+                                table.Cell().PaddingTop(10).Column(col => 
+                                {
+                                    col.Spacing(5);
+                                    var items = new[] { "Abastecimento de Camarim", "Estrutura", "Palco", "Som", "TRIO", "Iluminação/ Luz e Led" };
+                                    foreach(var item in items) col.Item().Text($"• {item}").FontSize(10);
+                                });
+                            });
+
+                            // Observations / Terms Section
+                            column.Item().PaddingTop(30).Background(Colors.Grey.Lighten4).Padding(15).Column(terms => 
+                            {
+                                terms.Spacing(10);
+                                terms.Item().Text("OBSERVAÇÕES:").Bold().FontSize(12);
+                                terms.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
+
+                                terms.Item().Text("1- Essa Proposta NÃO é válida como confirmação do Show;").FontSize(10);
+                                terms.Item().Text("2- Pagamento: 50% na assinatura e 50% até 24h antes da data do show;").FontSize(10);
+                                terms.Item().Text("3- Esse orçamento é válido por 15 dias;").FontSize(10);
+                                terms.Item().Text("4- Total geral de 16 pessoas com toda banda!").FontSize(10);
                             });
                         });
 
