@@ -234,7 +234,7 @@
                                         <div class="input-group">
                                             <span class="input-group-text">R$</span>
                                             <input type="text" class="form-control" formControlName="fee"
-                                                appCurrencyBrlInput placeholder="0,00">
+                                                currencyBrlInput placeholder="0,00">
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -252,7 +252,7 @@
                                                     <div class="input-group input-group-sm">
                                                         <span class="input-group-text">R$</span>
                                                         <input type="text" class="form-control"
-                                                            formControlName="productionValue" appCurrencyBrlInput
+                                                            formControlName="productionValue" currencyBrlInput
                                                             placeholder="0,00">
                                                     </div>
                                                 </div>
@@ -261,7 +261,7 @@
                                                         abpLocalization }}</label>
                                                     <div class="input-group input-group-sm">
                                                         <input type="text" class="form-control"
-                                                            formControlName="productionPercentage" appPercentageInput
+                                                            formControlName="productionPercentage" percentageInput
                                                             placeholder="0">
                                                         <span class="input-group-text">%</span>
                                                     </div>
@@ -281,7 +281,7 @@
                                                 }}</label>
                                             <div class="input-group">
                                                 <input type="text" class="form-control" formControlName="taxPercentage"
-                                                    appPercentageInput placeholder="0">
+                                                    percentageInput placeholder="0">
                                                 <span class="input-group-text">%</span>
                                             </div>
                                         </div>
@@ -291,7 +291,7 @@
                                             <div class="input-group">
                                                 <span class="input-group-text">R$</span>
                                                 <input type="text" class="form-control" formControlName="taxValue"
-                                                    appCurrencyBrlInput placeholder="0,00">
+                                                    currencyBrlInput placeholder="0,00">
                                             </div>
                                         </div>
                                     </div>
@@ -321,12 +321,12 @@
                                     <div class="col-md-3">
                                         <label class="form-label small">{{ '::Value' | abpLocalization }}</label>
                                         <input type="text" class="form-control form-control-sm" formControlName="value"
-                                            appCurrencyBrlInput placeholder="0,00">
+                                            currencyBrlInput placeholder="0,00">
                                     </div>
                                     <div class="col-md-3">
                                         <label class="form-label small">%</label>
                                         <input type="text" class="form-control form-control-sm"
-                                            formControlName="percentage" appPercentageInput placeholder="0">
+                                            formControlName="percentage" percentageInput placeholder="0">
                                     </div>
                                     <div class="col-md-1">
                                         <button type="button" class="btn btn-sm btn-outline-danger w-100"
