@@ -13,4 +13,7 @@ public interface IArtistAppService : IApplicationService
     Task<ArtistDto> CreateAsync(CreateUpdateArtistDto input);
     Task<ArtistDto> UpdateAsync(Guid id, CreateUpdateArtistDto input);
     Task DeleteAsync(Guid id);
+    Task<string> UploadProposalTemplateAsync(Guid artistId, Microsoft.AspNetCore.Http.IFormFile file);
+    Task DeleteProposalTemplateAsync(Guid artistId);
+    Task<byte[]?> GetProposalTemplateAsync(Guid artistId);
 }

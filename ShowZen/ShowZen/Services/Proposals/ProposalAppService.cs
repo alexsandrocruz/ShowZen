@@ -73,7 +73,7 @@ namespace ShowZen.Services.Proposals
                 try
                 {
                     // Load from ArtistAppService
-                    var artistAppService = LazyServiceProvider.LazyGetRequiredService<ArtistAppService>();
+                    var artistAppService = LazyServiceProvider.LazyGetRequiredService<IArtistAppService>();
                     artistTemplate = await artistAppService.GetProposalTemplateAsync(artist.Id);
                 }
                 catch

@@ -60,7 +60,7 @@ export class ArtistService {
 
     return this.restService.request<any, string>({
       method: 'POST',
-      url: `/api/app/artist/${artistId}/proposal-template`,
+      url: `/api/app/artist/proposal-template/${artistId}`,
       body: formData,
     },
       { apiName: this.apiName, ...config });
@@ -69,7 +69,7 @@ export class ArtistService {
   deleteProposalTemplate = (artistId: string, config?: Partial<Rest.Config>) =>
     this.restService.request<any, void>({
       method: 'DELETE',
-      url: `/api/app/artist/${artistId}/proposal-template`,
+      url: `/api/app/artist/proposal-template/${artistId}`,
     },
       { apiName: this.apiName, ...config });
 }

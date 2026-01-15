@@ -111,10 +111,10 @@ public class ArtistAppService : ApplicationService, IArtistAppService
     }
 
     [HttpPost]
-    [Route("{artistId}/proposal-template")]
+    [Route("proposal-template/{artistId}")]
     [IgnoreAntiforgeryToken]
     [Authorize(ShowZenPermissions.Artists.Edit)]
-    public async Task<string> UploadProposalTemplateAsync(Guid artistId, IFormFile file)
+    public async Task<string> UploadProposalTemplateAsync([FromRoute] Guid artistId, [FromForm] IFormFile file)
     {
         if (file == null || file.Length == 0)
         {
@@ -122,7 +122,8 @@ public class ArtistAppService : ApplicationService, IArtistAppService
         }
 
         // Validate PDF
-        if (!file.ContentType.Equals("application/pdf", StringComparison.OrdinalIgnoreCase))
+        if (!file.ContentType.Equals("application/pdf", StringComparison.OrdinalIgnoreCase) && 
+            !file.FileName.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
         {
             throw new Exception("Only PDF files are allowed");
         }
@@ -151,9 +152,9 @@ public class ArtistAppService : ApplicationService, IArtistAppService
     }
 
     [HttpDelete]
-    [Route("{artistId}/proposal-template")]
+    [Route("proposal-template/{artistId}")]
     [Authorize(ShowZenPermissions.Artists.Edit)]
-    public async Task DeleteProposalTemplateAsync(Guid artistId)
+    public async Task DeleteProposalTemplateAsync([FromRoute] Guid artistId)
     {
         var artist = await _artistRepository.GetAsync(artistId);
 
