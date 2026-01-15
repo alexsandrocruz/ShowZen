@@ -205,6 +205,11 @@
                             <div>
                                 <i class="fas fa-file-pdf me-2"></i>
                                 <span>PDF de apresentação já cadastrado</span>
+                                <a *ngIf="artist?.proposalTemplateUrl" [href]="artist.proposalTemplateUrl"
+                                    target="_blank"
+                                    class="ms-3 btn btn-sm btn-outline-light text-dark border-secondary bg-white">
+                                    <i class="fas fa-eye me-1"></i> Visualizar
+                                </a>
                             </div>
                             <button type="button" class="btn btn-sm btn-danger" (click)="deleteTemplate()"
                                 [disabled]="deletingTemplate">
