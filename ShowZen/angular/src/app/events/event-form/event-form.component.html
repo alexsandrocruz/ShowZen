@@ -182,7 +182,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ '::LocalPartner' | abpLocalization }}</label>
-                                    <ng-select [items]="clients" bindLabel="name" bindValue="id"
+                                    <ng-select [items]="partners" bindLabel="name" bindValue="id"
                                         formControlName="localPartnerId" placeholder="Selecione o parceiro local..."
                                         [addTag]="onAddLocalPartner"
                                         [addTagText]="'::SearchOrCreatePartner' | abpLocalization"
@@ -350,4 +350,4 @@
 </div>
 
 <app-client-quick-modal #clientQuickModal (onSave)="onClientCreated($event)"></app-client-quick-modal>
-<app-client-quick-modal #localPartnerQuickModal (onSave)="onLocalPartnerCreated($event)"></app-client-quick-modal>
+<app-partner-quick-modal #localPartnerQuickModal (onSave)="onLocalPartnerCreated($event)"></app-partner-quick-modal>

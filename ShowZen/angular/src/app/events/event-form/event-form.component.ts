@@ -23,6 +23,7 @@ import { NegotiationType } from '../../proxy/entities/events/negotiation-type.en
 import { CurrencyBrlInputDirective } from '../../shared/directives/currency-brl-input.directive';
 import { PercentageInputDirective } from '../../shared/directives/percentage-input.directive';
 import { ClientQuickModalComponent } from '../../shared/components/client-quick-modal/client-quick-modal.component';
+import { PartnerQuickModalComponent } from '../../shared/components/partner-quick-modal/partner-quick-modal.component';
 
 @Component({
     selector: 'app-event-form',
@@ -37,7 +38,8 @@ import { ClientQuickModalComponent } from '../../shared/components/client-quick-
         LocalizationPipe,
         CurrencyBrlInputDirective,
         PercentageInputDirective,
-        ClientQuickModalComponent
+        ClientQuickModalComponent,
+        PartnerQuickModalComponent
     ],
     providers: [{ provide: NgbDateAdapter, useClass: NgbDateNativeAdapter }],
     templateUrl: './event-form.component.html',
@@ -45,7 +47,7 @@ import { ClientQuickModalComponent } from '../../shared/components/client-quick-
 })
 export class EventFormComponent implements OnInit {
     @ViewChild('clientQuickModal') clientQuickModal!: ClientQuickModalComponent;
-    @ViewChild('localPartnerQuickModal') localPartnerQuickModal!: ClientQuickModalComponent;
+    @ViewChild('localPartnerQuickModal') localPartnerQuickModal!: PartnerQuickModalComponent;
 
     form!: FormGroup;
     eventId: string | null = null;
@@ -54,6 +56,7 @@ export class EventFormComponent implements OnInit {
 
     artists: ArtistDto[] = [];
     clients: ClientDto[] = [];
+    partners: ClientDto[] = [];
     locations: LocationDto[] = [];
 
     private clientResolve?: (value: ClientDto | PromiseLike<ClientDto>) => void;
@@ -221,7 +224,13 @@ export class EventFormComponent implements OnInit {
 
     loadDependencies(): void {
         this.artistService.getList({ maxResultCount: 100 }).subscribe(res => this.artists = res.items || []);
-        this.clientService.getList({ maxResultCount: 100 }).subscribe(res => this.clients = res.items || []);
+        this.clientService.getList({ maxResultCount: 100 }).subscribe(res => {
+            const allClients = res.items || [];
+            // Clients: todos exceto LocalProducer (7)
+            this.clients = allClients.filter(c => c.type !== ClientType.LocalProducer);
+            // Partners: apenas LocalProducer (7)
+            this.partners = allClients.filter(c => c.type === ClientType.LocalProducer);
+        });
         this.locationService.getList({ maxResultCount: 100 }).subscribe(res => this.locations = res.items || []);
     }
 
@@ -460,7 +469,7 @@ export class EventFormComponent implements OnInit {
     };
 
     onLocalPartnerCreated(client: ClientDto): void {
-        this.clients.push(client);
+        this.partners.push(client);
         if (this.localPartnerResolve) {
             this.localPartnerResolve(client);
             this.localPartnerResolve = undefined;
