@@ -166,10 +166,9 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ '::Client' | abpLocalization }} *</label>
                                     <ng-select [items]="clients" bindLabel="name" bindValue="id"
-                                        formControlName="clientId" [addTag]="true"
+                                        formControlName="clientId" [addTag]="onAddClient"
                                         [addTagText]="'::SearchOrCreateClient' | abpLocalization"
-                                        (add)="onAddClient($event)" [searchFn]="customSearchFnClient"
-                                        placeholder="Selecione o cliente...">
+                                        [searchFn]="customSearchFnClient" placeholder="Selecione o cliente...">
                                     </ng-select>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -185,8 +184,9 @@
                                     <label class="form-label">{{ '::LocalPartner' | abpLocalization }}</label>
                                     <ng-select [items]="clients" bindLabel="name" bindValue="id"
                                         formControlName="localPartnerId" placeholder="Selecione o parceiro local..."
-                                        [addTag]="true" [addTagText]="'::SearchOrCreatePartner' | abpLocalization"
-                                        (add)="onAddLocalPartner($event)" [searchFn]="customSearchFnClient">
+                                        [addTag]="onAddLocalPartner"
+                                        [addTagText]="'::SearchOrCreatePartner' | abpLocalization"
+                                        [searchFn]="customSearchFnClient">
                                     </ng-select>
                                 </div>
                             </div>
