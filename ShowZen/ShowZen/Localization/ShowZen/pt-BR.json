@@ -122,6 +122,7 @@
     "LocalPartner": "Parceiro Local",
     "SelectPartner": "Selecionar parceiro...",
     "SearchOrCreateClient": "Buscar ou criar cliente...",
+    "SearchOrCreatePartner": "Buscar ou criar parceiro...",
     "SearchOrCreateLocation": "Buscar ou criar local...",
     "EventStatus:Lead": "Lead",
     "EventStatus:ProposalSent": "Proposta Enviada",

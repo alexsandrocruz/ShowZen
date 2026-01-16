@@ -45,6 +45,7 @@ import { ClientQuickModalComponent } from '../../shared/components/client-quick-
 })
 export class EventFormComponent implements OnInit {
     @ViewChild('clientQuickModal') clientQuickModal!: ClientQuickModalComponent;
+    @ViewChild('localPartnerQuickModal') localPartnerQuickModal!: ClientQuickModalComponent;
 
     form!: FormGroup;
     eventId: string | null = null;
@@ -56,6 +57,7 @@ export class EventFormComponent implements OnInit {
     locations: LocationDto[] = [];
 
     private clientResolve?: (value: ClientDto | PromiseLike<ClientDto>) => void;
+    private localPartnerResolve?: (value: ClientDto | PromiseLike<ClientDto>) => void;
 
     eventTypes = Object.keys(EventType)
         .filter(key => isNaN(Number(key)))
@@ -449,4 +451,19 @@ export class EventFormComponent implements OnInit {
             (item.email?.toLowerCase().includes(term) ?? false) ||
             (item.city?.toLowerCase().includes(term) ?? false);
     };
+
+    onAddLocalPartner = (name: string): ClientDto | Promise<ClientDto> => {
+        return new Promise((resolve) => {
+            this.localPartnerResolve = resolve;
+            this.localPartnerQuickModal.open(name);
+        });
+    };
+
+    onLocalPartnerCreated(client: ClientDto): void {
+        this.clients.push(client);
+        if (this.localPartnerResolve) {
+            this.localPartnerResolve(client);
+            this.localPartnerResolve = undefined;
+        }
+    }
 }
