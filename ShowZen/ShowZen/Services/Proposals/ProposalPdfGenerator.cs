@@ -119,17 +119,11 @@ namespace ShowZen.Services.Proposals
                                 {
                                     costs.Spacing(10);
                                     
-                                    // Fee
+                                    // Fee (already includes all costs)
                                     if (eventData.Fee > 0)
                                     {
                                         costs.Item().Text("Cachê Artístico").FontSize(12);
-                                        costs.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-                                    }
-
-                                    // Production
-                                    if (eventData.ProductionValue > 0)
-                                    {
-                                        costs.Item().Text("Custos de Produção").FontSize(12);
+                                        costs.Item().Text("(Inclui todos os custos de produção e impostos)").FontSize(9).Italic().FontColor(Colors.Grey.Darken1);
                                         costs.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                                     }
                                 });
@@ -140,7 +134,7 @@ namespace ShowZen.Services.Proposals
                                 // Right: Total Block
                                 row.AutoItem().Background(PrimaryColor)
                                     .PaddingVertical(10).PaddingHorizontal(30)
-                                    .Text($"TOTAL: R$ {(eventData.Fee + (eventData.ProductionValue ?? 0)):N2}")
+                                    .Text($"TOTAL: R$ {eventData.Fee:N2}")
                                     .FontSize(14).Bold().FontColor(Colors.White);
                             });
 
