@@ -181,7 +181,16 @@ public class EventAppService : ApplicationService, IEventAppService
     [Authorize(ShowZenPermissions.Events.Edit)]
     public async Task<EventDto> UpdateAsync(Guid id, CreateUpdateEventDto input)
     {
-        var eventEntity = await _eventRepository.GetAsync(id);
+        // Get queryable to include Commissions
+        var queryable = await _eventRepository.GetQueryableAsync();
+        var eventEntity = await queryable
+            .Include(e => e.Commissions)
+            .FirstOrDefaultAsync(e => e.Id == id);
+            
+        if (eventEntity == null)
+        {
+            throw new BusinessException("ShowZen:EventNotFound");
+        }
         
         // Verificar conflito (excluindo o evento atual) - non-blocking
         var hasConflict = await _conflictDetector.HasConflictAsync(
@@ -219,11 +228,11 @@ public class EventAppService : ApplicationService, IEventAppService
             eventEntity.SuggestedAlternativeArtistId = null;
         }
         
-        // Handle Commissions
-        if (input.Commissions != null)
+        // Handle Commissions - clear all and recreate from input
+        eventEntity.Commissions.Clear();
+        
+        if (input.Commissions != null && input.Commissions.Any())
         {
-            // Clear and re-add for simplicity (requires including Commissions in Get)
-            eventEntity.Commissions.Clear();
             foreach (var commInput in input.Commissions)
             {
                 var commission = ObjectMapper.Map<CreateUpdateEventCommissionDto, EventCommission>(commInput);
