@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType, Chart, registerables } from 'chart.js';
 import { DashboardService } from './dashboard.service';
@@ -33,6 +33,7 @@ Chart.register(...registerables);
 export class DashboardComponent implements OnInit {
     private dashboardService = inject(DashboardService);
     private artistService = inject(ArtistService);
+    private router = inject(Router);
 
     stats: DashboardStats | null = null;
     loading = true;
@@ -219,5 +220,9 @@ export class DashboardComponent implements OnInit {
             'Perdido': 'bg-danger'
         };
         return statusMap[status] || 'bg-secondary';
+    }
+
+    navigateToEvent(eventId: string): void {
+        this.router.navigate(['/events/edit', eventId]);
     }
 }
