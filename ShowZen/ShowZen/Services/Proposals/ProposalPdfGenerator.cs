@@ -139,7 +139,7 @@ namespace ShowZen.Services.Proposals
                             });
 
                             // Scope Lists (Inclusos / Não Inclusos)
-                            column.Item().PaddingTop(20).Table(table =>
+                            column.Item().PaddingTop(12).Table(table =>
                             {
                                 table.ColumnsDefinition(columns =>
                                 {
@@ -167,27 +167,27 @@ namespace ShowZen.Services.Proposals
                                 });
 
                                 // Content
-                                table.Cell().PaddingTop(10).Column(col => 
+                                table.Cell().PaddingTop(6).Column(col => 
                                 {
-                                    col.Spacing(5);
+                                    col.Spacing(4);
                                     var items = new[] { "Cachê", "Despesa Logística", "Transporte", "Translado", "Aéreos", "Alimentação", "Despesas Administrativas", "IMPOSTOS/Encargos" };
                                     foreach(var item in items) col.Item().Text($"• {item}").FontSize(10);
                                 });
 
                                 table.Cell(); // Spacer
 
-                                table.Cell().PaddingTop(10).Column(col => 
+                                table.Cell().PaddingTop(6).Column(col => 
                                 {
-                                    col.Spacing(5);
+                                    col.Spacing(4);
                                     var items = new[] { "Abastecimento de Camarim", "Estrutura", "Palco", "Som", "TRIO", "Iluminação/ Luz e Led" };
                                     foreach(var item in items) col.Item().Text($"• {item}").FontSize(10);
                                 });
                             });
 
-                            // Observations / Terms Section (reduced padding)
-                            column.Item().PaddingTop(20).Background(Colors.Grey.Lighten4).Padding(12).Column(terms => 
+                            // Observations / Terms Section (compact)
+                            column.Item().PaddingTop(12).Background(Colors.Grey.Lighten4).Padding(10).Column(terms => 
                             {
-                                terms.Spacing(8);
+                                terms.Spacing(6);
                                 terms.Item().Text("OBSERVAÇÕES:").Bold().FontSize(12);
                                 terms.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 
@@ -198,9 +198,9 @@ namespace ShowZen.Services.Proposals
                             });
 
                             // Client Signature Section (compact, no line)
-                            column.Item().PaddingTop(20).AlignCenter().Column(signature =>
+                            column.Item().PaddingTop(12).AlignCenter().Column(signature =>
                             {
-                                signature.Spacing(5);
+                                signature.Spacing(3);
                                 
                                 // Load and display signature image
                                 try
@@ -209,7 +209,7 @@ namespace ShowZen.Services.Proposals
                                     if (File.Exists(signaturePath))
                                     {
                                         var signatureBytes = File.ReadAllBytes(signaturePath);
-                                        signature.Item().Width(180).Height(70).Image(signatureBytes);
+                                        signature.Item().Width(150).Height(60).Image(signatureBytes);
                                     }
                                 }
                                 catch (Exception ex)
@@ -218,7 +218,7 @@ namespace ShowZen.Services.Proposals
                                 }
                                 
                                 // Client name below signature
-                                signature.Item().Text("JOSE DOUGLAS DE OLIVEIRA").FontSize(10).Bold().FontColor(Colors.Black);
+                                signature.Item().Text("JOSE DOUGLAS DE OLIVEIRA").FontSize(9).Bold().FontColor(Colors.Black);
                             });
                         });
 
