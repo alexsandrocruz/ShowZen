@@ -184,10 +184,10 @@ namespace ShowZen.Services.Proposals
                                 });
                             });
 
-                            // Observations / Terms Section (compact)
-                            column.Item().PaddingTop(12).Background(Colors.Grey.Lighten4).Padding(10).Column(terms => 
+                            // Observations / Terms Section (ultra-compact)
+                            column.Item().PaddingTop(10).Background(Colors.Grey.Lighten4).Padding(8).Column(terms => 
                             {
-                                terms.Spacing(6);
+                                terms.Spacing(5);
                                 terms.Item().Text("OBSERVAÇÕES:").Bold().FontSize(12);
                                 terms.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 
@@ -197,8 +197,8 @@ namespace ShowZen.Services.Proposals
                                 terms.Item().Text("4- Total geral de 16 pessoas com toda banda!").FontSize(10);
                             });
 
-                            // Client Signature Section (compact, no line)
-                            column.Item().PaddingTop(12).AlignCenter().Column(signature =>
+                            // Client Signature Section (medium size)
+                            column.Item().PaddingTop(10).AlignCenter().Column(signature =>
                             {
                                 signature.Spacing(3);
                                 
@@ -209,7 +209,7 @@ namespace ShowZen.Services.Proposals
                                     if (File.Exists(signaturePath))
                                     {
                                         var signatureBytes = File.ReadAllBytes(signaturePath);
-                                        signature.Item().Width(300).Height(120).Image(signatureBytes);
+                                        signature.Item().Width(200).Height(80).Image(signatureBytes);
                                     }
                                 }
                                 catch (Exception ex)
