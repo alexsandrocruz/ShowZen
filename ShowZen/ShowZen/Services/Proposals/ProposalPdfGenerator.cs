@@ -184,10 +184,10 @@ namespace ShowZen.Services.Proposals
                                 });
                             });
 
-                            // Observations / Terms Section
-                            column.Item().PaddingTop(30).Background(Colors.Grey.Lighten4).Padding(15).Column(terms => 
+                            // Observations / Terms Section (reduced padding)
+                            column.Item().PaddingTop(20).Background(Colors.Grey.Lighten4).Padding(12).Column(terms => 
                             {
-                                terms.Spacing(10);
+                                terms.Spacing(8);
                                 terms.Item().Text("OBSERVAÇÕES:").Bold().FontSize(12);
                                 terms.Item().LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
 
@@ -197,17 +197,10 @@ namespace ShowZen.Services.Proposals
                                 terms.Item().Text("4- Total geral de 16 pessoas com toda banda!").FontSize(10);
                             });
 
-                            // Client Signature Section
-                            column.Item().PaddingTop(30).Column(signature =>
+                            // Client Signature Section (compact, no line)
+                            column.Item().PaddingTop(20).AlignCenter().Column(signature =>
                             {
-                                signature.Spacing(10);
-                                
-                                // Signature line
-                                signature.Item().Width(300).Column(signatureBox =>
-                                {
-                                    signatureBox.Item().LineHorizontal(1).LineColor(Colors.Grey.Darken1);
-                                    signatureBox.Item().PaddingTop(5).Text("Assinatura do Cliente").FontSize(9).FontColor(Colors.Grey.Darken2);
-                                });
+                                signature.Spacing(5);
                                 
                                 // Load and display signature image
                                 try
@@ -216,13 +209,16 @@ namespace ShowZen.Services.Proposals
                                     if (File.Exists(signaturePath))
                                     {
                                         var signatureBytes = File.ReadAllBytes(signaturePath);
-                                        signature.Item().Width(200).Height(80).Image(signatureBytes);
+                                        signature.Item().Width(180).Height(70).Image(signatureBytes);
                                     }
                                 }
                                 catch (Exception ex)
                                 {
                                     _logger.LogWarning(ex, "Failed to load client signature image");
                                 }
+                                
+                                // Client name below signature
+                                signature.Item().Text("JOSE DOUGLAS DE OLIVEIRA").FontSize(10).Bold().FontColor(Colors.Black);
                             });
                         });
 
