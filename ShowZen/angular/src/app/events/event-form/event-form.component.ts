@@ -341,6 +341,31 @@ export class EventFormComponent implements OnInit {
         this.router.navigate(['/schedule-overview']);
     }
 
+    delete(): void {
+        if (!this.eventId) return;
+
+        this.confirmation.warn(
+            '::EventDeletionConfirmationMessage',
+            '::AreYouSure',
+            {
+                yesText: '::Delete',
+                cancelText: '::Cancel'
+            }
+        ).subscribe((status) => {
+            if (status === Confirmation.Status.confirm) {
+                this.eventService.delete(this.eventId!).subscribe({
+                    next: () => {
+                        this.toaster.success('::EventDeletedSuccessfully');
+                        this.router.navigate(['/schedule-overview']);
+                    },
+                    error: () => {
+                        this.toaster.error('::ErrorDeletingEvent');
+                    }
+                });
+            }
+        });
+    }
+
     // --- Commission/Tax Logic Helpers ---
     addCommission(): void {
         const commissionForm = this.fb.group({

@@ -15,6 +15,10 @@
                         <i class="fas fa-times me-1"></i>
                         {{ '::Cancel' | abpLocalization }}
                     </button>
+                    <button *ngIf="isEditMode" type="button" class="btn btn-outline-danger" (click)="delete()">
+                        <i class="fas fa-trash me-1"></i>
+                        <span class="d-none d-md-inline">{{ '::Delete' | abpLocalization }}</span>
+                    </button>
                     <button type="button" class="btn btn-primary" (click)="save()" [disabled]="form.invalid || saving">
                         <i class="fas fa-check me-1"></i>
                         {{ '::Save' | abpLocalization }}
