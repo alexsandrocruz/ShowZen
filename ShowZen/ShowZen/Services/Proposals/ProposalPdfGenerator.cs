@@ -209,7 +209,7 @@ namespace ShowZen.Services.Proposals
                                     if (File.Exists(signaturePath))
                                     {
                                         var signatureBytes = File.ReadAllBytes(signaturePath);
-                                        signature.Item().Width(150).Height(60).Image(signatureBytes);
+                                        signature.Item().Width(300).Height(120).Image(signatureBytes);
                                     }
                                 }
                                 catch (Exception ex)
