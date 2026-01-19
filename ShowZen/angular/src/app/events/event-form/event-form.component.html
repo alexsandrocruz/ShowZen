@@ -178,10 +178,9 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ '::Location' | abpLocalization }}</label>
                                     <ng-select [items]="locations" bindLabel="name" bindValue="id"
-                                        formControlName="locationId" [addTag]="true"
+                                        formControlName="locationId" [addTag]="onAddLocation"
                                         [addTagText]="'::SearchOrCreateLocation' | abpLocalization"
-                                        (add)="onAddLocation($event)" [searchFn]="customSearchFn"
-                                        placeholder="Selecione o local...">
+                                        [searchFn]="customSearchFn" placeholder="Selecione o local...">
                                     </ng-select>
                                 </div>
                                 <div class="col-md-6 mb-3">
