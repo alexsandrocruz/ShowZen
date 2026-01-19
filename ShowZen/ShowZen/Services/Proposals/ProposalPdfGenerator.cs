@@ -196,6 +196,34 @@ namespace ShowZen.Services.Proposals
                                 terms.Item().Text("3- Esse orçamento é válido por 15 dias;").FontSize(10);
                                 terms.Item().Text("4- Total geral de 16 pessoas com toda banda!").FontSize(10);
                             });
+
+                            // Client Signature Section
+                            column.Item().PaddingTop(30).Column(signature =>
+                            {
+                                signature.Spacing(10);
+                                
+                                // Signature line
+                                signature.Item().Width(300).Column(signatureBox =>
+                                {
+                                    signatureBox.Item().LineHorizontal(1).LineColor(Colors.Grey.Darken1);
+                                    signatureBox.Item().PaddingTop(5).Text("Assinatura do Cliente").FontSize(9).FontColor(Colors.Grey.Darken2);
+                                });
+                                
+                                // Load and display signature image
+                                try
+                                {
+                                    var signaturePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "signatures", "client-signature.png");
+                                    if (File.Exists(signaturePath))
+                                    {
+                                        var signatureBytes = File.ReadAllBytes(signaturePath);
+                                        signature.Item().Width(200).Height(80).Image(signatureBytes);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    _logger.LogWarning(ex, "Failed to load client signature image");
+                                }
+                            });
                         });
 
                         // Footer
