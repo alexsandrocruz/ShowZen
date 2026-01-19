@@ -65,6 +65,12 @@ public class Program
                 return 0;
             }
 
+            if (IsCleanupDatabase(args))
+            {
+                await CleanupDatabase.RunAsync(app);
+                return 0;
+            }
+
             Log.Information("Starting ShowZen.");
             await app.RunAsync();
             return 0;
@@ -88,5 +94,10 @@ public class Program
     private static bool IsMigrateDatabase(string[] args)
     {
         return args.Any(x => x.Contains("--migrate-database", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsCleanupDatabase(string[] args)
+    {
+        return args.Any(x => x.Contains("--cleanup-database", StringComparison.OrdinalIgnoreCase));
     }
 }
