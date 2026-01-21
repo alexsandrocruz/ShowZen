@@ -1,9 +1,9 @@
 <div class="page-container">
-  <!-- Premium Header -->
+  <!-- Header -->
   <div class="page-header">
     <div class="page-header-content">
       <div class="page-title-wrapper">
-        <i class="far fa-calendar-alt page-icon"></i>
+        <i class="far fa-calendar-alt page-icon d-none d-md-block"></i>
         <div>
           <h2 class="page-title">{{ '::ScheduleOverview' | abpLocalization }}</h2>
           <p class="page-subtitle">{{ scheduleData?.events?.length || 0 }} {{ '::Events' | abpLocalization }}</p>
@@ -11,8 +11,8 @@
       </div>
 
       <div class="header-actions">
-        <!-- View Switcher -->
-        <div class="btn-group me-3" role="group">
+        <!-- View Switcher (hidden on mobile for now, defaults to list) -->
+        <div class="btn-group me-3 d-none d-md-flex" role="group">
           <button type="button" class="btn btn-outline-secondary" [class.active]="currentView === ViewMode.List"
             (click)="onViewModeChange(ViewMode.List)" title="Lista">
             <i class="fa fa-list"></i>
@@ -28,19 +28,26 @@
         </div>
 
         <button *abpPermission="'ShowZen.Events.Create'" class="btn btn-primary" (click)="onNewEvent()">
-          <i class="fa fa-plus me-2"></i> {{ '::NewEvent' | abpLocalization }}
+          <i class="fa fa-plus me-1"></i>
+          <span class="d-none d-sm-inline">{{ '::NewEvent' | abpLocalization }}</span>
+          <span class="d-sm-none">Novo</span>
         </button>
       </div>
     </div>
   </div>
 
-
-  <!-- Filters Card -->
-  <div class="card mb-4">
-    <div class="card-body p-3">
-      <app-schedule-filters [artists]="artists" [filters]="filters" (filtersChange)="onFiltersChange($event)">
-      </app-schedule-filters>
+  <!-- Filters (Desktop: card, Mobile: inline) -->
+  <div class="d-none d-md-block">
+    <div class="card mb-4">
+      <div class="card-body p-3">
+        <app-schedule-filters [artists]="artists" [filters]="filters" (filtersChange)="onFiltersChange($event)">
+        </app-schedule-filters>
+      </div>
     </div>
+  </div>
+  <div class="d-md-none mb-3">
+    <app-schedule-filters [artists]="artists" [filters]="filters" (filtersChange)="onFiltersChange($event)">
+    </app-schedule-filters>
   </div>
 
   <!-- Calendar/List View Card -->

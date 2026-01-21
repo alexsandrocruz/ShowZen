@@ -1,36 +1,140 @@
+// ========================================
+// MOBILE EVENT CARDS
+// ========================================
+.mobile-events-list {
+    padding: 0 1rem;
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6c757d;
+
+        i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+    }
+
+    .event-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        margin-bottom: 1rem;
+        padding: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid #e9ecef;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+
+    .event-card-conflict {
+        border-left: 4px solid #dc3545;
+        background: linear-gradient(to right, #fff5f5, white);
+    }
+
+    .event-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .event-date {
+        font-size: 0.85rem;
+        color: #495057;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+
+    .event-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #212529;
+        margin: 0 0 0.75rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .event-type-icon {
+        font-size: 1.2rem;
+    }
+
+    .event-details {
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-row {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.3rem 0;
+        font-size: 0.9rem;
+        color: #495057;
+
+        i {
+            width: 16px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+    }
+
+    .event-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .event-fee {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .conflict-warning {
+        margin-top: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        background: #f8d7da;
+        border-radius: 6px;
+        color: #721c24;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        i {
+            color: #dc3545;
+        }
+    }
+}
+
+// ========================================
+// DESKTOP TABLE VIEW
+// ========================================
 .events-grid-container {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
-    // Mobile: full width, no border-radius, horizontal scroll
-    @media (max-width: 767.98px) {
-        border-radius: 0;
-        margin-left: -1rem;
-        margin-right: -1rem;
-        width: calc(100% + 2rem);
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch; // Smooth iOS scroll
-
-        // Scroll hint shadow
-        background:
-            linear-gradient(to right, white 30%, transparent),
-            linear-gradient(to right, transparent, white 70%) 100% 0,
-            radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, .1), transparent),
-            radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, .1), transparent) 100% 0;
-        background-repeat: no-repeat;
-        background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
-        background-attachment: local, local, scroll, scroll;
-    }
-
     .table {
         margin-bottom: 0;
-
-        // Mobile: fixed minimum widths for scroll
-        @media (max-width: 767.98px) {
-            min-width: 700px; // Force horizontal scroll
-            font-size: 0.85rem;
-        }
 
         thead th {
             background-color: #f8f9fa;
@@ -38,25 +142,16 @@
             color: #495057;
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.75rem;
-            padding: 0.75rem 0.5rem;
+            font-size: 0.8rem;
+            padding: 1rem;
             white-space: nowrap;
-
-            @media (min-width: 768px) {
-                font-size: 0.8rem;
-                padding: 1rem;
-            }
         }
 
         tbody td {
-            padding: 0.75rem 0.5rem;
+            padding: 1rem;
             vertical-align: middle;
             border-bottom: 1px solid #e9ecef;
             transition: background-color 0.2s;
-
-            @media (min-width: 768px) {
-                padding: 1rem;
-            }
         }
 
         tbody tr:hover {
@@ -66,6 +161,9 @@
     }
 }
 
+// ========================================
+// SHARED STYLES
+// ========================================
 .avatar-circle {
     width: 32px;
     height: 32px;
@@ -86,7 +184,7 @@
     border-radius: 0.25rem;
 }
 
-// Badge colors (Bootstrap extensions/overrides if needed)
+// Badge colors
 .bg-secondary {
     background-color: #6c757d !important;
 }
@@ -120,7 +218,7 @@
     font-size: 0.875em;
 }
 
-// Conflict row styling - visible red hatched background
+// Conflict row styling - visible red hatched background (desktop only)
 .event-conflict-row {
     position: relative;
     background: repeating-linear-gradient(-45deg,

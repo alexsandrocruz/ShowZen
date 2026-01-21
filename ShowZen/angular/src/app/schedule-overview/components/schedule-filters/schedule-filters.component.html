@@ -1,4 +1,102 @@
-<div class="filters-container">
+<!-- ========================================= -->
+<!-- MOBILE: Filter Toggle Button + Drawer    -->
+<!-- ========================================= -->
+<div class="d-md-none">
+    <!-- Mobile Filter Toggle -->
+    <div class="mobile-filter-toggle">
+        <button class="btn btn-outline-secondary" (click)="toggleMobileFilters()">
+            <i class="fa fa-filter me-2"></i>
+            Filtros
+            <span *ngIf="getActiveFiltersCount() > 0" class="badge bg-primary ms-2">
+                {{ getActiveFiltersCount() }}
+            </span>
+        </button>
+        <button type="button" class="btn btn-link text-secondary" (click)="clearFilters()">
+            <i class="fa fa-undo"></i>
+        </button>
+    </div>
+
+    <!-- Mobile Filter Drawer (Overlay) -->
+    <div class="filter-drawer-backdrop" [class.show]="showMobileFilters" (click)="toggleMobileFilters()"></div>
+    <div class="filter-drawer" [class.show]="showMobileFilters">
+        <div class="filter-drawer-header">
+            <h5>Filtros</h5>
+            <button class="btn btn-close" (click)="toggleMobileFilters()"></button>
+        </div>
+
+        <div class="filter-drawer-body">
+            <!-- Period -->
+            <div class="filter-section">
+                <label class="filter-label">📅 Período</label>
+                <select class="form-select" [value]="filterForm.value.periodPreset"
+                    (change)="selectPeriod(+$any($event.target).value)">
+                    <option *ngFor="let preset of periodPresets" [value]="preset.days">{{ preset.label }}</option>
+                </select>
+            </div>
+
+            <!-- Artists -->
+            <div class="filter-section">
+                <label class="filter-label">🎤 Artistas</label>
+                <div class="filter-checkboxes">
+                    <div *ngFor="let artist of artists" class="form-check">
+                        <input class="form-check-input" type="checkbox" [id]="'m-artist-' + artist.id"
+                            [checked]="isSelected('selectedArtists', artist.id)"
+                            (change)="toggleSelection('selectedArtists', artist.id)">
+                        <label class="form-check-label" [for]="'m-artist-' + artist.id">
+                            {{ artist.name }}
+                        </label>
+                    </div>
+                    <div *ngIf="artists.length === 0" class="text-muted small">Nenhum artista encontrado.</div>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="filter-section">
+                <label class="filter-label">📊 Status</label>
+                <div class="filter-checkboxes">
+                    <div *ngFor="let status of eventStatuses" class="form-check">
+                        <input class="form-check-input" type="checkbox" [id]="'m-status-' + status.value"
+                            [checked]="isSelected('selectedStatuses', status.value)"
+                            (change)="toggleSelection('selectedStatuses', status.value)">
+                        <label class="form-check-label d-flex align-items-center" [for]="'m-status-' + status.value">
+                            <span class="status-dot me-2" [ngClass]="status.color"></span>
+                            {{ status.label }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Type -->
+            <div class="filter-section">
+                <label class="filter-label">🏷️ Tipo de Evento</label>
+                <div class="filter-checkboxes">
+                    <div *ngFor="let type of eventTypes" class="form-check">
+                        <input class="form-check-input" type="checkbox" [id]="'m-type-' + type.value"
+                            [checked]="isSelected('selectedTypes', type.value)"
+                            (change)="toggleSelection('selectedTypes', type.value)">
+                        <label class="form-check-label" [for]="'m-type-' + type.value">
+                            {{ type.icon }} {{ type.label }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-drawer-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="clearFilters()">
+                <i class="fa fa-undo me-1"></i> Limpar
+            </button>
+            <button type="button" class="btn btn-primary" (click)="toggleMobileFilters()">
+                <i class="fa fa-check me-1"></i> Aplicar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================= -->
+<!-- DESKTOP: Inline Filters                  -->
+<!-- ========================================= -->
+<div class="filters-container d-none d-md-block">
     <div class="d-flex align-items-center flex-wrap gap-2">
 
         <!-- Period Dropdown -->

@@ -69,6 +69,22 @@ export class EventsGridComponent {
     return icons[type] || 'Evento';
   }
 
+  getTypeIcon(type: EventType): string {
+    const icons: Record<number, string> = {
+      1: '🎵',
+      2: '🎤',
+      3: '👨‍🏫',
+      4: '📺',
+      5: '📻',
+      6: '🎙️',
+      7: '🏛️',
+      8: '🏢',
+      9: '📚',
+      99: '❓'
+    };
+    return icons[type] || '📅';
+  }
+
   onGenerateProposal(event: EventSummaryDto): void {
     if (this.generatingProposal) {
       return;

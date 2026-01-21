@@ -22,6 +22,7 @@ export class ScheduleFiltersComponent implements OnInit {
 
     // Dropdown UI State
     activeDropdown: string | null = null;
+    showMobileFilters = false;
 
     // Enums for template
     eventStatuses = [
@@ -106,6 +107,25 @@ export class ScheduleFiltersComponent implements OnInit {
 
     stopProp(event: Event): void {
         event.stopPropagation();
+    }
+
+    toggleMobileFilters(): void {
+        this.showMobileFilters = !this.showMobileFilters;
+        // Prevent body scroll when drawer is open
+        if (this.showMobileFilters) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    }
+
+    getActiveFiltersCount(): number {
+        let count = 0;
+        const artists = this.filterForm?.get('selectedArtists')?.value || [];
+        const statuses = this.filterForm?.get('selectedStatuses')?.value || [];
+        const types = this.filterForm?.get('selectedTypes')?.value || [];
+        count = artists.length + statuses.length + types.length;
+        return count;
     }
 
     // Filter Logic

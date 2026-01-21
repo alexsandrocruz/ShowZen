@@ -1,4 +1,72 @@
-<div class="events-grid-container table-responsive">
+<!-- ========== MOBILE VIEW: Event Cards ========== -->
+<div class="mobile-events-list d-block d-md-none">
+    <!-- Empty State -->
+    <div *ngIf="events.length === 0" class="empty-state">
+        <i class="fa fa-calendar-times"></i>
+        <p>Nenhum evento encontrado para os filtros selecionados.</p>
+    </div>
+
+    <!-- Event Cards -->
+    <div *ngFor="let event of events" class="event-card" (click)="onEventClick(event)"
+        [ngClass]="{'event-card-conflict': event.hasConflict}">
+
+        <!-- Card Header: Date + Status -->
+        <div class="event-card-header">
+            <span class="event-date">
+                {{ event.startDateTime | date:'EEE, dd \'de\' MMM':'':'pt-BR' }}
+            </span>
+            <span class="badge" [ngClass]="getStatusClass(event.status)">
+                {{ getStatusLabel(event.status) }}
+            </span>
+        </div>
+
+        <!-- Event Title -->
+        <h4 class="event-title">
+            <span class="event-type-icon">{{ getTypeIcon(event.type) }}</span>
+            {{ event.title }}
+        </h4>
+
+        <!-- Event Details -->
+        <div class="event-details">
+            <div class="detail-row">
+                <i class="fa fa-music text-primary"></i>
+                <span>{{ event.artistName }}</span>
+            </div>
+            <div class="detail-row" *ngIf="event.clientName">
+                <i class="fa fa-user text-secondary"></i>
+                <span>{{ event.clientName }}</span>
+            </div>
+            <div class="detail-row" *ngIf="event.locationName">
+                <i class="fa fa-map-marker-alt text-danger"></i>
+                <span>{{ event.locationName }}</span>
+            </div>
+            <div class="detail-row">
+                <i class="fa fa-clock text-info"></i>
+                <span>{{ event.startDateTime | date:'HH:mm' }} - {{ event.endDateTime | date:'HH:mm' }}</span>
+            </div>
+        </div>
+
+        <!-- Card Footer: Fee + Action -->
+        <div class="event-card-footer">
+            <span *ngIf="event.fee" class="event-fee">
+                {{ event.fee | currency:'BRL':'symbol':'1.2-2' }}
+            </span>
+            <span *ngIf="!event.fee" class="event-fee text-muted">-</span>
+            <button class="btn btn-sm btn-outline-primary"
+                (click)="onGenerateProposal(event); $event.stopPropagation()">
+                <i class="fa fa-file-pdf me-1"></i> Proposta
+            </button>
+        </div>
+
+        <!-- Conflict Warning -->
+        <div *ngIf="event.hasConflict" class="conflict-warning">
+            <i class="fa fa-exclamation-triangle"></i> Conflito de Agenda
+        </div>
+    </div>
+</div>
+
+<!-- ========== DESKTOP VIEW: Table ========== -->
+<div class="events-grid-container table-responsive d-none d-md-block">
     <table class="table table-hover align-middle">
         <thead>
             <tr>
