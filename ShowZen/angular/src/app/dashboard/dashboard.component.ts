@@ -46,6 +46,9 @@ export class DashboardComponent implements OnInit {
     startDate: string = '';
     endDate: string = '';
 
+    // Mobile Filter Drawer
+    showMobileFilters = false;
+
     constructor() {
         // Initialize with last 30 days
         const end = new Date();
@@ -151,6 +154,35 @@ export class DashboardComponent implements OnInit {
     }
 
     onFilterChange(): void {
+        this.loadStats();
+    }
+
+    toggleMobileFilters(): void {
+        this.showMobileFilters = !this.showMobileFilters;
+        if (this.showMobileFilters) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    }
+
+    getActiveFiltersCount(): number {
+        let count = 0;
+        if (this.selectedArtistId) count++;
+        return count;
+    }
+
+    clearFilters(): void {
+        this.selectedArtistId = null;
+        const end = new Date();
+        const start = new Date();
+        start.setDate(end.getDate() - 30);
+        this.startDate = start.toISOString().substring(0, 10);
+        this.endDate = end.toISOString().substring(0, 10);
+    }
+
+    applyFilters(): void {
+        this.toggleMobileFilters();
         this.loadStats();
     }
 

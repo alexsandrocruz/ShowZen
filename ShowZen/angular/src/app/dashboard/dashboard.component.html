@@ -1,17 +1,17 @@
 <div class="dashboard-container">
-    <!-- Premium Header -->
+    <!-- Header -->
     <div class="page-header">
         <div class="page-header-content">
             <div class="page-title-wrapper">
-                <i class="fa fa-tachometer-alt page-icon"></i>
+                <i class="fa fa-tachometer-alt page-icon d-none d-md-block"></i>
                 <div>
                     <h2 class="page-title">Dashboard</h2>
                     <p class="page-subtitle">Visão geral do seu negócio</p>
                 </div>
             </div>
 
-            <!-- Dashboard Filters -->
-            <div class="dashboard-filters d-flex gap-2 align-items-center">
+            <!-- Desktop Filters -->
+            <div class="dashboard-filters d-none d-md-flex gap-2 align-items-center">
                 <div class="filter-artist" style="min-width: 220px;">
                     <ng-select [items]="artists" bindLabel="name" bindValue="id" [(ngModel)]="selectedArtistId"
                         (change)="onFilterChange()" placeholder="Selecione o Artista" [clearable]="true"
@@ -33,6 +33,58 @@
                         [(ngModel)]="endDate" (change)="onFilterChange()" style="width: 130px;">
                 </div>
             </div>
+
+            <!-- Mobile Filter Toggle -->
+            <div class="d-md-none">
+                <button class="btn btn-outline-secondary" (click)="toggleMobileFilters()">
+                    <i class="fa fa-filter me-2"></i>
+                    Filtros
+                    <span *ngIf="getActiveFiltersCount() > 0" class="badge bg-primary ms-2">
+                        {{ getActiveFiltersCount() }}
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Filter Drawer -->
+    <div class="filter-drawer-backdrop" *ngIf="showMobileFilters" (click)="toggleMobileFilters()"></div>
+    <div class="filter-drawer" [class.show]="showMobileFilters">
+        <div class="filter-drawer-header">
+            <h5>Filtros</h5>
+            <button class="btn btn-close" (click)="toggleMobileFilters()"></button>
+        </div>
+
+        <div class="filter-drawer-body">
+            <!-- Artist -->
+            <div class="filter-section">
+                <label class="filter-label">🎤 Artista</label>
+                <ng-select [items]="artists" bindLabel="name" bindValue="id" [(ngModel)]="selectedArtistId"
+                    placeholder="Todos os artistas" [clearable]="true" class="w-100">
+                </ng-select>
+            </div>
+
+            <!-- Date Range -->
+            <div class="filter-section">
+                <label class="filter-label">📅 Período</label>
+                <div class="mb-2">
+                    <label class="form-label small text-muted mb-1">Data Início</label>
+                    <input type="date" class="form-control" [(ngModel)]="startDate">
+                </div>
+                <div>
+                    <label class="form-label small text-muted mb-1">Data Fim</label>
+                    <input type="date" class="form-control" [(ngModel)]="endDate">
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-drawer-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="clearFilters()">
+                <i class="fa fa-undo me-1"></i> Limpar
+            </button>
+            <button type="button" class="btn btn-primary" (click)="applyFilters()">
+                <i class="fa fa-check me-1"></i> Aplicar
+            </button>
         </div>
     </div>
 
@@ -59,8 +111,44 @@
 
     <!-- Dashboard Content -->
     @if (stats && !loading) {
-    <!-- KPI Cards - Two Rows -->
-    <div class="kpi-sections-wrapper">
+
+    <!-- ========== MOBILE: Compact KPI List ========== -->
+    <div class="d-lg-none mb-4">
+        <div class="kpi-compact-list">
+            <div class="kpi-compact-section">
+                <div class="kpi-compact-row">
+                    <span class="kpi-compact-label">📅 Shows no Período</span>
+                    <span class="kpi-compact-value text-success">{{ stats.totalShows }}</span>
+                </div>
+                <div class="kpi-compact-row">
+                    <span class="kpi-compact-label">💰 Cachê Médio</span>
+                    <span class="kpi-compact-value text-success">{{ formatKpiValue(stats.averageFee) }}</span>
+                </div>
+                <div class="kpi-compact-row">
+                    <span class="kpi-compact-label">💵 Cachê Confirmado</span>
+                    <span class="kpi-compact-value text-success fw-bold">{{ formatCurrency(stats.totalPeriodFee)
+                        }}</span>
+                </div>
+            </div>
+            <div class="kpi-compact-section">
+                <div class="kpi-compact-row">
+                    <span class="kpi-compact-label">📋 Eventos do Período</span>
+                    <span class="kpi-compact-value text-primary">{{ stats.totalEvents }}</span>
+                </div>
+                <div class="kpi-compact-row">
+                    <span class="kpi-compact-label">🎯 Leads Abertos</span>
+                    <span class="kpi-compact-value text-warning">{{ stats.openLeads }}</span>
+                </div>
+                <div class="kpi-compact-row">
+                    <span class="kpi-compact-label">📈 Receita Prevista</span>
+                    <span class="kpi-compact-value text-purple">{{ formatKpiValue(stats.expectedRevenue) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== DESKTOP: KPI Cards ========== -->
+    <div class="kpi-sections-wrapper d-none d-lg-block">
         <!-- Row 1: Shows and Confirmed Metrics (White Cards) -->
         <div class="kpi-row mb-4">
             <div class="kpi-grid">
