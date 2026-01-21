@@ -179,6 +179,12 @@ export class EventsGridComponent {
     this.closeShareModal();
   }
 
+  onViewProposal(): void {
+    // Open PDF in new tab/window using mobile-friendly method
+    this.openUrlMobile(this.shareModalProposalUrl);
+    // Don't close modal - user might want to share after viewing
+  }
+
   /**
    * Share proposal using Web Share API (works great on iOS and modern Android)
    */
