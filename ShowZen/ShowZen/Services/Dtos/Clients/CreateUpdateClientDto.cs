@@ -19,7 +19,6 @@ public class CreateUpdateClientDto
     [StringLength(256)]
     public string? Email { get; set; }
     
-    [Phone]
     [StringLength(50)]
     public string? Phone { get; set; }
     

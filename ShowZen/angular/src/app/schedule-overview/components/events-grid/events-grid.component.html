@@ -46,15 +46,20 @@
             </div>
         </div>
 
-        <!-- Card Footer: Fee + Action -->
+        <!-- Card Footer: Fee -->
         <div class="event-card-footer">
+            <span class="event-fee-label">Cachê:</span>
             <span *ngIf="event.fee" class="event-fee">
                 {{ event.fee | currency:'BRL':'symbol':'1.2-2' }}
             </span>
             <span *ngIf="!event.fee" class="event-fee text-muted">-</span>
-            <button class="btn btn-sm btn-outline-primary"
+        </div>
+
+        <!-- Action Button -->
+        <div class="event-card-actions">
+            <button class="btn btn-outline-primary btn-sm w-100"
                 (click)="onGenerateProposal(event); $event.stopPropagation()">
-                <i class="fa fa-file-pdf me-1"></i> Proposta
+                <i class="fa fa-file-pdf me-1"></i> Gerar Proposta
             </button>
         </div>
 
@@ -163,4 +168,34 @@
             </tr>
         </tbody>
     </table>
+</div>
+
+<!-- ========== SHARE MODAL (Mobile) ========== -->
+<div class="share-modal-backdrop" *ngIf="showShareModal" (click)="closeShareModal()"></div>
+<div class="share-modal" *ngIf="showShareModal">
+    <div class="share-modal-header">
+        <i class="fa fa-check-circle text-success"></i>
+        <h4>Proposta Gerada!</h4>
+        <p class="text-muted mb-0">{{ shareModalEventTitle }}</p>
+    </div>
+
+    <div class="share-modal-body">
+        <p>O que deseja fazer?</p>
+
+        <div class="share-actions">
+            <button class="btn btn-primary btn-lg w-100 mb-3" (click)="onShareProposal()">
+                <i class="fa fa-share-alt me-2"></i>
+                Compartilhar
+            </button>
+
+            <button class="btn btn-outline-secondary w-100 mb-3" (click)="onCopyLink()">
+                <i class="fa fa-copy me-2"></i>
+                Copiar Link
+            </button>
+
+            <button class="btn btn-link text-muted w-100" (click)="closeShareModal()">
+                Fechar
+            </button>
+        </div>
+    </div>
 </div>

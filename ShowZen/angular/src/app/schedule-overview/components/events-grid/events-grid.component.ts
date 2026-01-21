@@ -23,6 +23,11 @@ export class EventsGridComponent {
   EventType = EventType;
   generatingProposal = false;
 
+  // Share Modal State
+  showShareModal = false;
+  shareModalProposalUrl = '';
+  shareModalEventTitle = '';
+
   onEventClick(event: EventSummaryDto): void {
     this.eventClick.emit(event);
   }
@@ -97,23 +102,39 @@ export class EventsGridComponent {
         this.generatingProposal = false;
         const proposalUrl = this.proposalService.getPdfUrl(proposal.uniqueToken);
 
-        // Open PDF in new tab
-        window.open(proposalUrl, '_blank');
+        if (this.isMobile()) {
+          // Mobile: Open PDF directly for viewing
+          this.openUrlMobile(proposalUrl);
 
-        // Copy to clipboard
-        navigator.clipboard.writeText(proposalUrl).then(() => {
-          this.toaster.success(
-            `Proposta gerada com sucesso! PDF aberto em nova aba e link copiado para a área de transferência.`,
-            'Sucesso',
-            { life: 5000 }
-          );
-        }).catch(() => {
-          this.toaster.success(
-            `Proposta gerada e aberta em nova aba! Link: ${proposalUrl}`,
-            'Sucesso',
-            { life: 8000 }
-          );
-        });
+          // After opening, show share option if available
+          if (navigator.share) {
+            setTimeout(() => {
+              this.showMobileShareOption(proposalUrl, event.title, proposal.uniqueToken);
+            }, 500);
+          } else {
+            this.toaster.success(
+              `Proposta gerada! Use o menu do navegador para compartilhar.`,
+              'Sucesso',
+              { life: 4000 }
+            );
+          }
+        } else {
+          // Desktop: Open in new tab and copy link
+          this.openUrlMobile(proposalUrl);
+          navigator.clipboard.writeText(proposalUrl).then(() => {
+            this.toaster.success(
+              `Proposta gerada! Link copiado para a área de transferência.`,
+              'Sucesso',
+              { life: 5000 }
+            );
+          }).catch(() => {
+            this.toaster.success(
+              `Proposta gerada com sucesso!`,
+              'Sucesso',
+              { life: 3000 }
+            );
+          });
+        }
       },
       error: (err) => {
         this.generatingProposal = false;
@@ -124,5 +145,74 @@ export class EventsGridComponent {
         console.error('Error generating proposal:', err);
       }
     });
+  }
+
+  /**
+   * Check if running on mobile device
+   */
+  private isMobile(): boolean {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
+
+  /**
+   * Shows a toast with share option on mobile using Web Share API
+   */
+  private showMobileShareOption(url: string, eventTitle: string, token: string): void {
+    this.shareModalProposalUrl = url;
+    this.shareModalEventTitle = eventTitle;
+    this.showShareModal = true;
+  }
+
+  closeShareModal(): void {
+    this.showShareModal = false;
+  }
+
+  onShareProposal(): void {
+    this.shareProposal(this.shareModalProposalUrl, this.shareModalEventTitle);
+    this.closeShareModal();
+  }
+
+  onCopyLink(): void {
+    navigator.clipboard.writeText(this.shareModalProposalUrl).then(() => {
+      this.toaster.success('Link copiado!', 'Sucesso', { life: 2000 });
+    });
+    this.closeShareModal();
+  }
+
+  /**
+   * Share proposal using Web Share API (works great on iOS and modern Android)
+   */
+  private async shareProposal(url: string, eventTitle: string): Promise<void> {
+    if (!navigator.share) {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(url);
+      this.toaster.info('Link copiado!', 'Info');
+      return;
+    }
+
+    try {
+      await navigator.share({
+        title: `Proposta - ${eventTitle}`,
+        text: `Confira a proposta para o evento: ${eventTitle}`,
+        url: url
+      });
+    } catch (err) {
+      // User cancelled or share failed - this is normal, don't show error
+      console.log('Share cancelled or failed:', err);
+    }
+  }
+
+  /**
+   * Opens a URL in a new tab using a temporary anchor click.
+   * This method works reliably on mobile browsers which block window.open in async contexts.
+   */
+  private openUrlMobile(url: string): void {
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 }
