@@ -345,6 +345,27 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Form Actions (Bottom) -->
+                    <div class="card mb-4 mt-4">
+                        <div class="card-body py-3">
+                            <div class="d-flex gap-3 justify-content-end align-items-center">
+                                <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+                                    <i class="fas fa-times me-1"></i>
+                                    {{ '::Cancel' | abpLocalization }}
+                                </button>
+                                <button *ngIf="isEditMode" type="button" class="btn btn-outline-danger"
+                                    (click)="delete()">
+                                    <i class="fas fa-trash me-1"></i>
+                                    {{ '::Delete' | abpLocalization }}
+                                </button>
+                                <button type="button" class="btn btn-primary btn-lg px-5 shadow-sm" (click)="save()"
+                                    [disabled]="form.invalid || saving">
+                                    <i class="fas fa-check me-1"></i>
+                                    {{ '::Save' | abpLocalization }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                 </form>
             </div>

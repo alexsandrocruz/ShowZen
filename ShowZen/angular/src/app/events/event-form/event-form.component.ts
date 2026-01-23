@@ -136,13 +136,13 @@ export class EventFormComponent implements OnInit {
             status: [EventStatus.Lead],
             startDate: [null, [Validators.required]],
             startTime: { hour: 20, minute: 0 },
-            durationInMinutes: [120, [Validators.required, Validators.min(30)]],
+            durationInMinutes: [90, [Validators.required, Validators.min(30)]],
             description: ['', [Validators.maxLength(2000)]],
 
             // New fields
             localPartnerId: [null],
             contractType: [ContractType.Private],
-            duration: ['02:00'],
+            duration: ['01:30'],
             hasProduction: [false],
             productionValue: [null],
             productionPercentage: [null],
@@ -178,7 +178,7 @@ export class EventFormComponent implements OnInit {
     loadEvent(id: string): void {
         this.eventService.get(id).subscribe(event => {
             const startDateTime = new Date(event.startDateTime!);
-            const endDateTime = event.endDateTime ? new Date(event.endDateTime) : new Date(startDateTime.getTime() + 2 * 60 * 60 * 1000);
+            const endDateTime = event.endDateTime ? new Date(event.endDateTime) : new Date(startDateTime.getTime() + 1.5 * 60 * 60 * 1000);
             const durationInMinutes = Math.round((endDateTime.getTime() - startDateTime.getTime()) / 60000);
 
             this.commissions.clear();
