@@ -31,7 +31,7 @@ export class ClientQuickModalComponent {
         this.form = this.fb.group({
             name: ['', [Validators.required, Validators.maxLength(100)]],
             type: [ClientType.PrivateCompany, [Validators.required]],
-            email: ['', [Validators.email]],
+            email: [''],
             phone: [''],
         });
     }

@@ -15,7 +15,6 @@ public class CreateUpdateClientDto
     [StringLength(50)]
     public string? Document { get; set; }
     
-    [EmailAddress]
     [StringLength(256)]
     public string? Email { get; set; }
     

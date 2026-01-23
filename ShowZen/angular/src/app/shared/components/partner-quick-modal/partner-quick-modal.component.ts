@@ -30,7 +30,7 @@ export class PartnerQuickModalComponent {
         this.form = this.fb.group({
             name: ['', [Validators.required, Validators.maxLength(100)]],
             type: [ClientType.LocalProducer, [Validators.required]], // Sempre LocalProducer para parceiros
-            email: ['', [Validators.email]],
+            email: [''],
             phone: [''],
         });
     }
