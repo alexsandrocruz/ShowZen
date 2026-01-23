@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, HostListener, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ArtistDto } from '../../../proxy/services/dtos/artists/models';
@@ -12,7 +12,7 @@ import { ScheduleFilters } from '../../models/schedule-models';
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule]
 })
-export class ScheduleFiltersComponent implements OnInit {
+export class ScheduleFiltersComponent implements OnInit, OnChanges {
     @Input() artists: ArtistDto[] = [];
     @Input() filters!: ScheduleFilters;
 
@@ -65,22 +65,14 @@ export class ScheduleFiltersComponent implements OnInit {
         this.initForm();
     }
 
-    private initForm(): void {
-        // Calculate period days difference or default to 30
-        let periodDays = 30;
-        if (this.filters?.dateRange) {
-            const start = new Date(this.filters.dateRange.start);
-            const end = new Date(this.filters.dateRange.end);
-            const diffTime = Math.abs(end.getTime() - start.getTime());
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            const match = this.periodPresets.find(p => p.days === diffDays);
-            if (match) {
-                periodDays = match.days;
-            } else if (diffDays > 25 && diffDays < 35) {
-                periodDays = 30;
-            }
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['filters'] && this.filterForm) {
+            this.updateFormState();
         }
+    }
+
+    private initForm(): void {
+        const periodDays = this.calculatePeriodDays();
 
         this.filterForm = this.fb.group({
             selectedArtists: [this.filters?.artistIds || []],
@@ -88,6 +80,53 @@ export class ScheduleFiltersComponent implements OnInit {
             selectedTypes: [this.filters?.types || []],
             periodPreset: [periodDays]
         });
+    }
+
+    private updateFormState(): void {
+        if (!this.filters) return;
+
+        const periodDays = this.calculatePeriodDays();
+
+        this.filterForm.patchValue({
+            selectedArtists: this.filters.artistIds || [],
+            selectedStatuses: this.filters.statuses || [],
+            selectedTypes: this.filters.types || [],
+            periodPreset: periodDays
+        }, { emitEvent: false });
+    }
+
+    private calculatePeriodDays(): number {
+        let periodDays = 30; // Default
+        if (this.filters?.dateRange) {
+            const start = new Date(this.filters.dateRange.start);
+            const end = new Date(this.filters.dateRange.end);
+
+            // To compare accurately we should check the logic used in selectPeriod
+            // But checking the difference is a good approximation for presets
+            const diffTime = Math.abs(end.getTime() - start.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            // Check specific logic for special periods (year, month etc)
+            // Ideally we should persist the preset ID, but reverse engineering works
+            const match = this.periodPresets.find(p => p.days === diffDays);
+            if (match) {
+                periodDays = match.days;
+            } else if (diffDays > 25 && diffDays < 35) {
+                periodDays = 30;
+            } else if (diffDays > 360 && diffDays < 370) {
+                // Check for "Year" (-2 or -3) -> hard to distinguish from date comparison solely
+                // Fallback to days approx or keep existing logic
+            }
+
+            // Refined check for special values
+            // If the start date is Jan 1st and end is Dec 31st of the same year
+            if (start.getDate() === 1 && start.getMonth() === 0 && end.getDate() === 31 && end.getMonth() === 11) {
+                const currentYear = new Date().getFullYear();
+                if (start.getFullYear() === currentYear) return -2; // This year
+                if (start.getFullYear() === currentYear - 1) return -3; // Last year
+            }
+        }
+        return periodDays;
     }
 
     // Dropdown Toggling
