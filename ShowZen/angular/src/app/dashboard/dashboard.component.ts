@@ -50,10 +50,10 @@ export class DashboardComponent implements OnInit {
     showMobileFilters = false;
 
     constructor() {
-        // Initialize with last 30 days
-        const end = new Date();
-        const start = new Date();
-        start.setDate(end.getDate() - 30);
+        // Initialize with Current Year (01/01 - 31/12)
+        const year = new Date().getFullYear();
+        const start = new Date(year, 0, 1);
+        const end = new Date(year, 11, 31);
 
         this.startDate = start.toISOString().substring(0, 10);
         this.endDate = end.toISOString().substring(0, 10);
@@ -174,9 +174,11 @@ export class DashboardComponent implements OnInit {
 
     clearFilters(): void {
         this.selectedArtistId = null;
-        const end = new Date();
-        const start = new Date();
-        start.setDate(end.getDate() - 30);
+
+        const year = new Date().getFullYear();
+        const start = new Date(year, 0, 1);
+        const end = new Date(year, 11, 31);
+
         this.startDate = start.toISOString().substring(0, 10);
         this.endDate = end.toISOString().substring(0, 10);
     }
