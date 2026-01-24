@@ -356,7 +356,7 @@
                                 <button *ngIf="isEditMode" type="button" class="btn btn-outline-danger"
                                     (click)="delete()">
                                     <i class="fas fa-trash me-1"></i>
-                                    {{ '::Delete' | abpLocalization }}
+                                    <span class="d-none d-md-inline">{{ '::Delete' | abpLocalization }}</span>
                                 </button>
                                 <button type="button" class="btn btn-primary shadow-sm" (click)="save()"
                                     [disabled]="form.invalid || saving">
