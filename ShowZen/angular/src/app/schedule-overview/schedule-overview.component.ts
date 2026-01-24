@@ -65,8 +65,8 @@ export class ScheduleOverviewComponent implements OnInit, OnDestroy {
     statuses: [],
     types: [],
     dateRange: {
-      start: new Date(),
-      end: this.getDatePlusDays(new Date(), 30)
+      start: new Date(new Date().getFullYear(), 0, 1),
+      end: new Date(new Date().getFullYear(), 11, 31)
     }
   };
 

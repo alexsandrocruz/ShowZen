@@ -50,7 +50,7 @@ export class ScheduleFiltersComponent implements OnInit, OnChanges {
 
     periodPresets = [
         { label: 'Todos', days: 9999 },
-        { label: 'Ano Atual', days: -2 },
+        { label: 'Ano Atual (01/01 - 31/12)', days: -2 },
         { label: 'Ano Passado', days: -3 },
         { label: 'Próximos 6 meses', days: 180 },
         { label: 'Próximos 12 meses', days: 365 },
