@@ -191,13 +191,20 @@ export class ScheduleOverviewComponent implements OnInit, OnDestroy {
 
   // Active Filter Helpers
   get activeArtistsLabel(): string {
-    const count = this.filters.artistIds?.length || 0;
-    if (count === 0) return '';
-    if (count === 1) {
-      const artist = this.artists.find(a => a.id === this.filters.artistIds![0]);
-      return artist ? artist.name : '1 Artista';
+    const ids = this.filters.artistIds || [];
+    if (ids.length === 0) return '';
+
+    const names = ids
+      .map(id => this.artists.find(a => a.id === id)?.name)
+      .filter(n => !!n) as string[];
+
+    if (names.length === 0) return `${ids.length} Artistas`; // Fallback if names not found
+
+    if (names.length <= 2) {
+      return names.join(', ');
+    } else {
+      return `${names.slice(0, 2).join(', ')} +${names.length - 2}`;
     }
-    return `${count} Artistas`;
   }
 
   get activeStatusesLabel(): string {

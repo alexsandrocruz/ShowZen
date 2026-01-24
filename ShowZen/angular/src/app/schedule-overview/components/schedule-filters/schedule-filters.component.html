@@ -74,8 +74,7 @@
                         <input class="form-check-input" type="checkbox" [id]="'m-status-' + status.value"
                             [checked]="isSelected('selectedStatuses', status.value)"
                             (change)="toggleSelection('selectedStatuses', status.value)">
-                        <label class="form-check-label d-flex align-items-center" [for]="'m-status-' + status.value">
-                            <span class="status-dot me-2" [ngClass]="status.color"></span>
+                        <label class="form-check-label" [for]="'m-status-' + status.value">
                             {{ status.label }}
                         </label>
                     </div>
@@ -98,7 +97,7 @@
                             [checked]="isSelected('selectedTypes', type.value)"
                             (change)="toggleSelection('selectedTypes', type.value)">
                         <label class="form-check-label" [for]="'m-type-' + type.value">
-                            {{ type.icon }} {{ type.label }}
+                            {{ type.label }}
                         </label>
                     </div>
                 </div>
