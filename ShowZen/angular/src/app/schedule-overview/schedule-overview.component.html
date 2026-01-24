@@ -36,6 +36,28 @@
     </div>
   </div>
 
+  <!-- Active Filters Summary (Mobile/Desktop) -->
+  <div class="mb-3 d-flex flex-wrap gap-2 align-items-center" *ngIf="hasActiveFilters() || activePeriodLabel">
+    <span class="text-muted small me-2">Filtros Ativos:</span>
+
+    <!-- Period is always active really -->
+    <span class="badge bg-light text-dark border">
+      📅 {{ activePeriodLabel }}
+    </span>
+
+    <span class="badge bg-info text-white" *ngIf="activeArtistsLabel">
+      🎤 {{ activeArtistsLabel }}
+    </span>
+
+    <span class="badge bg-success text-white" *ngIf="activeStatusesLabel">
+      📊 {{ activeStatusesLabel }}
+    </span>
+
+    <span class="badge bg-warning text-dark" *ngIf="activeTypesLabel">
+      🏷️ {{ activeTypesLabel }}
+    </span>
+  </div>
+
   <!-- Filters (Desktop: card, Mobile: inline) -->
   <div class="d-none d-md-block">
     <div class="card mb-4">

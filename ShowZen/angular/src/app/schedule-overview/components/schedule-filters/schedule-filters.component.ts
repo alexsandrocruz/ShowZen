@@ -216,7 +216,17 @@ export class ScheduleFiltersComponent implements OnInit, OnChanges {
     // Generic Multi-Select Logic
     isSelected(controlName: string, value: any): boolean {
         const current = this.filterForm.get(controlName)?.value || [];
+        // If checking for "Todos" (value === null or 'todos'), return true if list is empty
+        if (value === 'todos') {
+            return current.length === 0;
+        }
         return current.includes(value);
+    }
+
+    toggleTodos(controlName: string): void {
+        // "Todos" means clearing the selection (empty list = All)
+        this.filterForm.patchValue({ [controlName]: [] });
+        this.emitFilters();
     }
 
     toggleSelection(controlName: string, value: any): void {
@@ -228,6 +238,11 @@ export class ScheduleFiltersComponent implements OnInit, OnChanges {
         } else {
             current.push(value);
         }
+
+        // If user unselects the last item, it effectively becomes "Todos"?
+        // Requirement says "Todos" is default. If list is empty, it is Todos.
+        // So if user clicks an item, it gets added. If they unclick, it gets removed.
+        // If list becomes empty, Todos is auto-selected.
 
         this.filterForm.patchValue({ [controlName]: current });
         this.emitFilters();

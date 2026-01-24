@@ -188,4 +188,46 @@ export class ScheduleOverviewComponent implements OnInit, OnDestroy {
     result.setDate(result.getDate() + days);
     return result;
   }
+
+  // Active Filter Helpers
+  get activeArtistsLabel(): string {
+    const count = this.filters.artistIds?.length || 0;
+    if (count === 0) return '';
+    if (count === 1) {
+      const artist = this.artists.find(a => a.id === this.filters.artistIds![0]);
+      return artist ? artist.name : '1 Artista';
+    }
+    return `${count} Artistas`;
+  }
+
+  get activeStatusesLabel(): string {
+    const count = this.filters.statuses?.length || 0;
+    if (count === 0) return '';
+    // We could map enum values to labels here if needed
+    // Simple approach: just count
+    return `${count} Status`;
+  }
+
+  get activeTypesLabel(): string {
+    const count = this.filters.types?.length || 0;
+    if (count === 0) return '';
+    return `${count} Tipos`;
+  }
+
+  get activePeriodLabel(): string {
+    if (!this.filters.dateRange) return 'Todos';
+    const start = this.filters.dateRange.start;
+    const end = this.filters.dateRange.end;
+    return `${this.formatDate(start)} - ${this.formatDate(end)}`;
+  }
+
+  private formatDate(date: Date): string {
+    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  }
+
+  hasActiveFilters(): boolean {
+    return (this.filters.artistIds?.length || 0) > 0 ||
+      (this.filters.statuses?.length || 0) > 0 ||
+      (this.filters.types?.length || 0) > 0;
+  }
 }

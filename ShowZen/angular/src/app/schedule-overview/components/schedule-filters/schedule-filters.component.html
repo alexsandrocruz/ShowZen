@@ -38,6 +38,14 @@
             <div class="filter-section">
                 <label class="filter-label">🎤 Artistas</label>
                 <div class="filter-checkboxes">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="m-artist-all"
+                            [checked]="isSelected('selectedArtists', 'todos')"
+                            (change)="toggleTodos('selectedArtists')">
+                        <label class="form-check-label" for="m-artist-all">
+                            Todos
+                        </label>
+                    </div>
                     <div *ngFor="let artist of artists" class="form-check">
                         <input class="form-check-input" type="checkbox" [id]="'m-artist-' + artist.id"
                             [checked]="isSelected('selectedArtists', artist.id)"
@@ -54,6 +62,14 @@
             <div class="filter-section">
                 <label class="filter-label">📊 Status</label>
                 <div class="filter-checkboxes">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="m-status-all"
+                            [checked]="isSelected('selectedStatuses', 'todos')"
+                            (change)="toggleTodos('selectedStatuses')">
+                        <label class="form-check-label" for="m-status-all">
+                            Todos
+                        </label>
+                    </div>
                     <div *ngFor="let status of eventStatuses" class="form-check">
                         <input class="form-check-input" type="checkbox" [id]="'m-status-' + status.value"
                             [checked]="isSelected('selectedStatuses', status.value)"
@@ -70,6 +86,13 @@
             <div class="filter-section">
                 <label class="filter-label">🏷️ Tipo de Evento</label>
                 <div class="filter-checkboxes">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="m-type-all"
+                            [checked]="isSelected('selectedTypes', 'todos')" (change)="toggleTodos('selectedTypes')">
+                        <label class="form-check-label" for="m-type-all">
+                            Todos
+                        </label>
+                    </div>
                     <div *ngFor="let type of eventTypes" class="form-check">
                         <input class="form-check-input" type="checkbox" [id]="'m-type-' + type.value"
                             [checked]="isSelected('selectedTypes', type.value)"
