@@ -10,6 +10,7 @@ export interface ProposalDto {
     expiresAt: string;
     viewCount: number;
     pdfPath?: string;
+    pdfFileName?: string;
     status: ProposalStatus;
     eventTitle: string;
     artistName: string;
@@ -67,7 +68,8 @@ export class ProposalService {
         return `${window.location.origin}/proposals/${token}`;
     }
 
-    getPdfUrl(token: string): string {
-        return `${window.location.origin}/proposals/${token}.pdf`;
+    getPdfUrl(proposal: ProposalDto): string {
+        const fileName = proposal.pdfFileName || `${proposal.uniqueToken}.pdf`;
+        return `${window.location.origin}/proposals/${fileName}`;
     }
 }

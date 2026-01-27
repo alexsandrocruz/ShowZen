@@ -1,14 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { ProposalService, ProposalDto } from '../../services/proposal.service';
+import { ProposalService, ProposalDto } from '../services/proposal.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
-    selector: 'app-proposal-view',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
+  selector: 'app-proposal-view',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <div class="proposal-view-container">
       @if (loading) {
         <div class="loading-state">
@@ -51,7 +51,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
       }
     </div>
   `,
-    styles: [`
+  styles: [`
     .proposal-view-container {
       min-height: 100vh;
       background: #f8f9fa;
@@ -103,45 +103,45 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   `]
 })
 export class ProposalViewComponent implements OnInit {
-    private route = inject(ActivatedRoute);
-    private proposalService = inject(ProposalService);
-    private sanitizer = inject(DomSanitizer);
+  private route = inject(ActivatedRoute);
+  private proposalService = inject(ProposalService);
+  private sanitizer = inject(DomSanitizer);
 
-    proposal: ProposalDto | null = null;
-    loading = true;
-    error: string | null = null;
-    pdfUrl = '';
-    safePdfUrl: SafeResourceUrl | null = null;
+  proposal: ProposalDto | null = null;
+  loading = true;
+  error: string | null = null;
+  pdfUrl = '';
+  safePdfUrl: SafeResourceUrl | null = null;
 
-    ngOnInit(): void {
-        const token = this.route.snapshot.paramMap.get('token');
+  ngOnInit(): void {
+    const token = this.route.snapshot.paramMap.get('token');
 
-        if (!token) {
-            this.error = 'Token de proposta inválido';
-            this.loading = false;
-            return;
-        }
-
-        // Track view
-        this.proposalService.trackView({
-            token,
-            ipAddress: undefined, // Will be captured on backend if needed
-            userAgent: navigator.userAgent
-        }).subscribe();
-
-        // Load proposal
-        this.proposalService.getProposalByToken(token).subscribe({
-            next: (proposal) => {
-                this.proposal = proposal;
-                this.pdfUrl = this.proposalService.getPdfUrl(token);
-                this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.pdfUrl);
-                this.loading = false;
-            },
-            error: (err) => {
-                this.error = 'Não foi possível carregar a proposta. Verifique se o link está correto.';
-                this.loading = false;
-                console.error('Error loading proposal:', err);
-            }
-        });
+    if (!token) {
+      this.error = 'Token de proposta inválido';
+      this.loading = false;
+      return;
     }
+
+    // Track view
+    this.proposalService.trackView({
+      token,
+      ipAddress: undefined, // Will be captured on backend if needed
+      userAgent: navigator.userAgent
+    }).subscribe();
+
+    // Load proposal
+    this.proposalService.getProposalByToken(token).subscribe({
+      next: (proposal) => {
+        this.proposal = proposal;
+        this.pdfUrl = this.proposalService.getPdfUrl(proposal);
+        this.safePdfUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.pdfUrl);
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Não foi possível carregar a proposta. Verifique se o link está correto.';
+        this.loading = false;
+        console.error('Error loading proposal:', err);
+      }
+    });
+  }
 }

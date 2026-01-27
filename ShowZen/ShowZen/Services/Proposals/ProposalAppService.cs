@@ -13,6 +13,10 @@ using ShowZen.Services.Dtos.Proposals;
 using ShowZen.Services.Artists;
 using Volo.Abp.BlobStoring;
 using Microsoft.Extensions.Logging;
+using System.Text;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using System.IO;
 
 namespace ShowZen.Services.Proposals
 {
@@ -102,10 +106,16 @@ namespace ShowZen.Services.Proposals
 
             var finalPdf = await _pdfGenerator.MergePdfsAsync(artistTemplate, budgetPdf);
 
+            // Generate filename: WS-Proposta-{SanitizedEventName}-{Date}-{ShortToken}.pdf
+            var sanitizedEventName = SanitizeEventName(eventData.Title);
+            var dateStr = DateTime.Now.ToString("yyyyMMdd");
+            var shortToken = token.Substring(0, 4);
+            var fileName = $"WS-Proposta-{sanitizedEventName}-{dateStr}-{shortToken}.pdf";
+
             // Save PDF to file system
             var pdfPath = await _pdfGenerator.SavePdfAsync(
-                finalPdf, 
-                token, 
+                finalPdf,
+                fileName,
                 _webHostEnvironment.WebRootPath);
 
             // Create proposal record
@@ -133,7 +143,8 @@ namespace ShowZen.Services.Proposals
                 Status = (Dtos.Proposals.ProposalStatus)proposal.Status,
                 EventTitle = eventData.Title,
                 ArtistName = artist.Name,
-                ClientName = client.Name
+                ClientName = client.Name,
+                PdfFileName = fileName
             };
         }
 
@@ -164,7 +175,8 @@ namespace ShowZen.Services.Proposals
                 Status = (Dtos.Proposals.ProposalStatus)proposal.Status,
                 EventTitle = proposal.Event?.Title ?? "",
                 ArtistName = proposal.Event?.Artist?.Name ?? "",
-                ClientName = proposal.Event?.Client?.Name ?? ""
+                ClientName = proposal.Event?.Client?.Name ?? "",
+                PdfFileName = !string.IsNullOrEmpty(proposal.PdfPath) ? Path.GetFileName(proposal.PdfPath) : null
             };
         }
 
@@ -198,6 +210,29 @@ namespace ShowZen.Services.Proposals
         {
             var proposal = await _proposalRepository.GetAsync(proposalId);
             return proposal.ViewCount;
+        }
+        private string SanitizeEventName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return "Evento";
+
+            var normalizedString = name.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            var cleanName = stringBuilder.ToString().Normalize(NormalizationForm.FormC);
+            // Remove everything that is not a letter or digit
+            cleanName = Regex.Replace(cleanName, "[^a-zA-Z0-9]", "");
+            
+            return cleanName;
         }
     }
 }

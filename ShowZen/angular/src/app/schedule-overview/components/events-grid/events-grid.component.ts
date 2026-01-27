@@ -100,7 +100,7 @@ export class EventsGridComponent {
     this.proposalService.generateProposal({ eventId: event.id }).subscribe({
       next: (proposal) => {
         this.generatingProposal = false;
-        const proposalUrl = this.proposalService.getPdfUrl(proposal.uniqueToken);
+        const proposalUrl = this.proposalService.getPdfUrl(proposal);
 
         if (this.isMobile()) {
           // Mobile: Open PDF directly for viewing

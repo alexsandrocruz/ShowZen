@@ -11,6 +11,7 @@ namespace ShowZen.Services.Dtos.Proposals
         public DateTime ExpiresAt { get; set; }
         public int ViewCount { get; set; }
         public string? PdfPath { get; set; }
+        public string? PdfFileName { get; set; }
         public ProposalStatus Status { get; set; }
         
         // Related data

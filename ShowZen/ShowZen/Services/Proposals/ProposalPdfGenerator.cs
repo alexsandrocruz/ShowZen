@@ -283,7 +283,7 @@ namespace ShowZen.Services.Proposals
             }
         }
 
-        public async Task<string> SavePdfAsync(byte[] pdfBytes, string token, string wwwrootPath)
+        public async Task<string> SavePdfAsync(byte[] pdfBytes, string fileName, string wwwrootPath)
         {
             var proposalsDir = Path.Combine(wwwrootPath, "proposals");
             
@@ -293,7 +293,6 @@ namespace ShowZen.Services.Proposals
                 Directory.CreateDirectory(proposalsDir);
             }
 
-            var fileName = $"{token}.pdf";
             var filePath = Path.Combine(proposalsDir, fileName);
 
             await File.WriteAllBytesAsync(filePath, pdfBytes);
