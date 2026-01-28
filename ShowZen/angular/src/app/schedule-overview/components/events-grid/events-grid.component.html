@@ -75,6 +75,7 @@
     <table class="table table-hover align-middle">
         <thead>
             <tr>
+                <th scope="col" class="text-center">Ações</th>
                 <th scope="col">Data/Hora</th>
                 <th scope="col">Evento</th>
                 <th scope="col">Artista</th>
@@ -82,12 +83,20 @@
                 <th scope="col">Local</th>
                 <th scope="col">Status</th>
                 <th scope="col" class="text-end">Cachê</th>
-                <th scope="col" class="text-center">Ações</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let event of events" (click)="onEventClick(event)" class="cursor-pointer"
                 [ngClass]="{'event-conflict-row': event.hasConflict}">
+                <!-- Actions -->
+                <td class="text-center" (click)="$event.stopPropagation()">
+                    <button class="btn btn-sm btn-outline-primary" (click)="onGenerateProposal(event)"
+                        title="Gerar Proposta">
+                        <i class="fa fa-file-pdf me-1"></i>
+                        Proposta
+                    </button>
+                </td>
+
                 <!-- Date/Time -->
                 <td>
                     <div class="d-flex flex-column">
@@ -147,14 +156,7 @@
                     <span *ngIf="!event.fee" class="text-muted">-</span>
                 </td>
 
-                <!-- Actions -->
-                <td class="text-center" (click)="$event.stopPropagation()">
-                    <button class="btn btn-sm btn-outline-primary" (click)="onGenerateProposal(event)"
-                        title="Gerar Proposta">
-                        <i class="fa fa-file-pdf me-1"></i>
-                        Proposta
-                    </button>
-                </td>
+
             </tr>
 
             <!-- Empty State -->
