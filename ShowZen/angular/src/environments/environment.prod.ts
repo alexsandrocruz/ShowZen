@@ -17,7 +17,7 @@ export const environment = {
   },
   apis: {
     default: {
-      url: 'https://eventos.zensuite.com.br',
+      url: 'https://eventos.zensuite.com.br/',
       rootNamespace: 'ShowZen',
     },
   },

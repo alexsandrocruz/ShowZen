@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Extensions.DependencyInjection;
@@ -155,11 +155,15 @@ public class ShowZenModule : AbpModule
                 var authority = NormalizeUrl(configuration["AuthServer:Authority"]);
                 var selfUrl = NormalizeUrl(configuration["App:SelfUrl"]);
 
-                if (!string.IsNullOrWhiteSpace(authority) &&
-                    !string.IsNullOrWhiteSpace(selfUrl) &&
-                    !string.Equals(authority, selfUrl, StringComparison.OrdinalIgnoreCase))
+                if (!authority.IsNullOrWhiteSpace())
                 {
                     options.SetIssuer(new Uri(authority, UriKind.Absolute));
+                }
+
+                if (!authority.IsNullOrWhiteSpace() &&
+                    !selfUrl.IsNullOrWhiteSpace() &&
+                    !string.Equals(authority, selfUrl, StringComparison.OrdinalIgnoreCase))
+                {
                     options.UseSystemNetHttp();
                 }
                 else
