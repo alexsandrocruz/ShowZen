@@ -48,20 +48,39 @@ export class ScheduleFiltersComponent implements OnInit, OnChanges {
         { value: EventType.Other, label: 'Outro', icon: '❓' }
     ];
 
-    periodPresets = [
-        { label: 'Todos', days: 9999 },
-        { label: 'Ano Atual (01/01 - 31/12)', days: -2 },
-        { label: 'Ano Passado', days: -3 },
-        { label: 'Próximos 6 meses', days: 180 },
-        { label: 'Próximos 12 meses', days: 365 },
+    periodPresets: any[] = [
         { label: 'Próximos 30 dias', days: 30 },
-        { label: 'Próximos 60 dias', days: 60 },
-        { label: 'Mês atual', days: -1 }
+        { label: 'Mês atual', days: -1 },
+        { label: 'Ano Atual (01/01 - 31/12)', days: -2 },
     ];
+
+    monthPresets: any[] = [];
+
+    private generateDynamicPresets(): void {
+        const now = new Date();
+        const months = [];
+        
+        // Next 6 months
+        for (let i = 0; i < 8; i++) {
+            const date = new Date(now.getFullYear(), now.getMonth() + i, 1);
+            const label = date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+            // Capitalize first letter
+            const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1);
+            
+            months.push({
+                label: capitalizedLabel,
+                days: -10 - i, // Special marker for specific month: -10 = current month, -11 = next, etc.
+                month: date.getMonth(),
+                year: date.getFullYear()
+            });
+        }
+        this.monthPresets = months;
+    }
 
     constructor(private fb: FormBuilder) { }
 
     ngOnInit(): void {
+        this.generateDynamicPresets();
         this.initForm();
     }
 
@@ -78,7 +97,8 @@ export class ScheduleFiltersComponent implements OnInit, OnChanges {
             selectedArtists: [this.filters?.artistIds || []],
             selectedStatuses: [this.filters?.statuses || []],
             selectedTypes: [this.filters?.types || []],
-            periodPreset: [periodDays]
+            periodPreset: [periodDays],
+            specificDate: ['']
         });
     }
 
@@ -204,12 +224,73 @@ export class ScheduleFiltersComponent implements OnInit, OnChanges {
                 break;
         }
 
+        // Handle negative days -10 and below (Specific months)
+        if (days <= -10) {
+            const preset = this.monthPresets.find(p => p.days === days);
+            if (preset) {
+                startDate = new Date(preset.year, preset.month, 1);
+                endDate = new Date(preset.year, preset.month + 1, 0);
+            }
+        }
+
         this.filters.dateRange = {
             start: startDate,
             end: endDate
         };
 
         this.activeDropdown = null; // Close dropdown after selection
+        this.emitFilters();
+    }
+
+    onSpecificDateChange(event: any): void {
+        const dateStr = event.target.value;
+        if (!dateStr) return;
+
+        const date = new Date(dateStr);
+        // Jump to month view or just center? 
+        // For filters, we expand to +/- 15 days around that date to show context
+        const startDate = new Date(date);
+        startDate.setDate(startDate.getDate() - 2); // Show 2 days before
+        
+        const endDate = new Date(date);
+        endDate.setDate(endDate.getDate() + 14); // And 2 weeks after
+
+        this.filters.dateRange = {
+            start: startDate,
+            end: endDate
+        };
+
+        this.filterForm.patchValue({ periodPreset: 0 }, { emitEvent: false });
+        this.emitFilters();
+    }
+
+    prevPeriod(): void {
+        const start = new Date(this.filters.dateRange.start);
+        const end = new Date(this.filters.dateRange.end);
+        
+        const diff = end.getTime() - start.getTime();
+        
+        this.filters.dateRange = {
+            start: new Date(start.getTime() - diff - 86400000),
+            end: new Date(start.getTime() - 86400000)
+        };
+        
+        this.filterForm.patchValue({ periodPreset: 0 }, { emitEvent: false });
+        this.emitFilters();
+    }
+
+    nextPeriod(): void {
+        const start = new Date(this.filters.dateRange.start);
+        const end = new Date(this.filters.dateRange.end);
+        
+        const diff = end.getTime() - start.getTime();
+        
+        this.filters.dateRange = {
+            start: new Date(end.getTime() + 86400000),
+            end: new Date(end.getTime() + diff + 86400000)
+        };
+        
+        this.filterForm.patchValue({ periodPreset: 0 }, { emitEvent: false });
         this.emitFilters();
     }
 
@@ -253,7 +334,8 @@ export class ScheduleFiltersComponent implements OnInit, OnChanges {
             selectedArtists: [],
             selectedStatuses: [],
             selectedTypes: [],
-            periodPreset: 30
+            periodPreset: 30,
+            specificDate: ''
         });
         this.selectPeriod(30); // Resets period and emits
     }
@@ -274,7 +356,7 @@ export class ScheduleFiltersComponent implements OnInit, OnChanges {
     // Label Helpers
     getPeriodLabel(): string {
         const days = this.filterForm.get('periodPreset')?.value;
-        const preset = this.periodPresets.find(p => p.days === days);
+        const preset = this.periodPresets.find(p => p.days === days) || this.monthPresets.find(p => p.days === days);
         return preset ? preset.label : 'Período';
     }
 

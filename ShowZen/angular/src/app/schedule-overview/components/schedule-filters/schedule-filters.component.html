@@ -18,7 +18,7 @@
 
     <!-- Mobile Filter Drawer (Overlay) -->
     <div class="filter-drawer-backdrop" [class.show]="showMobileFilters" (click)="toggleMobileFilters()"></div>
-    <div class="filter-drawer" [class.show]="showMobileFilters">
+    <div class="filter-drawer" [class.show]="showMobileFilters" *ngIf="filterForm" [formGroup]="filterForm">
         <div class="filter-drawer-header">
             <h5>Filtros</h5>
             <button class="btn btn-close" (click)="toggleMobileFilters()"></button>
@@ -28,10 +28,26 @@
             <!-- Period -->
             <div class="filter-section">
                 <label class="filter-label">📅 Período</label>
-                <select class="form-select" [value]="filterForm.value.periodPreset"
-                    (change)="selectPeriod(+$any($event.target).value)">
-                    <option *ngFor="let preset of periodPresets" [value]="preset.days">{{ preset.label }}</option>
-                </select>
+                <div class="input-group">
+                    <button class="btn btn-outline-secondary" (click)="prevPeriod()">
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <select class="form-select" [value]="filterForm.value.periodPreset"
+                        (change)="selectPeriod(+$any($event.target).value)">
+                        <option *ngFor="let preset of periodPresets" [value]="preset.days">{{ preset.label }}</option>
+                        <hr>
+                        <option *ngFor="let preset of monthPresets" [value]="preset.days">{{ preset.label }}</option>
+                    </select>
+                    <button class="btn btn-outline-secondary" (click)="nextPeriod()">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Specific Date (Mobile) -->
+            <div class="filter-section">
+                <label class="filter-label">🎯 Pular para Data</label>
+                <input type="date" class="form-control" formControlName="specificDate" (change)="onSpecificDateChange($event)">
             </div>
 
             <!-- Artists -->
@@ -118,24 +134,53 @@
 <!-- ========================================= -->
 <!-- DESKTOP: Inline Filters                  -->
 <!-- ========================================= -->
-<div class="filters-container d-none d-md-block">
+<div class="filters-container d-none d-md-block" *ngIf="filterForm" [formGroup]="filterForm">
     <div class="d-flex align-items-center flex-wrap gap-2">
 
-        <!-- Period Dropdown -->
-        <div class="dropdown custom-dropdown" [class.show]="activeDropdown === 'period'">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button"
-                (click)="toggleDropdown('period', $event)">
-                📅 {{ getPeriodLabel() }}
+        <!-- Period Controls (Desktop) -->
+        <div class="d-flex align-items-center gap-1 border rounded p-1 bg-white shadow-sm">
+            <button class="btn btn-icon-small" (click)="prevPeriod()" title="Anterior">
+                <i class="fa fa-chevron-left"></i>
             </button>
-            <ul class="dropdown-menu" [class.show]="activeDropdown === 'period'">
-                <li *ngFor="let preset of periodPresets">
-                    <a class="dropdown-item" href="javascript:void(0)"
-                        [class.active]="filterForm.value.periodPreset === preset.days"
-                        (click)="selectPeriod(preset.days)">
-                        {{ preset.label }}
-                    </a>
-                </li>
-            </ul>
+
+            <!-- Period Dropdown -->
+            <div class="dropdown custom-dropdown" [class.show]="activeDropdown === 'period'">
+                <button class="btn btn-period-toggle dropdown-toggle" type="button"
+                    (click)="toggleDropdown('period', $event)">
+                    📅 {{ getPeriodLabel() }}
+                </button>
+                <ul class="dropdown-menu shadow" [class.show]="activeDropdown === 'period'" style="max-height: 400px; overflow-y: auto;">
+                    <li class="dropdown-header">Atalhos</li>
+                    <li *ngFor="let preset of periodPresets">
+                        <a class="dropdown-item" href="javascript:void(0)"
+                            [class.active]="filterForm.value.periodPreset === preset.days"
+                            (click)="selectPeriod(preset.days)">
+                            {{ preset.label }}
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="dropdown-header">Meses</li>
+                    <li *ngFor="let preset of monthPresets">
+                        <a class="dropdown-item" href="javascript:void(0)"
+                            [class.active]="filterForm.value.periodPreset === preset.days"
+                            (click)="selectPeriod(preset.days)">
+                            {{ preset.label }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <button class="btn btn-icon-small" (click)="nextPeriod()" title="Próximo">
+                <i class="fa fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Specific Date Input (Desktop) -->
+        <div class="date-jumper-wrapper d-flex align-items-center border rounded p-1 bg-white shadow-sm">
+            <i class="fa fa-bullseye text-primary ms-2 me-1 small"></i>
+            <input type="date" class="form-control form-control-sm border-0 bg-transparent" 
+                formControlName="specificDate" (change)="onSpecificDateChange($event)"
+                title="Pular para data específica">
         </div>
 
         <!-- Artist Dropdown -->
