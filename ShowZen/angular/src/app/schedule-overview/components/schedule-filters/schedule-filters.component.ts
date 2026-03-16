@@ -59,20 +59,28 @@ export class ScheduleFiltersComponent implements OnInit, OnChanges {
     private generateDynamicPresets(): void {
         const now = new Date();
         const months = [];
+        const targetYear = 2026;
+        const targetMonth = 11; // December (0-indexed)
         
-        // Next 6 months
-        for (let i = 0; i < 8; i++) {
-            const date = new Date(now.getFullYear(), now.getMonth() + i, 1);
-            const label = date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-            // Capitalize first letter
+        let currentDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        let i = 0;
+
+        while (currentDate.getFullYear() < targetYear || (currentDate.getFullYear() === targetYear && currentDate.getMonth() <= targetMonth)) {
+            const label = currentDate.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
             const capitalizedLabel = label.charAt(0).toUpperCase() + label.slice(1);
             
             months.push({
                 label: capitalizedLabel,
-                days: -10 - i, // Special marker for specific month: -10 = current month, -11 = next, etc.
-                month: date.getMonth(),
-                year: date.getFullYear()
+                days: -10 - i,
+                month: currentDate.getMonth(),
+                year: currentDate.getFullYear()
             });
+
+            i++;
+            currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
+            
+            // Safety break to prevent infinite loop
+            if (i > 36) break;
         }
         this.monthPresets = months;
     }
