@@ -1,0 +1,21 @@
+# SaaS Playbook state (user-specific progress)
+.saas-playbook-state.json
+company-profile.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# Node (if anyone adds tooling)
+node_modules/
