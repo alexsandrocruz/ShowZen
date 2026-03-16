@@ -142,7 +142,17 @@ public class EventAppService : ApplicationService, IEventAppService
         );
         
         var eventEntity = ObjectMapper.Map<CreateUpdateEventDto, Event>(input);
-        eventEntity.Status = EventStatus.Lead;
+        
+        // Respect status if provided, otherwise default to Lead
+        if (input.Status.HasValue)
+        {
+            eventEntity.Status = input.Status.Value;
+        }
+        else
+        {
+            eventEntity.Status = EventStatus.Lead;
+        }
+        
         eventEntity.HasConflict = hasConflict; // Mark conflict but don't block
         
         // Clear automatically mapped commissions to avoid EF tracking conflicts with default/empty IDs

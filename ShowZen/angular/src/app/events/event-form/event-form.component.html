@@ -96,10 +96,14 @@
                                         formControlName="status" [clearable]="false">
                                         <ng-template ng-label-tmp let-item="item">
                                             <span class="badge" [ngClass]="{
-                                                'bg-secondary': item.key === 0,
                                                 'bg-primary': item.key === 1,
                                                 'bg-warning': item.key === 2,
-                                                'bg-success': item.key === 3
+                                                'bg-success': item.key === 3,
+                                                'bg-info': item.key === 4,
+                                                'bg-dark': item.key === 5,
+                                                'bg-danger': item.key === 6,
+                                                'bg-secondary': item.key === 7,
+                                                'bg-warning-subtle text-dark': item.key === 8
                                             }">{{ item.value | abpLocalization }}</span>
                                         </ng-template>
                                         <ng-template ng-option-tmp let-item="item">
