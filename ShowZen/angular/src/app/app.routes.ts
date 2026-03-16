@@ -88,4 +88,8 @@ export const APP_ROUTES: Routes = [
     path: 'privacy',
     loadComponent: () => import('./privacy/privacy.component').then(c => c.PrivacyComponent),
   },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
