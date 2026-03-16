@@ -118,6 +118,16 @@ public class ShowZenModule : AbpModule
     /* Single point to enable/disable multi-tenancy */
     public const bool IsMultiTenant = true;
 
+    private static string? NormalizeUrl(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return null;
+        }
+
+        return value.Trim().TrimEnd('/');
+    }
+
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
@@ -134,8 +144,29 @@ public class ShowZenModule : AbpModule
         {
             builder.AddValidation(options =>
             {
-                options.AddAudiences("ShowZen");
-                options.UseLocalServer();
+                var audiences = (configuration["AuthServer:Audience"] ?? "ShowZen")
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+                foreach (var audience in audiences)
+                {
+                    options.AddAudiences(audience);
+                }
+
+                var authority = NormalizeUrl(configuration["AuthServer:Authority"]);
+                var selfUrl = NormalizeUrl(configuration["App:SelfUrl"]);
+
+                if (!string.IsNullOrWhiteSpace(authority) &&
+                    !string.IsNullOrWhiteSpace(selfUrl) &&
+                    !string.Equals(authority, selfUrl, StringComparison.OrdinalIgnoreCase))
+                {
+                    options.SetIssuer(new Uri(authority, UriKind.Absolute));
+                    options.UseSystemNetHttp();
+                }
+                else
+                {
+                    options.UseLocalServer();
+                }
+
                 options.UseAspNetCore();
             });
         });
@@ -225,10 +256,18 @@ public class ShowZenModule : AbpModule
     
     private void ConfigureAuthentication(ServiceConfigurationContext context)
     {
+        var configuration = context.Services.GetConfiguration();
+        var authority = NormalizeUrl(configuration["AuthServer:Authority"]);
+        var selfUrl = NormalizeUrl(configuration["App:SelfUrl"]);
+        var useExternalAuthority =
+            !string.IsNullOrWhiteSpace(authority) &&
+            !string.IsNullOrWhiteSpace(selfUrl) &&
+            !string.Equals(authority, selfUrl, StringComparison.OrdinalIgnoreCase);
+
         context.Services.ForwardIdentityAuthenticationForBearer(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme);
         context.Services.Configure<AbpClaimsPrincipalFactoryOptions>(options =>
         {
-            options.IsDynamicClaimsEnabled = true;
+            options.IsDynamicClaimsEnabled = !useExternalAuthority;
         });
     }
 

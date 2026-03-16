@@ -9,7 +9,7 @@ export const environment = {
     logoUrl: '',
   },
   oAuthConfig: {
-    issuer: 'https://eventos.zensuite.com.br/',
+    issuer: 'https://eventos.zensuite.com.br',
     redirectUri: 'https://eventos.zensuite.com.br',
     clientId: 'ShowZen_App',
     responseType: 'code',

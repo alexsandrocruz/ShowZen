@@ -3,12 +3,12 @@ import { Environment } from '@abp/ng.core';
 const baseUrl = 'http://localhost:4200';
 
 const oAuthConfig = {
-  issuer: 'https://localhost:44353/',
+  issuer: 'https://localhost:44353',
   redirectUri: baseUrl,
   clientId: 'ShowZen_App',
   responseType: 'code',
   scope: 'offline_access ShowZen',
-  requireHttps: true,
+  requireHttps: false,
 };
 
 export const environment = {
