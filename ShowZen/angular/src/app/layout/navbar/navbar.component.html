@@ -3,8 +3,7 @@
         <!-- Logo -->
         <div class="navbar-brand">
             <a routerLink="/" class="logo-link" (click)="closeMobileMenu()">
-                <span class="logo-icon">🎭</span>
-                <span class="logo-text">ShowZen</span>
+                <img src="assets/images/showzen-logo.svg" alt="ShowZen Logo" height="56">
             </a>
         </div>
 
@@ -110,7 +109,7 @@
 <!-- Mobile Sidebar Drawer -->
 <div class="mobile-sidebar" [class.open]="isMobileMenuOpen">
     <div class="sidebar-header">
-        <span class="logo-text">ShowZen</span>
+        <img src="assets/images/showzen-logo.svg" alt="ShowZen Logo" height="48">
         <button class="close-btn" (click)="closeMobileMenu()" aria-label="Close menu">
             <i class="fas fa-times"></i>
         </button>

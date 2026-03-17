@@ -4,9 +4,8 @@ import { Component } from '@angular/core';
   selector: 'app-logo',
   standalone: true,
   template: `
-    <div class="d-flex align-items-center" style="font-size: 1.25rem;">
-      <i class="fa fa-calendar-alt text-primary me-2 fa-lg"></i>
-      <span class="fw-bold logo-text">ShowZen</span>
+    <div class="d-flex align-items-center">
+      <img src="assets/images/showzen-logo.svg" alt="ShowZen Logo" height="56">
     </div>
   `,
   styles: [`
