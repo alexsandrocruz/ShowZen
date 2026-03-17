@@ -5,12 +5,13 @@ ShowZen's pricing is built around the value of **centralized management**. As an
 
 ## Tier Comparison Matrix (BRL)
 
-| Feature | Starter (Indie) | Growth (Agency) | Pro / Enterprise |
+| Feature | Starter (Artista) | Pro (Escritório) | Enterprise (Agência) |
 |---|---|---|---|
-| **Monthly Price** | R$ 197/mo | R$ 497/mo | Custom / Sob Consulta |
+| **Monthly Price** | R$ 197/mo | R$ 497/mo | Sob Consulta |
 | **Annual Price** | R$ 1.970/yr (2 mo free) | R$ 4.970/yr (2 mo free) | Custom |
-| **Value Metric** | Up to 2 Artists | 3 to 10 Artists | 10+ Artists |
-| **Agenda & Conflict** | Basic Alerts | Advanced Alarms | Tailored Rules |
+| **Value Metric** | 1 Managed Artist | Up to 5 Artists | Unlimited Artists |
+| **Setup Fee** | R$ 1.500 (Setup Único) | R$ 2.500 (Implementação) | R$ 5.000+ (Custom) |
+| **Agenda & Conflict** | Basic Alerts | Advanced Alarms | Real-time Sync |
 | **PDF Proposals** | Limit: 5/mo | Unlimited | Unlimited |
 | **Financial BRL** | Partial (Cachê) | Full (Tax/Commission) | Multi-entity / ERP Sync |
 | **Support** | Email | WhatsApp / Priority | Dedicated Manager |
@@ -25,9 +26,10 @@ ShowZen's pricing is built around the value of **centralized management**. As an
 ### 1. Anchoring
 On the landing page, we highlight the **Growth (R$ 497)** plan as the "Ideal para Escritórios". It anchors the value between a cheap entry point and a high-end custom solution.
 
-### 2. The Setup Fee (One-time)
-- **Setup Fee:** R$ 1.500 - R$ 5.000.
-- **Why:** Covers the cost of high-touch onboarding and migration from legacy spreadsheets. It also increases user commitment (Skin in the game).
+### 2. The Setup Fee (Onboarding Especializado)
+- **Setup Fee:** Implementação inicial que garante o sucesso do cliente.
+- **Propósito:** Cobre o custo de migração de dados das planilhas legadas, treinamento da equipe e configuração personalizada do workspace. 
+- **Comprometimento:** Funciona como um filtro de qualificação e aumenta o LTV (Lifetime Value) ao reduzir o churn inicial.
 
 ### 3. Charm Pricing
 Using `R$ X97` instead of `R$ X00` to align with standard Brazilian SaaS psychological benchmarks.
