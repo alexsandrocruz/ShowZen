@@ -4,4 +4,5 @@ import * as Clients from './clients';
 import * as Dashboard from './dashboard';
 import * as Dtos from './dtos';
 import * as Events from './events';
-export { Artists, Books, Clients, Dashboard, Dtos, Events };
+import * as Reports from './reports';
+export { Artists, Books, Clients, Dashboard, Dtos, Events, Reports };

@@ -56,6 +56,13 @@ export const APP_ROUTE_PROVIDER = [
         order: 7,
         layout: eLayoutType.application,
       },
+      {
+        path: '/reports/monthly',
+        name: '::Menu:MonthlyReport',
+        iconClass: 'fas fa-calendar-check',
+        order: 8,
+        layout: eLayoutType.application,
+      },
     ]);
 
     console.log('[ShowZen] Routes configured successfully');

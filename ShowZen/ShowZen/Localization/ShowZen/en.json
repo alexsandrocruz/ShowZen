@@ -6,6 +6,8 @@
     "Welcome_Text": "This is a minimalist, single layer application startup template for the ABP Framework.",
     "Menu:ShowZen": "Book Store",
     "Menu:Books": "Books",
+    "Menu:Reports": "Reports",
+    "Menu:MonthlyReport": "Monthly Agenda",
     "Actions": "Actions",
     "Close": "Close",
     "Delete": "Delete",

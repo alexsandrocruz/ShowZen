@@ -62,6 +62,11 @@ export const APP_ROUTES: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'reports/monthly',
+    loadComponent: () => import('./reports/monthly-report/monthly-report.component').then(c => c.MonthlyReportComponent),
+    canActivate: [authGuard],
+  },
+  {
     path: 'events/new',
     loadComponent: () => import('./events/event-form/event-form.component').then(c => c.EventFormComponent),
     canActivate: [authGuard],

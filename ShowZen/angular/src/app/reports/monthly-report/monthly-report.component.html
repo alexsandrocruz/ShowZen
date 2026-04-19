@@ -1,0 +1,154 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="page-header-content">
+      <div class="page-title-wrapper">
+        <i class="fas fa-calendar-check page-icon"></i>
+        <div>
+          <h2 class="page-title">Agenda Mensal</h2>
+          <p class="page-subtitle">Eventos confirmados do mês</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-outline-primary btn-sm me-2" (click)="downloadPdf()" [disabled]="events.length === 0">
+          <i class="fas fa-file-pdf me-1"></i> Baixar PDF
+        </button>
+        <button class="btn btn-success btn-sm" (click)="shareWhatsApp()" [disabled]="events.length === 0">
+          <i class="fab fa-whatsapp me-1"></i> Compartilhar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <div class="row align-items-end g-3">
+        <div class="col-md-3">
+          <label class="form-label">Mês</label>
+          <select class="form-select" [(ngModel)]="selectedMonth">
+            <option *ngFor="let m of monthNames; let i = index" [value]="i + 1">{{ m }}</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Ano</label>
+          <input type="number" class="form-control" [(ngModel)]="selectedYear" min="2020" max="2030" />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Artista (opcional)</label>
+          <select class="form-select" [(ngModel)]="selectedArtistIds" multiple size="1">
+            <option *ngFor="let artist of artists" [value]="artist.id">{{ artist.name }}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <button class="btn btn-primary w-100" (click)="applyFilters()" [disabled]="loading">
+            <i class="fa fa-filter me-1"></i>
+            <span *ngIf="!loading">Aplicar Filtros</span>
+            <span *ngIf="loading">Carregando...</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary -->
+  <div class="summary-bar mb-3" *ngIf="loaded">
+    <span class="summary-text">
+      <i class="fas fa-check-circle text-success me-1"></i>
+      {{ events.length }} evento(s) confirmado(s) em {{ monthYearLabel }}
+    </span>
+  </div>
+
+  <!-- Loading -->
+  <div class="text-center py-5" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Carregando...</span>
+    </div>
+    <p class="mt-2 text-muted">Carregando eventos...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state text-center py-5" *ngIf="loaded && events.length === 0">
+    <i class="fas fa-calendar-xmark fa-3x text-muted mb-3"></i>
+    <h5 class="text-muted">Nenhum evento confirmado</h5>
+    <p class="text-muted">Não há eventos confirmados em {{ monthYearLabel }}.</p>
+  </div>
+
+  <!-- Table (Desktop) -->
+  <div class="card d-none d-md-block" *ngIf="loaded && events.length > 0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th style="width: 100px;">Data</th>
+            <th style="width: 130px;">Cidade</th>
+            <th>Evento</th>
+            <th>Artista</th>
+            <th>Contato</th>
+            <th style="width: 140px;">Telefone</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let event of events">
+            <td>
+              <div class="date-cell">
+                <span class="date-day">{{ event.startDateTime | date:'dd' }}</span>
+                <span class="date-month">{{ event.startDateTime | date:'MMM/yyyy' }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="badge bg-light text-dark">
+                {{ event.city }}{{ event.state ? '/' + event.state : '' }}
+              </span>
+            </td>
+            <td>
+              <strong>{{ event.title }}</strong>
+              <div class="text-muted small" *ngIf="event.locationName">{{ event.locationName }}</div>
+            </td>
+            <td>{{ event.artistName }}</td>
+            <td>{{ event.contactName }}</td>
+            <td>
+              <a *ngIf="event.contactPhone" [href]="'tel:' + event.contactPhone" class="text-decoration-none">
+                <i class="fas fa-phone me-1 text-success"></i>{{ formatPhone(event.contactPhone) }}
+              </a>
+              <span class="text-muted" *ngIf="!event.contactPhone">—</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Cards (Mobile) -->
+  <div class="d-md-none" *ngIf="loaded && events.length > 0">
+    <div class="card mb-3 event-card" *ngFor="let event of events">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div class="date-badge">
+            <span class="date-day">{{ event.startDateTime | date:'dd' }}</span>
+            <span class="date-month">{{ event.startDateTime | date:'MMM' }}</span>
+          </div>
+          <span class="badge bg-light text-dark">
+            {{ event.city }}{{ event.state ? '/' + event.state : '' }}
+          </span>
+        </div>
+        <h6 class="card-title mb-1">{{ event.title }}</h6>
+        <p class="text-muted small mb-2" *ngIf="event.artistName">{{ event.artistName }}</p>
+        <hr class="my-2" />
+        <div class="row small">
+          <div class="col-6">
+            <span class="text-muted">Contato:</span><br />
+            {{ event.contactName }}
+          </div>
+          <div class="col-6">
+            <span class="text-muted">Telefone:</span><br />
+            <a *ngIf="event.contactPhone" [href]="'tel:' + event.contactPhone" class="text-success text-decoration-none">
+              <i class="fas fa-phone me-1"></i>{{ formatPhone(event.contactPhone) }}
+            </a>
+            <span class="text-muted" *ngIf="!event.contactPhone">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
