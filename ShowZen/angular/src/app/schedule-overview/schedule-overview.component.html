@@ -27,6 +27,12 @@
           </button>
         </div>
 
+        <button class="btn btn-outline-primary me-2" routerLink="/reports/monthly">
+          <i class="fa fa-file-pdf me-1"></i>
+          <span class="d-none d-sm-inline">Agenda Mensal PDF</span>
+          <span class="d-sm-none">PDF</span>
+        </button>
+
         <button *abpPermission="'ShowZen.Events.Create'" class="btn btn-primary" (click)="onNewEvent()">
           <i class="fa fa-plus me-1"></i>
           <span class="d-none d-sm-inline">{{ '::NewEvent' | abpLocalization }}</span>
