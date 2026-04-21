@@ -21,13 +21,17 @@ export class ReportService {
     },
       { apiName: this.apiName, ...config });
 
-  getMonthlyConfirmedEventsPdfUrl = (input: MonthlyReportInput): string => {
-    const params = new URLSearchParams();
-    params.set('year', input.year.toString());
-    params.set('month', input.month.toString());
-    if (input.artistIds && input.artistIds.length > 0) {
-      input.artistIds.forEach(id => params.append('artistIds', id));
-    }
-    return `/api/app/report/monthly-confirmed-events/pdf?${params.toString()}`;
+  getMonthlyConfirmedEventsPdfBlob = (input: MonthlyReportInput) => {
+    return this.restService.request<any, Blob>({
+      method: 'GET',
+      responseType: 'blob',
+      url: '/api/app/report/monthly-confirmed-events-pdf',
+      params: {
+        year: input.year,
+        month: input.month,
+        artistIds: input.artistIds,
+      },
+    },
+      { apiName: this.apiName });
   };
 }
