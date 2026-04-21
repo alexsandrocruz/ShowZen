@@ -85,7 +85,7 @@
         <thead class="table-light">
           <tr>
             <th style="width: 100px;">Data</th>
-            <th style="width: 130px;">Cidade</th>
+            <th style="width: 150px;">Local</th>
             <th>Evento</th>
             <th>Artista</th>
             <th>Contato</th>
@@ -101,13 +101,13 @@
               </div>
             </td>
             <td>
-              <span class="badge bg-light text-dark">
-                {{ event.city }}{{ event.state ? '/' + event.state : '' }}
-              </span>
+              <strong>{{ event.locationName || 'A definir' }}</strong>
+              <div class="text-muted small" *ngIf="event.city || event.state">
+                {{ event.city }}{{ event.city && event.state ? '/' : '' }}{{ event.state }}
+              </div>
             </td>
             <td>
               <strong>{{ event.title }}</strong>
-              <div class="text-muted small" *ngIf="event.locationName">{{ event.locationName }}</div>
             </td>
             <td>{{ event.artistName }}</td>
             <td>{{ event.contactName }}</td>
@@ -132,9 +132,12 @@
             <span class="date-day">{{ event.startDateTime | date:'dd' }}</span>
             <span class="date-month">{{ event.startDateTime | date:'MMM' }}</span>
           </div>
-          <span class="badge bg-light text-dark">
-            {{ event.city }}{{ event.state ? '/' + event.state : '' }}
-          </span>
+          <div class="text-end">
+            <strong>{{ event.locationName || 'A definir' }}</strong>
+            <div class="text-muted small" *ngIf="event.city || event.state">
+              {{ event.city }}{{ event.city && event.state ? '/' : '' }}{{ event.state }}
+            </div>
+          </div>
         </div>
         <h6 class="card-title mb-1">{{ event.title }}</h6>
         <p class="text-muted small mb-2" *ngIf="event.artistName">{{ event.artistName }}</p>
