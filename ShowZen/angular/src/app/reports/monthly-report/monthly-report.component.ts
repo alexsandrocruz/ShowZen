@@ -75,17 +75,35 @@ export class MonthlyReportComponent implements OnInit {
     return `${this.monthNames[this.selectedMonth - 1]} ${this.selectedYear}`;
   }
 
-  get pdfUrl(): string {
+  isDownloadingPdf = false;
+
+  downloadPdf(): void {
+    if (this.isDownloadingPdf) return;
+    
+    this.isDownloadingPdf = true;
     const input: MonthlyReportInput = {
       year: this.selectedYear,
       month: this.selectedMonth,
       artistIds: this.selectedArtistIds.length > 0 ? this.selectedArtistIds : undefined,
     };
-    return this.reportService.getMonthlyConfirmedEventsPdfUrl(input);
-  }
-
-  downloadPdf(): void {
-    window.open(this.pdfUrl, '_blank');
+    
+    this.reportService.getMonthlyConfirmedEventsPdfBlob(input).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Agenda-${this.monthNames[this.selectedMonth - 1]}-${this.selectedYear}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        this.isDownloadingPdf = false;
+      },
+      error: () => {
+        this.isDownloadingPdf = false;
+        alert('Erro ao tentar baixar o PDF.');
+      }
+    });
   }
 
   shareWhatsApp(): void {
