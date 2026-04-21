@@ -24,6 +24,7 @@ import { CurrencyBrlInputDirective } from '../../shared/directives/currency-brl-
 import { PercentageInputDirective } from '../../shared/directives/percentage-input.directive';
 import { ClientQuickModalComponent } from '../../shared/components/client-quick-modal/client-quick-modal.component';
 import { PartnerQuickModalComponent } from '../../shared/components/partner-quick-modal/partner-quick-modal.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-event-form',
@@ -194,6 +195,33 @@ export class EventFormComponent implements OnInit {
                 });
             }
 
+            // Ensure entities are loaded if they exceed the maxResultCount of the initial load
+            const missingFetches = [];
+            
+            if (event.artistId && !this.artists.some(a => a.id === event.artistId)) {
+                missingFetches.push(this.artistService.get(event.artistId).subscribe(artist => {
+                    this.artists = [...this.artists, artist];
+                }));
+            }
+            
+            if (event.clientId && !this.clients.some(c => c.id === event.clientId)) {
+                missingFetches.push(this.clientService.get(event.clientId).subscribe(client => {
+                    this.clients = [...this.clients, client];
+                }));
+            }
+            
+            if (event.localPartnerId && !this.partners.some(p => p.id === event.localPartnerId)) {
+                missingFetches.push(this.clientService.get(event.localPartnerId).subscribe(partner => {
+                    this.partners = [...this.partners, partner];
+                }));
+            }
+            
+            if (event.locationId && !this.locations.some(l => l.id === event.locationId)) {
+                missingFetches.push(this.locationService.get(event.locationId).subscribe(location => {
+                    this.locations = [...this.locations, location];
+                }));
+            }
+
             this.form.patchValue({
                 title: event.title,
                 type: event.type,
@@ -223,15 +251,15 @@ export class EventFormComponent implements OnInit {
     }
 
     loadDependencies(): void {
-        this.artistService.getList({ maxResultCount: 100 }).subscribe(res => this.artists = res.items || []);
-        this.clientService.getList({ maxResultCount: 100 }).subscribe(res => {
+        this.artistService.getList({ maxResultCount: 1000 }).subscribe(res => this.artists = res.items || []);
+        this.clientService.getList({ maxResultCount: 1000 }).subscribe(res => {
             const allClients = res.items || [];
             // Clients: todos exceto LocalProducer (7)
             this.clients = allClients.filter(c => c.type !== ClientType.LocalProducer);
             // Partners: apenas LocalProducer (7)
             this.partners = allClients.filter(c => c.type === ClientType.LocalProducer);
         });
-        this.locationService.getList({ maxResultCount: 100 }).subscribe(res => this.locations = res.items || []);
+        this.locationService.getList({ maxResultCount: 1000 }).subscribe(res => this.locations = res.items || []);
     }
 
     save(): void {

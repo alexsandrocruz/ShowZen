@@ -101,8 +101,14 @@ public class MonthlyReportPdfGenerator : ITransientDependency
                                     row.ConstantItem(100).Padding(6).Text(cityState)
                                         .FontSize(8);
 
-                                    row.RelativeItem(2).Padding(6).Text(evt.Title)
-                                        .FontSize(8);
+                                    row.RelativeItem(2).Padding(6).Column(c =>
+                                    {
+                                        c.Item().Text(evt.Title).FontSize(8);
+                                        if (!string.IsNullOrWhiteSpace(evt.LocationName))
+                                        {
+                                            c.Item().Text(evt.LocationName).FontSize(7).FontColor(Colors.Grey.Darken2);
+                                        }
+                                    });
 
                                     row.RelativeItem().Padding(6).Text(evt.ContactName)
                                         .FontSize(8);
