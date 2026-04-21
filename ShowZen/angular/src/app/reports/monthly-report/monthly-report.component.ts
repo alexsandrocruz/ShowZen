@@ -106,7 +106,46 @@ export class MonthlyReportComponent implements OnInit {
     });
   }
 
-  shareWhatsApp(): void {
+  isSharing = false;
+
+  async shareReport(): Promise<void> {
+    if (this.isSharing) return;
+    
+    this.isSharing = true;
+    const input: MonthlyReportInput = {
+      year: this.selectedYear,
+      month: this.selectedMonth,
+      artistIds: this.selectedArtistIds.length > 0 ? this.selectedArtistIds : undefined,
+    };
+    
+    this.reportService.getMonthlyConfirmedEventsPdfBlob(input).subscribe({
+      next: async (blob: Blob) => {
+        const fileName = `Agenda-${this.monthNames[this.selectedMonth - 1]}-${this.selectedYear}.pdf`;
+        const file = new File([blob], fileName, { type: 'application/pdf' });
+        
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: fileName,
+              text: 'Confira nossa agenda mensal de eventos confirmados.'
+            });
+          } catch (error) {
+            console.error('Erro ao compartilhar:', error);
+          }
+        } else {
+          this.fallbackToTextShare();
+        }
+        this.isSharing = false;
+      },
+      error: () => {
+        this.isSharing = false;
+        alert('Erro ao tentar gerar o PDF para compartilhamento.');
+      }
+    });
+  }
+
+  private fallbackToTextShare(): void {
     const text = `📅 *Agenda - ${this.monthYearLabel}*\n\n` +
       this.events.map((e, i) =>
         `${i + 1}. *${e.startDateTime.substring(0, 10)}* - ${e.city}\n` +
@@ -115,16 +154,8 @@ export class MonthlyReportComponent implements OnInit {
       ).join('\n\n') +
       `\n\n_Total: ${this.events.length} evento(s) confirmado(s)_`;
 
-    if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
-      // Use Web Share API on mobile
-      navigator.share({ text }).catch(() => {
-        this.fallbackCopy(text);
-      });
-    } else {
-      // Desktop: copy to clipboard and open WhatsApp
-      this.fallbackCopy(text);
-      window.open('https://web.whatsapp.com/', '_blank');
-    }
+    this.fallbackCopy(text);
+    alert('O seu sistema não suporta envio direto de formulários PDF pelo navegador. Os dados da agenda em formato de texto foram copiados para sua área de transferência!');
   }
 
   private fallbackCopy(text: string): void {
