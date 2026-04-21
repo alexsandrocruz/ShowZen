@@ -71,7 +71,7 @@ public class MonthlyReportPdfGenerator : ITransientDependency
                         {
                             row.ConstantItem(35).Padding(6).Text("Data")
                                 .FontSize(8).Bold().FontColor(Colors.White);
-                            row.ConstantItem(100).Padding(6).Text("Cidade")
+                            row.ConstantItem(100).Padding(6).Text("Local")
                                 .FontSize(8).Bold().FontColor(Colors.White);
                             row.RelativeItem(2).Padding(6).Text("Evento")
                                 .FontSize(8).Bold().FontColor(Colors.White);
@@ -95,20 +95,22 @@ public class MonthlyReportPdfGenerator : ITransientDependency
                                             evt.StartDateTime.ToString("dd/MM"))
                                         .FontSize(8);
 
-                                    var cityState = !string.IsNullOrWhiteSpace(evt.State)
-                                        ? $"{evt.City}/{evt.State}"
-                                        : evt.City;
-                                    row.ConstantItem(100).Padding(6).Text(cityState)
-                                        .FontSize(8);
-
-                                    row.RelativeItem(2).Padding(6).Column(c =>
+                                    row.ConstantItem(100).Padding(6).Column(c =>
                                     {
-                                        c.Item().Text(evt.Title).FontSize(8);
-                                        if (!string.IsNullOrWhiteSpace(evt.LocationName))
+                                        var localDisplay = !string.IsNullOrWhiteSpace(evt.LocationName) ? evt.LocationName : "A definir";
+                                        c.Item().Text(localDisplay).FontSize(8).Bold();
+
+                                        var cityState = !string.IsNullOrWhiteSpace(evt.State)
+                                            ? (!string.IsNullOrWhiteSpace(evt.City) ? $"{evt.City}/{evt.State}" : evt.State)
+                                            : evt.City;
+
+                                        if (!string.IsNullOrWhiteSpace(cityState))
                                         {
-                                            c.Item().Text(evt.LocationName).FontSize(7).FontColor(Colors.Grey.Darken2);
+                                            c.Item().Text(cityState).FontSize(7).FontColor(Colors.Grey.Darken2);
                                         }
                                     });
+
+                                    row.RelativeItem(2).Padding(6).Text(evt.Title).FontSize(8);
 
                                     row.RelativeItem().Padding(6).Text(evt.ContactName)
                                         .FontSize(8);
