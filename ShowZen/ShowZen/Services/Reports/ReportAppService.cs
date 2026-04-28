@@ -79,7 +79,6 @@ public class ReportAppService : ApplicationService, IReportAppService
 
     private static MonthlyReportItemDto MapToDto(Event e)
     {
-        // City: prefer Location.City (unless it's 'A definir'), fallback to Client.City
         var locationCity = e.Location?.City;
         if (!string.IsNullOrWhiteSpace(locationCity) && locationCity.Trim().Equals("A definir", StringComparison.OrdinalIgnoreCase))
         {
@@ -87,7 +86,7 @@ public class ReportAppService : ApplicationService, IReportAppService
         }
         var city = !string.IsNullOrWhiteSpace(locationCity)
             ? locationCity
-            : (e.Client?.City ?? string.Empty);
+            : string.Empty;
 
         var locationState = e.Location?.State;
         if (!string.IsNullOrWhiteSpace(locationState) && locationState.Trim().Equals("A definir", StringComparison.OrdinalIgnoreCase))
@@ -96,7 +95,7 @@ public class ReportAppService : ApplicationService, IReportAppService
         }
         var state = !string.IsNullOrWhiteSpace(locationState)
             ? locationState
-            : (e.Client?.State ?? string.Empty);
+            : string.Empty;
 
         return new MonthlyReportItemDto
         {
