@@ -306,13 +306,74 @@ docker compose up -d nginx
 
 ### 5. Renovação Automática
 
-```bash
-# Adicionar ao crontab
-crontab -e
+> ⚠️ **ATENÇÃO — armadilha que já derrubou produção (jun/2026):** o Nginx roda em
+> container ocupando a porta 80. O `certbot renew` usa o modo `--standalone` por
+> padrão (herdado da emissão inicial), que tenta **abrir a própria porta 80** e
+> **falha** com `Could not bind TCP port 80 because it is already in use`. O renew
+> falha silenciosamente, o certificado vence e o site sai do ar. Veja
+> [Troubleshooting → Certificado SSL expirou / renovação falha](#erro-certificado-ssl-expirou--renovação-falha).
 
-# Adicionar linha:
+A forma correta é parar o Nginx **apenas durante** a renovação, via hooks, e deixar
+o `systemd timer` do Certbot (que tenta 2×/dia) cuidar do agendamento — em vez de um
+cron mensal frágil que só tenta uma vez por mês.
+
+**Não use** o cron mensal abaixo (foi a causa do incidente):
+
+```bash
+# ❌ NÃO USE — colide com o Nginx na porta 80 e nunca renova
 0 0 1 * * certbot renew --quiet && docker restart NOME_PROJETO-nginx
 ```
+
+**Opção A (recomendada) — `certbot.timer` + hooks.** Grave os hooks na configuração
+de renovação do domínio para que valham em qualquer execução do timer:
+
+```bash
+# Garante que o systemd timer do Certbot está ativo (tenta renovar 2×/dia)
+systemctl enable --now certbot.timer
+systemctl status certbot.timer
+
+# Grava os hooks de forma permanente no arquivo de renovação do domínio.
+# O Certbot para o Nginx para liberar a porta 80, renova em standalone e religa.
+certbot renew \
+  --pre-hook  "docker stop NOME_PROJETO-nginx" \
+  --post-hook "docker start NOME_PROJETO-nginx"
+
+# Validar sem aplicar (deve passar agora, sem o erro de porta 80):
+certbot renew --dry-run
+```
+
+> Os `--pre-hook`/`--post-hook` passados em uma execução do `certbot renew` ficam
+> persistidos em `/etc/letsencrypt/renewal/SEU_DOMINIO.com.br.conf`, então o
+> `certbot.timer` os reutiliza automaticamente nas renovações seguintes.
+
+**Opção B (zero downtime) — desafio webroot servido pelo próprio Nginx.** Evita
+parar o Nginx, mas exige editar o `docker-compose.prod.yml` e o `nginx.conf`:
+
+1. Crie o diretório no host e monte-o no container Nginx:
+   ```yaml
+   # docker-compose.prod.yml, no serviço nginx:
+   volumes:
+     - /var/www/certbot:/var/www/certbot:ro
+   ```
+   ```bash
+   mkdir -p /var/www/certbot
+   docker compose up -d nginx
+   ```
+2. Garanta o bloco de ACME-challenge no `server { listen 80; }` do `nginx.conf`:
+   ```nginx
+   location /.well-known/acme-challenge/ {
+       root /var/www/certbot;
+   }
+   ```
+3. Renove via webroot (Nginx continua no ar):
+   ```bash
+   certbot renew --webroot -w /var/www/certbot \
+     --deploy-hook "docker exec NOME_PROJETO-nginx nginx -s reload"
+   ```
+
+> **Nota:** o caminho `/var/www/certbot` precisa existir **no host** e estar montado
+> no container. Tentar `--webroot -w /var/www/certbot` sem isso resulta em
+> `/var/www/certbot does not exist or is not a directory`.
 
 ---
 
@@ -603,6 +664,51 @@ location /libs/ { proxy_pass http://...; }
 location /Abp/ { proxy_pass http://...; }
 ```
 
+### Erro: Certificado SSL expirou / renovação falha
+
+**Sintoma:** navegador exibe `NET::ERR_CERT_DATE_INVALID` e, por causa do HSTS, nem
+permite prosseguir. O site fica totalmente inacessível.
+
+**Causa (incidente de jun/2026):** o `certbot renew` rodava em modo `--standalone`,
+mas o Nginx (em container) já ocupa a porta 80. A renovação falhava com:
+
+```
+Could not bind TCP port 80 because it is already in use by another process
+on this system (such as a web server). Please stop the program in question
+and then try again.
+```
+
+Como o cron só tentava no dia 1º de cada mês, a falha passava despercebida até o
+certificado vencer.
+
+**Diagnóstico:**
+```bash
+# Estado do certificado (procure por "INVALID: EXPIRED")
+certbot certificates
+
+# Mostra o erro real da renovação sem aplicar nada
+certbot renew --dry-run
+```
+
+**Correção de emergência (restaura o site agora):**
+```bash
+docker stop NOME_PROJETO-nginx       # libera a porta 80
+certbot renew --force-renewal --standalone
+docker start NOME_PROJETO-nginx
+```
+
+**Verificar que voltou:**
+```bash
+curl -I https://SEU_DOMINIO.com.br/health-status   # deve responder HTTP/2 200
+echo | openssl s_client -servername SEU_DOMINIO.com.br \
+  -connect SEU_DOMINIO.com.br:443 2>/dev/null \
+  | openssl x509 -noout -dates                      # confirma novas datas
+```
+
+**Correção definitiva:** aplique a renovação automática correta descrita em
+[Configuração SSL/HTTPS → Renovação Automática](#5-renovação-automática) (hooks +
+`certbot.timer`), para que isso não se repita no próximo ciclo de ~90 dias.
+
 ### API não inicia
 
 Verifique logs:
@@ -629,6 +735,7 @@ Environment=ASPNETCORE_URLS=http://0.0.0.0:5000
 - [ ] Docker e Docker Compose instalados
 - [ ] PostgreSQL e Redis rodando
 - [ ] Certificado SSL gerado
+- [ ] Renovação automática configurada com hooks (`certbot.timer` ativo + `certbot renew --dry-run` passando)
 - [ ] Nginx configurado com todas as rotas
 - [ ] API rodando via systemd
 - [ ] GitHub Secrets configurados
@@ -653,6 +760,15 @@ docker restart NOME_PROJETO-nginx
 
 # Ver todos os containers
 docker ps
+
+# Estado dos certificados SSL (procure por datas de expiração)
+certbot certificates
+
+# Testar a renovação automática sem aplicar (deve passar sem erro de porta 80)
+certbot renew --dry-run
+
+# Confirmar que o timer de renovação está ativo
+systemctl status certbot.timer
 
 # Acessar PostgreSQL
 docker exec -it NOME_PROJETO-postgres psql -U usuario -d banco
