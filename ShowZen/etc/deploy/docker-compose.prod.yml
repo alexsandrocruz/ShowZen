@@ -8,7 +8,10 @@ services:
       POSTGRES_PASSWORD: "##Cavaleiro33"
       POSTGRES_DB: ShowZen
     ports:
-      - "5432:5432"
+      # Publicado SOMENTE em loopback. Sem o prefixo 127.0.0.1 o Docker publica em
+      # 0.0.0.0 e o Postgres fica exposto a internet inteira — foi o caso ate 15/09/2026.
+      # A API roda no host e conecta por Host=localhost, entao o loopback basta.
+      - "127.0.0.1:5432:5432"
     volumes:
       - /opt/showzen/data/postgres:/var/lib/postgresql/data
     healthcheck:
