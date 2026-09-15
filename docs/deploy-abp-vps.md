@@ -280,38 +280,73 @@ http {
 
 ## Configuração SSL/HTTPS
 
+> **NÃO use `certbot --standalone` nesta arquitetura.** O nginx roda com
+> `network_mode: host` e ocupa a porta 80 permanentemente, então o standalone não
+> consegue fazer bind e **toda renovação falha** com `Could not bind TCP port 80`.
+> Foi exatamente isso que derrubou o certificado de produção em 13/09/2026: o
+> `certbot.timer` tentava duas vezes por dia e falhava em silêncio desde a emissão.
+> Use **webroot**, que valida sem tocar no nginx.
+
 ### 1. Instalar Certbot
 
 ```bash
 apt install -y certbot
 ```
 
-### 2. Parar Nginx Temporariamente
+### 2. Criar o webroot e montá-lo no nginx
 
 ```bash
-docker compose stop nginx
+mkdir -p /var/www/certbot
 ```
 
-### 3. Gerar Certificado
+No `docker-compose.prod.yml`, o serviço nginx precisa do mount (sem ele o nginx
+responde 404 no desafio e a validação nunca passa):
 
-```bash
-certbot certonly --standalone -d SEU_DOMINIO.com.br
+```yaml
+    volumes:
+      - /var/www/certbot:/var/www/certbot:ro
 ```
 
-### 4. Reiniciar Nginx
+E o `nginx.conf` precisa servir o desafio no server block da porta 80, **antes**
+do redirect para HTTPS:
+
+```nginx
+location /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+}
+```
+
+### 3. Gerar Certificado (sem downtime)
 
 ```bash
-docker compose up -d nginx
+certbot certonly --webroot -w /var/www/certbot -d SEU_DOMINIO.com.br
+```
+
+### 4. Hook para recarregar o nginx a cada renovação
+
+```bash
+printf '#!/bin/sh\ndocker exec NOME_PROJETO-nginx nginx -s reload\n' \
+  > /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
+chmod +x /etc/letsencrypt/renewal-hooks/deploy/reload-nginx.sh
 ```
 
 ### 5. Renovação Automática
 
-```bash
-# Adicionar ao crontab
-crontab -e
+Não crie cron. O pacote do certbot já instala o `certbot.timer`, que roda duas
+vezes por dia — cadência correta para certificado de 90 dias. Um cron mensal
+(`0 0 1 * *`) é insuficiente e conflita com o timer.
 
-# Adicionar linha:
-0 0 1 * * certbot renew --quiet && docker restart NOME_PROJETO-nginx
+```bash
+systemctl enable --now certbot.timer
+```
+
+### 6. Validar que a automação funciona
+
+Este passo é obrigatório — é o único que prova que a renovação vai acontecer
+sozinha. Sem ele, a falha só aparece 90 dias depois, com o site fora do ar:
+
+```bash
+certbot renew --dry-run
 ```
 
 ---
